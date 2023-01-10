@@ -21,6 +21,8 @@ public class Movement {
 
     static boolean turningLeft = true;
     static boolean shouldRight = true;
+
+    static Direction prevDirection = Direction.NORTH;
     static Direction alongWall(Direction desired) throws GameActionException {
 //        if (rc.canMove(desired)) {
 //            return desired;
@@ -29,6 +31,7 @@ public class Movement {
         if (shouldRight) {
             rc.setIndicatorString("YAY");
             Direction checkDir = lastDirection;
+            if (checkDir == Direction.CENTER) checkDir = prevDirection;
 
 //            if (turningLeft) {
 //                checkDir = lastDirection.rotateRight();
@@ -104,7 +107,9 @@ public class Movement {
 
         return null;
     }
-    static Direction tryMove(RobotController rc, MapLocation currentTarget) throws GameActionException {
+    static Direction tryMove(RobotController rc, MapLocation currentTarget, Direction previous) throws GameActionException {
+        if (previous != null) prevDirection = previous;
+
         if (!rc.isMovementReady()) return null;
         Movement.rc = rc;
 

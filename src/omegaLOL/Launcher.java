@@ -5,7 +5,17 @@ import static omegaLOL.RobotPlayer.*;
 public class Launcher {
     static MapLocation parentLoc = null;
     static int partnerID = -1;
+
+    static MapLocation prevLocation = null;
+    static Direction prevDirection = null;
     static void runLauncher(RobotController rc) throws GameActionException {
+        if (prevLocation == null) {
+            prevLocation = rc.getLocation();
+        } else if (!rc.getLocation().equals(prevLocation)) {
+            prevDirection = prevLocation.directionTo(rc.getLocation());
+            prevLocation = rc.getLocation();
+        }
+
         if (parentLoc == null) {
             RobotInfo[] friends = rc.senseNearbyRobots(42069,rc.getTeam());
             int mini=42069;
@@ -54,7 +64,7 @@ public class Launcher {
         }
         if (rc.canSenseRobot(partnerID)) {
             RobotInfo partner = rc.senseRobot(partnerID);
-            Direction dir = Movement.tryMove(rc, partner.location);
+            Direction dir = Movement.tryMove(rc, partner.location,prevDirection);
             if (dir != null) {
                 rc.move(dir);
             }

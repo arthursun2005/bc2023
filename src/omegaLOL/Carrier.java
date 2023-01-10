@@ -8,7 +8,17 @@ public class Carrier {
     static MapLocation minLoc = null;
     static MapLocation parentLoc = null;
     static boolean takenAnchor = false;
+
+    static MapLocation prevLocation = null;
+    static Direction prevDirection = null;
     static void runCarrier(RobotController rc) throws GameActionException {
+        if (prevLocation == null) {
+            prevLocation = rc.getLocation();
+        } else if (!rc.getLocation().equals(prevLocation)) {
+            prevDirection = prevLocation.directionTo(rc.getLocation());
+            prevLocation = rc.getLocation();
+        }
+
         if (parentLoc == null) {
             RobotInfo[] friends = rc.senseNearbyRobots(42069,rc.getTeam());
             int mini=42069;
@@ -43,7 +53,7 @@ public class Carrier {
         }
         if (rc.getAnchor() == null && takenAnchor == false) {
             rc.setIndicatorString("Trying to move to " + parentLoc);
-            Direction dir = Movement.tryMove(rc, parentLoc);
+            Direction dir = Movement.tryMove(rc, parentLoc, prevDirection);
             if (dir != null) {
                 rc.move(dir);
             }
@@ -55,7 +65,7 @@ public class Carrier {
             System.out.println(minLoc + " " + " loc! " + rc.getRoundNum());
 
             if (minLoc != null) {
-                Direction dir = Movement.tryMove(rc, minLoc);
+                Direction dir = Movement.tryMove(rc, minLoc, prevDirection);
                 if (dir == null) {
                     System.out.println("null somehow");
                     minLoc = null;
@@ -83,7 +93,7 @@ public class Carrier {
                     rc.placeAnchor();
                     return;
                 }
-                Direction dir = Movement.tryMove(rc, minLoc);
+                Direction dir = Movement.tryMove(rc, minLoc, prevDirection);
                 if (dir == null) {
                     minLoc = null;
                 } else {
