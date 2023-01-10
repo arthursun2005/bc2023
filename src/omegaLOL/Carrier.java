@@ -61,6 +61,12 @@ public class Carrier {
         }
 
         if (rc.getAnchor() != null) {
+            if ((rc.senseIsland(rc.getLocation()) != -1) && rc.senseTeamOccupyingIsland(rc.senseIsland(rc.getLocation())) != rc.getTeam() &&rc.canPlaceAnchor()) {
+                rc.setIndicatorString("Huzzah, placed anchor!");
+                rc.placeAnchor();
+                return;
+            }
+
             if (!rc.isMovementReady()) return;
             System.out.println(minLoc + " " + " loc! " + rc.getRoundNum());
 
@@ -78,7 +84,8 @@ public class Carrier {
             int[] islands = rc.senseNearbyIslands();
             int mini = 42069;
             for (int id : islands) {
-                if (rc.senseAnchor(id)!=null) continue;
+                if (rc.senseTeamOccupyingIsland(id) == rc.getTeam())  continue;
+//                if (rc.senseAnchor(id). == ) continue;
                 MapLocation[] thisIslandLocs = rc.senseNearbyIslandLocations(id);
                 for (MapLocation nLoc : thisIslandLocs) {
                     if (me.distanceSquaredTo(nLoc) < mini) {
@@ -88,11 +95,7 @@ public class Carrier {
                 }
             }
             if (mini!=42069) {
-                if (me.equals(minLoc)&&rc.canPlaceAnchor()) {
-                    rc.setIndicatorString("Huzzah, placed anchor!");
-                    rc.placeAnchor();
-                    return;
-                }
+
                 Direction dir = Movement.tryMove(rc, minLoc, prevDirection);
                 if (dir == null) {
                     minLoc = null;

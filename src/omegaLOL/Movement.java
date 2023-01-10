@@ -44,11 +44,19 @@ public class Movement {
 
             if (turningLeft) {
                 for (int i = 0; i < 8; i++) {
+                    if (rc.onTheMap(currentLocation.add(checkDir)) && rc.canSenseRobotAtLocation(currentLocation.add(checkDir))
+                            && rc.senseRobotAtLocation(currentLocation.add(checkDir)).getTeam() == rc.getTeam().opponent())  {
+                        return Direction.CENTER;
+                    }
                     if (rc.canMove(checkDir)) break;
                     checkDir = checkDir.rotateRight();
                 }
             } else {
                 for (int i = 0; i < 8; i++) {
+                    if (rc.onTheMap(currentLocation.add(checkDir)) && rc.canSenseRobotAtLocation(currentLocation.add(checkDir))
+                            && rc.senseRobotAtLocation(currentLocation.add(checkDir)).getTeam() == rc.getTeam().opponent())  {
+                        return Direction.CENTER;
+                    }
                     if (rc.canMove(checkDir)) break;
                     checkDir = checkDir.rotateLeft();
                 }
@@ -80,7 +88,13 @@ public class Movement {
 //                return alongWall(desired);
 //            }
 
-            if (rc.canMove(checkDir)) break;
+            if (rc.onTheMap(currentLocation.add(checkDir)) && rc.canSenseRobotAtLocation(currentLocation.add(checkDir))
+                    && rc.senseRobotAtLocation(currentLocation.add(checkDir)).getTeam() == rc.getTeam().opponent())  {
+                return Direction.CENTER;
+            }
+            if (rc.canMove(checkDir)) {
+                break;
+            }
 
             if (turningLeft) {
                 checkDir = checkDir.rotateRight();
@@ -92,21 +106,51 @@ public class Movement {
         return checkDir;
     }
 
-    static Direction normal(Direction togo) {
+    static Direction normal(Direction togo) throws GameActionException {
         Direction left = togo.rotateLeft();
         Direction right = togo.rotateRight();
 
-        if (rc.canMove(togo)) return togo;
+        if (rc.onTheMap(currentLocation.add(togo)) && rc.canSenseRobotAtLocation(currentLocation.add(togo))
+                && rc.senseRobotAtLocation(currentLocation.add(togo)).getTeam() == rc.getTeam().opponent())  {
+            return Direction.CENTER;
+        }
+        if (rc.canMove(togo)) {
+            return togo;
+        }
 
         MapLocation tryLeft = currentLocation.add(left);
         MapLocation tryRight = currentLocation.add(right);
 
         if (tryLeft.distanceSquaredTo(oldTarget) < tryRight.distanceSquaredTo(oldTarget)) {
-            if (rc.canMove(left)) return left;
-            if (rc.canMove(right)) return right;
+            if (rc.onTheMap(currentLocation.add(left)) && rc.canSenseRobotAtLocation(currentLocation.add(left))
+                    && rc.senseRobotAtLocation(currentLocation.add(left)).getTeam() == rc.getTeam().opponent())  {
+                return Direction.CENTER;
+            }
+            if (rc.canMove(left)) {
+                return left;
+            }
+            if (rc.onTheMap(currentLocation.add(right)) && rc.canSenseRobotAtLocation(currentLocation.add(right))
+                    && rc.senseRobotAtLocation(currentLocation.add(right)).getTeam() == rc.getTeam().opponent())  {
+                return Direction.CENTER;
+            }
+            if (rc.canMove(right)) {
+                return right;
+            }
         } else {
-            if (rc.canMove(right)) return right;
-            if (rc.canMove(left)) return left;
+            if (rc.onTheMap(currentLocation.add(right)) && rc.canSenseRobotAtLocation(currentLocation.add(right))
+                    && rc.senseRobotAtLocation(currentLocation.add(right)).getTeam() == rc.getTeam().opponent())  {
+                return Direction.CENTER;
+            }
+            if (rc.canMove(right)) {
+                return right;
+            }
+            if (rc.onTheMap(currentLocation.add(left)) && rc.canSenseRobotAtLocation(currentLocation.add(left))
+                    && rc.senseRobotAtLocation(currentLocation.add(left)).getTeam() == rc.getTeam().opponent())  {
+                return Direction.CENTER;
+            }
+            if (rc.canMove(left)) {
+                return left;
+            }
         }
 
         // bruh rip
