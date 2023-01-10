@@ -22,7 +22,6 @@ public class Movement {
     static boolean turningLeft = true;
     static boolean shouldRight = true;
 
-    static Direction prevDirection = Direction.NORTH;
     static Direction alongWall(Direction desired) throws GameActionException {
 //        if (rc.canMove(desired)) {
 //            return desired;
@@ -31,7 +30,10 @@ public class Movement {
         if (shouldRight) {
             rc.setIndicatorString("YAY");
             Direction checkDir = lastDirection;
-            if (checkDir == Direction.CENTER) checkDir = prevDirection;
+
+            if (lastDirection == Direction.CENTER) {
+                lastDirection = Direction.NORTH;
+            }
 
 //            if (turningLeft) {
 //                checkDir = lastDirection.rotateRight();
@@ -59,6 +61,10 @@ public class Movement {
 
         Direction checkDir = lastDirection;
 
+        if (!rc.onTheMap(currentLocation.add(checkDir))) {
+            turningLeft = !turningLeft;
+        }
+
         if (turningLeft) {
             checkDir = checkDir.rotateLeft().rotateLeft();
         } else {
@@ -67,12 +73,12 @@ public class Movement {
 
 
         for (int i = 0; i < 8; i++) {
-            MapLocation temp = currentLocation.add(checkDir);
-            if (!rc.onTheMap(temp)) {
-                turningLeft = !turningLeft;
-                lastDirection = lastDirection.opposite();
-                return alongWall(desired);
-            }
+//            MapLocation temp = currentLocation.add(checkDir);
+//            if (!rc.onTheMap(temp)) {
+//                turningLeft = !turningLeft;
+//                lastDirection = lastDirection.opposite();
+//                return alongWall(desired);
+//            }
 
             if (rc.canMove(checkDir)) break;
 
@@ -108,7 +114,7 @@ public class Movement {
         return null;
     }
     static Direction tryMove(RobotController rc, MapLocation currentTarget, Direction previous) throws GameActionException {
-        if (previous != null) prevDirection = previous;
+        if (previous != null && lastDirection == Direction.CENTER) lastDirection = previous;
 
         if (!rc.isMovementReady()) return null;
         Movement.rc = rc;
@@ -119,6 +125,8 @@ public class Movement {
             oldTarget = currentTarget;
             currentState = State.NORMAL;
             lastDirection = Direction.CENTER;
+
+            if (previous != null) lastDirection = previous;
         }
 
         currentLocation = rc.getLocation();
