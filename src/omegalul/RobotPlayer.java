@@ -9,6 +9,11 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+import static omegalul.Headquarter.*;
+import static omegalul.Movement.*;
+import static omegalul.Carrier.*;
+import static omegalul.Launcher.*;
+
 /**
  * RobotPlayer is the class that describes your main robot strategy.
  * The run() method inside this class is like your main function: this is what we'll call once your robot
@@ -42,6 +47,9 @@ public strictfp class RobotPlayer {
         Direction.WEST,
         Direction.NORTHWEST,
     };
+
+    static int moveCount = 0;
+    static Direction curDir = Direction.NORTH;
 
     /**
      * run() is the method that is called when a robot is instantiated in the Battlecode world.
@@ -108,40 +116,7 @@ public strictfp class RobotPlayer {
         // Your code should never reach here (unless it's intentional)! Self-destruction imminent...
     }
 
-    /**
-     * Run a single turn for a Headquarters.
-     * This code is wrapped inside the infinite loop in run(), so it is called once per turn.
-     */
-    static void runHeadquarters(RobotController rc) throws GameActionException {
-        if (rc.canBuildAnchor(Anchor.STANDARD)) {
-            // If we can build an anchor do it!
-            rc.buildAnchor(Anchor.STANDARD);
-            rc.setIndicatorString("Building anchor! " + rc.getAnchor());
-        }
-        else if (rc.getAnchor() != null && rc.getResourceAmount(ResourceType.ADAMANTIUM)>=50) {
-            Direction dir; MapLocation newLoc;
-            do {
-                dir = directions[rng.nextInt(directions.length)];
-                newLoc = rc.getLocation().add(dir);
-            } while (!rc.canBuildRobot(RobotType.CARRIER, newLoc));
-            rc.setIndicatorString("Trying to build a carrier");
-            rc.buildRobot(RobotType.CARRIER, newLoc);
-        }
-        if (rc.getResourceAmount(ResourceType.MANA)-rc.getResourceAmount(ResourceType.ADAMANTIUM)>=60) {
-            Direction dir; MapLocation newLoc;
-            do {
-                dir = directions[rng.nextInt(directions.length)];
-                newLoc = rc.getLocation().add(dir);
-            } while (!rc.canBuildRobot(RobotType.LAUNCHER, newLoc));
-            rc.setIndicatorString("Trying to build a launcher");
-            rc.buildRobot(RobotType.LAUNCHER, newLoc);
-        }
-    }
 
-    /**
-     * Run a single turn for a Carrier.
-     * This code is wrapped inside the infinite loop in run(), so it is called once per turn.
-     */
     static void tryMove(RobotController rc, Direction dir) throws GameActionException {
         if (!rc.isMovementReady()) return;
         for (int i=0; i<8; i++) {
@@ -152,121 +127,7 @@ public strictfp class RobotPlayer {
             dir=dir.rotateRight();
         }
     }
-    static int moveCount = 0;
-    static Direction curDir = Direction.NORTH;
-    static void runCarrier(RobotController rc) throws GameActionException {
-        MapLocation me = rc.getLocation();
-        if (rc.getAnchor() == null) {
-            for (int dx = -1; dx <= 1; dx++) {
-                for (int dy = -1; dy <= 1; dy++) {
-                    MapLocation hqLoc = new MapLocation(me.x + dx, me.y + dy);
-                    if (rc.canTakeAnchor(hqLoc, Anchor.STANDARD)) {
-                        rc.setIndicatorString("Taking standard Anchor");
-                        rc.takeAnchor(hqLoc, Anchor.STANDARD);
-                    }
-                }
-            }
-        }
-        if (rc.getAnchor() != null) {
-            // If I have an anchor singularly focus on getting it to the first island I see
-            int[] islands = rc.senseNearbyIslands();
-            int mini = 42069;
-            MapLocation minLoc = me;
-            for (int id : islands) {
-                if (rc.senseAnchor(id)!=null) continue;
-                MapLocation[] thisIslandLocs = rc.senseNearbyIslandLocations(id);
-                for (MapLocation nLoc : thisIslandLocs) {
-                    if (me.distanceSquaredTo(nLoc) < mini) {
-                        mini=me.distanceSquaredTo(nLoc);
-                        minLoc=nLoc;
-                    }
-                }
-            }
-            if (mini!=42069) {
-                if (me.equals(minLoc)&&rc.canPlaceAnchor()) {
-                    rc.setIndicatorString("Huzzah, placed anchor!");
-                    rc.placeAnchor();
-                    return;
-                }
-                rc.setIndicatorString("Moving my anchor towards " + minLoc);
-                Direction dir = me.directionTo(minLoc);
-                tryMove(rc, dir);
-            }
-            else {
-                if (!rc.isMovementReady()) return;
-                if (moveCount==0 || !rc.canMove(curDir)) {
-                    moveCount=4;
-                    Direction newDirects[] = {
-                        curDir,
-                        curDir.rotateRight(),
-                        curDir.rotateLeft(),
-                        curDir.rotateRight().rotateRight(),
-                        curDir.rotateLeft().rotateLeft(),
-                    };
-                    for (int i=0; i<20; i++) {
-                        curDir = newDirects[rng.nextInt(newDirects.length)];
-                        if (rc.canMove(curDir)) {
-                            rc.move(curDir);
-                            return;
-                        }
-                    }
-                    while (true) {
-                        curDir = directions[rng.nextInt(directions.length)];
-                        if (rc.canMove(curDir)) {
-                            rc.move(curDir);
-                            return;
-                        }
-                    }
-                }
-                moveCount--;
-                rc.move(curDir);
-            }
-        }
-    }
 
-    static void runLauncher(RobotController rc) throws GameActionException {
-        // Try to attack someone
-        int radius = rc.getType().actionRadiusSquared;
-        Team opponent = rc.getTeam().opponent();
-        RobotInfo[] enemies = rc.senseNearbyRobots(radius, opponent);
-        if (enemies.length >= 0) {
-            for (RobotInfo enemy : enemies) {
-                MapLocation toAttack = enemy.location;
-                if (rc.canAttack(toAttack)) {
-                    rc.setIndicatorString("Attacking");
-                    rc.attack(toAttack);
-                    return;
-                }
-            }
-        }
-        // should probably put this in a function
-        if (!rc.isMovementReady()) return;
-        if (moveCount==0 || !rc.canMove(curDir)) {
-            moveCount=4;
-            Direction newDirects[] = {
-                curDir,
-                curDir.rotateRight(),
-                curDir.rotateLeft(),
-                curDir.rotateRight().rotateRight(),
-                curDir.rotateLeft().rotateLeft(),
-            };
-            for (int i=0; i<20; i++) {
-                curDir = newDirects[rng.nextInt(newDirects.length)];
-                if (rc.canMove(curDir)) {
-                    rc.move(curDir);
-                    return;
-                }
-            }
-            while (true) {
-                curDir = directions[rng.nextInt(directions.length)];
-                if (rc.canMove(curDir)) {
-                    rc.move(curDir);
-                    return;
-                }
-            }
-        }
-        moveCount--;
-        rc.move(curDir);
-    }
+
 }
 
