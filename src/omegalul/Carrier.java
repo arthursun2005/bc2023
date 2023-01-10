@@ -5,6 +5,7 @@ import static omegalul.RobotPlayer.*;
 
 public class Carrier {
 
+    static MapLocation minLoc = null;
     static void runCarrier(RobotController rc) throws GameActionException {
         MapLocation me = rc.getLocation();
         if (rc.getAnchor() == null) {
@@ -18,11 +19,24 @@ public class Carrier {
                 }
             }
         }
+
         if (rc.getAnchor() != null) {
+            if (!rc.isMovementReady()) return;
+            System.out.println(minLoc + " " + " loc! " + rc.getRoundNum());
+
+            if (minLoc != null) {
+                Direction dir = Movement.tryMove(rc, minLoc);
+                if (dir == null) {
+                    System.out.println("null somehow");
+                    minLoc = null;
+                } else {
+                    rc.move(dir);
+                    return;
+                }
+            }
             // If I have an anchor singularly focus on getting it to the first island I see
             int[] islands = rc.senseNearbyIslands();
             int mini = 42069;
-            MapLocation minLoc = me;
             for (int id : islands) {
                 if (rc.senseAnchor(id)!=null) continue;
                 MapLocation[] thisIslandLocs = rc.senseNearbyIslandLocations(id);
@@ -39,11 +53,16 @@ public class Carrier {
                     rc.placeAnchor();
                     return;
                 }
-                rc.setIndicatorString("Moving my anchor towards " + minLoc);
                 Direction dir = Movement.tryMove(rc, minLoc);
-                rc.move(dir);
+                if (dir == null) {
+                    minLoc = null;
+                } else {
+                    rc.move(dir);
+                    return;
+                }
             }
             else {
+                System.out.println(rc.getRoundNum() + " " + " reached!");
                 if (!rc.isMovementReady()) return;
                 if (moveCount==0 || !rc.canMove(curDir)) {
                     moveCount=4;
