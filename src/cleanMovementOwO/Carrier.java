@@ -8,8 +8,7 @@ public class Carrier extends Robot {
     static MapLocation parentLoc = null;
     static boolean takenAnchor = false;
 
-    static MapLocation prevLocation = null;
-    static Direction prevDirection = null;
+
 
     static boolean canMove(Direction desired) throws GameActionException {
         return rc.canMove(desired) && !rc.senseMapInfo(rc.getLocation().add(desired)).getCurrentDirection().equals(desired.opposite());
@@ -19,12 +18,6 @@ public class Carrier extends Robot {
     }
 
     public void runUnit() throws GameActionException {
-        if (prevLocation == null) {
-            prevLocation = rc.getLocation();
-        } else if (!rc.getLocation().equals(prevLocation)) {
-            prevDirection = prevLocation.directionTo(rc.getLocation());
-            prevLocation = rc.getLocation();
-        }
 
         if (parentLoc == null) {
             RobotInfo[] friends = rc.senseNearbyRobots(42069,rc.getTeam());

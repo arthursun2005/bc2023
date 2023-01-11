@@ -1,9 +1,6 @@
 package cleanMovementOwO;
 
-import battlecode.common.Clock;
-import battlecode.common.Direction;
-import battlecode.common.GameActionException;
-import battlecode.common.RobotController;
+import battlecode.common.*;
 
 import java.util.Random;
 
@@ -29,6 +26,10 @@ public abstract class Robot {
     static int turnCount = 0;
     static int currentRound;
 
+    static Movement movement;
+
+    static MapLocation prevLocation = null;
+    static Direction prevDirection = null;
     public Robot(RobotController rc) {
         Robot.rc = rc;
         rng = new Random(rc.getID());
@@ -38,6 +39,13 @@ public abstract class Robot {
         // Before unit runs
         turnCount++;
         currentRound = rc.getRoundNum();
+
+        if (prevLocation == null) {
+            prevLocation = rc.getLocation();
+        } else if (!rc.getLocation().equals(prevLocation)) {
+            prevDirection = prevLocation.directionTo(rc.getLocation());
+            prevLocation = rc.getLocation();
+        }
 
         // Does turn
         runUnit();
