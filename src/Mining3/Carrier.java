@@ -1,4 +1,4 @@
-package Mining2;
+package Mining3;
 
 import battlecode.common.*;
 
@@ -56,12 +56,6 @@ public class Carrier extends Robot {
                     }
                 }
             }
-            for (int i = 0; i < 10; i++) {
-                if (rc.readSharedArray(i)==0&&rc.canWriteSharedArray(i,rc.getID()%60000)) {
-                    rc.writeSharedArray(i,rc.getID()%60000);
-                    break;
-                }
-            }
         }
         MapLocation me = rc.getLocation();
         if (rc.getAnchor() == null) {
@@ -86,6 +80,12 @@ public class Carrier extends Robot {
             if ((rc.senseIsland(rc.getLocation()) != -1) && rc.senseTeamOccupyingIsland(rc.senseIsland(rc.getLocation())) != rc.getTeam() &&rc.canPlaceAnchor()) {
                 rc.setIndicatorString("Huzzah, placed anchor!");
                 rc.placeAnchor();
+                for (int i=1; i<=20; i++) {
+                    if (rc.readSharedArray(i)==0 && rc.canWriteSharedArray(i,me.x*69+me.y)) {
+                        rc.writeSharedArray(i,me.x*69+me.y);
+                        break;
+                    }
+                }
                 return;
             }
 
