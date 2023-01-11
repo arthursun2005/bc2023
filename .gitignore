@@ -202,3 +202,5 @@ fabric.properties
 version.txt
 .project
 .settings
+.history
+.vscode
