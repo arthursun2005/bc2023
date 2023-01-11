@@ -23,6 +23,7 @@ public class Movement {
     static boolean shouldRight = true;
 
     static boolean canMove(Direction desired) throws GameActionException {
+        if (currentState == State.WALL) return rc.canMove(desired) && rc.senseMapInfo(currentLocation.add(desired)).getCurrentDirection().equals(Direction.CENTER);
         return rc.canMove(desired) && !rc.senseMapInfo(currentLocation.add(desired)).getCurrentDirection().equals(desired.opposite());
     }
 
@@ -121,7 +122,7 @@ public class Movement {
         if (canMove(togo)) {
             return togo;
         }
-
+/*
         MapLocation tryLeft = currentLocation.add(left);
         MapLocation tryRight = currentLocation.add(right);
 
@@ -158,12 +159,25 @@ public class Movement {
         }
 
         // bruh rip
-
+*/
         return null;
     }
+
+    static MapLocation prevLocation = null;
+
     static Direction tryMove(RobotController rc, MapLocation currentTarget, Direction previous) throws GameActionException {
         System.out.println("CALLED");
         if (previous != null && lastDirection == Direction.CENTER) lastDirection = previous;
+        else {
+            if (prevLocation == null) {
+                prevLocation = rc.getLocation();
+            } else if (!rc.getLocation().equals(prevLocation)) {
+                lastDirection = prevLocation.directionTo(rc.getLocation());
+                prevLocation = rc.getLocation();
+            }
+        }
+        rc.setIndicatorString("STATE" + currentState);
+        if (lastDirection == Direction.CENTER) lastDirection = Direction.NORTH;
 
         if (!rc.isMovementReady()) return null;
         Movement.rc = rc;
