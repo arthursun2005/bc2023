@@ -9,7 +9,6 @@ public class Amplifier extends Robot {
         super(rc);
 
     }
-
     static int arr[][] = new int[69][69];
     static int possi[] = {0,1,1,1};
 
@@ -36,12 +35,29 @@ public class Amplifier extends Robot {
             // 1 for passable, 2 for impassable
             for (MapLocation loc : toCheck) {
                 if (!rc.canSenseLocation(loc)) continue;
+
                 int x = loc.x, y = loc.y;
                 int oppx = rc.getMapWidth()-x-1, oppy = rc.getMapHeight()-y-1;
-                arr[x][y] = (rc.sensePassability(loc)?2:1);
-                if (arr[oppx][y]+arr[x][y]==3) possi[1] = 0;
-                if (arr[x][oppy]+arr[x][y]==3) possi[2] = 0;
-                if (arr[oppx][oppy]+arr[x][y]==3) possi[3] = 0;
+
+                RobotInfo possibleHQ = rc.senseRobotAtLocation(loc);
+                MapInfo mapInfo = rc.senseMapInfo(loc);
+
+                if (possibleHQ != null && possibleHQ.getType().equals(RobotType.HEADQUARTERS)) {
+                    arr[x][y] = 1;
+                } else if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) {
+                    arr[x][y] = 2;
+
+                    // CHECK FOR CLOUD AFTER THIS
+
+                } else if (rc.sensePassability(loc)) {
+                    arr[x][y] = 4;
+                } else {
+                    arr[x][y] = 5;
+                }
+
+                if (arr[oppx][y] != 0 && arr[oppx][y] != arr[x][y]) possi[1] = 0;
+                if (arr[x][oppy] != 0  && arr[x][oppy] != arr[x][y]) possi[2] = 0;
+                if (arr[oppx][oppy]  != 0 && arr[oppx][oppy] != arr[x][y]) possi[3] = 0;
             }
 
             if (possi[1]+possi[2]+possi[3]==1) {
@@ -55,33 +71,7 @@ public class Amplifier extends Robot {
 
             if (arr[oppositeLoc.x][oppositeLoc.y]==0) moveToLocation(oppositeLoc);
             else {
-                if (!rc.isMovementReady()) return;
-                if (moveCount==0 || !rc.canMove(curDir)) {
-                    moveCount=4;
-                    Direction newDirects[] = {
-                            curDir,
-                            curDir.rotateRight(),
-                            curDir.rotateLeft(),
-                            curDir.rotateRight().rotateRight(),
-                            curDir.rotateLeft().rotateLeft(),
-                    };
-                    for (int i=0; i<20; i++) {
-                        curDir = newDirects[rng.nextInt(newDirects.length)];
-                        if (rc.canMove(curDir)) {
-                            rc.move(curDir);
-                            return;
-                        }
-                    }
-                    while (true) {
-                        curDir = directions[rng.nextInt(directions.length)];
-                        if (rc.canMove(curDir)) {
-                            rc.move(curDir);
-                            return;
-                        }
-                    }
-                }
-                moveCount--;
-                rc.move(curDir);
+                moveRandom();
             }
         }
     }

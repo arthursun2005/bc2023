@@ -163,7 +163,7 @@ public class Movement {
 
         // bruh rip
 */
-        return null;
+        return Direction.CENTER;
     }
 
     static MapLocation prevLocation = null;
@@ -180,7 +180,7 @@ public class Movement {
         }
         if (lastDirection == Direction.CENTER) lastDirection = Direction.NORTH;
 
-        if (!rc.isMovementReady()) return null;
+        if (!rc.isMovementReady()) return Direction.CENTER;
         Movement.rc = rc;
 
         if (oldTarget == null) oldTarget = currentTarget;
@@ -195,7 +195,7 @@ public class Movement {
 
         currentLocation = rc.getLocation();
         Direction togo = currentLocation.directionTo(oldTarget);
-        if (togo.equals(Direction.CENTER)) return null;
+        if (togo.equals(Direction.CENTER)) return Direction.CENTER;
 
         if (currentState.equals(State.WALL)) {
             if (currentLocation.distanceSquaredTo(oldTarget) < lastWall.distanceSquaredTo(oldTarget)) {
@@ -228,7 +228,7 @@ public class Movement {
             return lastDirection = nextMove;
         }
 
-        return null;
+        return Direction.CENTER;
     }
 
 }

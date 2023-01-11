@@ -56,10 +56,7 @@ public class Launcher extends Robot {
         }
         if (rc.canSenseRobot(partnerID)) {
             RobotInfo partner = rc.senseRobot(partnerID);
-            Direction dir = Movement.tryMove(rc, partner.location, prevDirection);
-            if (dir != null && rc.canMove(dir)) {
-                rc.move(dir);
-            }
+            moveToLocation(partner.location);
             return;
         }
         // should probably put this in a function

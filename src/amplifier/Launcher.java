@@ -63,32 +63,6 @@ public class Launcher extends Robot {
             return;
         }
         // should probably put this in a function
-        if (!rc.isMovementReady()) return;
-        if (moveCount==0 || !rc.canMove(curDir)) {
-            moveCount=4;
-            Direction newDirects[] = {
-                    curDir,
-                    curDir.rotateRight(),
-                    curDir.rotateLeft(),
-                    curDir.rotateRight().rotateRight(),
-                    curDir.rotateLeft().rotateLeft(),
-            };
-            for (int i=0; i<20; i++) {
-                curDir = newDirects[rng.nextInt(newDirects.length)];
-                if (rc.canMove(curDir)) {
-                    rc.move(curDir);
-                    return;
-                }
-            }
-            while (true) {
-                curDir = directions[rng.nextInt(directions.length)];
-                if (rc.canMove(curDir)) {
-                    rc.move(curDir);
-                    return;
-                }
-            }
-        }
-        moveCount--;
-        rc.move(curDir);
+        moveRandom();
     }
 }
