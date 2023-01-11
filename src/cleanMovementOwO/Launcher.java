@@ -1,4 +1,4 @@
-package omegaASS;
+package cleanMovementOwO;
 
 import battlecode.common.*;
 public class Launcher extends Robot {
