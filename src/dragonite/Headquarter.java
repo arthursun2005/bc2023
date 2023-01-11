@@ -1,8 +1,9 @@
-package Betterbug;
+package dragonite;
 
 import battlecode.common.*;
+import static dragonite.RobotPlayer.*;
 
-public class Headquarter extends Robot {
+public class Headquarter {
 
     /**
      * Run a single turn for a Headquarters.
@@ -10,11 +11,7 @@ public class Headquarter extends Robot {
      */
 
     static Direction globalDir = Direction.CENTER;
-
-    public Headquarter(RobotController rc) throws GameActionException {
-        super(rc);
-    }
-    public void runUnit() throws GameActionException {
+    static void runHeadquarters(RobotController rc) throws GameActionException {
         if (!globalDir.equals(Direction.CENTER)) {
 
             Direction[] directions = {globalDir,

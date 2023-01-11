@@ -1,19 +1,14 @@
-package Betterbug;
+package dragonite;
 
 import battlecode.common.*;
-
-public class Launcher extends Robot {
+import static dragonite.RobotPlayer.*;
+public class Launcher {
     static MapLocation parentLoc = null;
     static int partnerID = -1;
 
     static MapLocation prevLocation = null;
     static Direction prevDirection = null;
-
-    public Launcher(RobotController rc) throws GameActionException {
-        super(rc);
-
-    }
-    public void runUnit() throws GameActionException {
+    static void runLauncher(RobotController rc) throws GameActionException {
         if (prevLocation == null) {
             prevLocation = rc.getLocation();
         } else if (!rc.getLocation().equals(prevLocation)) {

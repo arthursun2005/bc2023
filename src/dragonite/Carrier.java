@@ -1,8 +1,9 @@
-package Betterbug;
+package dragonite;
 
 import battlecode.common.*;
+import static dragonite.RobotPlayer.*;
 
-public class Carrier extends Robot {
+public class Carrier {
 
     static MapLocation minLoc = null;
     static MapLocation parentLoc = null;
@@ -10,12 +11,8 @@ public class Carrier extends Robot {
 
     static MapLocation prevLocation = null;
     static Direction prevDirection = null;
-
-    public Carrier(RobotController rc) throws GameActionException {
-        super(rc);
-    }
-
-    public void runUnit() throws GameActionException {
+    
+    static void runCarrier(RobotController rc) throws GameActionException {
         if (prevLocation == null) {
             prevLocation = rc.getLocation();
         } else if (!rc.getLocation().equals(prevLocation)) {
