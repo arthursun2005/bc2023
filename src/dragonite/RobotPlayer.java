@@ -23,6 +23,7 @@ public strictfp class RobotPlayer {
             case DESTABILIZER:
                 break;
             case AMPLIFIER:
+                robot = new Amplifier(rc);
                 break;
         }
 
