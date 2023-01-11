@@ -49,8 +49,18 @@ public abstract class Robot {
 
         // Does turn
         runUnit();
-
     }
 
     abstract void runUnit() throws GameActionException;
+
+    public void moveToLocation(MapLocation loc) throws GameActionException {
+        // CHECK IF MOVE IS VALID
+
+        while (rc.isMovementReady()) {
+            Direction dir = movement.tryMove(rc, loc, prevDirection);
+            if (dir != null && rc.canMove(dir)) {
+                rc.move(dir);
+            } else return;
+        }
+    }
 }
