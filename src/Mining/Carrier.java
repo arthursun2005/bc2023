@@ -1,19 +1,14 @@
-package bruh;
+package Mining;
 
 import battlecode.common.*;
-import static bruh.RobotPlayer.*;
 
 import java.util.ArrayList;
-
-public class Carrier {
+public class Carrier extends Robot {
 
     static MapLocation minLoc = null;
     static MapLocation parentLoc = null;
     static boolean takenAnchor = false;
-
-    static MapLocation prevLocation = null;
-    static Direction prevDirection = null;
-    static ArrayList<MapLocation> wells = new ArrayList<>(), seenWells = new ArrayList<>(); 
+    static ArrayList<MapLocation> wells = new ArrayList<>(), seenWells = new ArrayList<>();
     static int curWellSharedArray = 30;
     static int choice = 0;
     static int exploreturns = 0;
@@ -34,7 +29,7 @@ public class Carrier {
         if (!rc.canWriteSharedArray(0, 0)) return;
         for (MapLocation newWell : seenWells) {
             if (!isWell[newWell.x][newWell.y] && curWellSharedArray < 64) {
-                isWell[newWell.x][newWell.y] = true;    
+                isWell[newWell.x][newWell.y] = true;
                 rc.writeSharedArray(curWellSharedArray, newWell.x+1);
                 rc.writeSharedArray(curWellSharedArray+1, newWell.y+1);
                 curWellSharedArray += 2;
@@ -43,13 +38,11 @@ public class Carrier {
         seenWells.clear();
     }
 
-    static void runCarrier(RobotController rc) throws GameActionException {
-        if (prevLocation == null) {
-            prevLocation = rc.getLocation();
-        } else if (!rc.getLocation().equals(prevLocation)) {
-            prevDirection = prevLocation.directionTo(rc.getLocation());
-            prevLocation = rc.getLocation();
-        }
+    public Carrier(RobotController rc) throws GameActionException {
+        super(rc);
+    }
+
+    public void runUnit() throws GameActionException {
 
         if (parentLoc == null) {
             RobotInfo[] friends = rc.senseNearbyRobots(42069,rc.getTeam());
@@ -70,7 +63,6 @@ public class Carrier {
                 }
             }
         }
-
         MapLocation me = rc.getLocation();
         if (rc.getAnchor() == null) {
             for (int dx = -1; dx <= 1; dx++) {
@@ -84,6 +76,11 @@ public class Carrier {
                 }
             }
         }
+        if (rc.getAnchor() == null && takenAnchor == false) {
+            rc.setIndicatorString("Trying to move to " + parentLoc);
+            moveToLocation(parentLoc);
+            return;
+        }
 
         if (rc.getAnchor() != null) {
             if ((rc.senseIsland(rc.getLocation()) != -1) && rc.senseTeamOccupyingIsland(rc.senseIsland(rc.getLocation())) != rc.getTeam() &&rc.canPlaceAnchor()) {
@@ -96,14 +93,7 @@ public class Carrier {
             System.out.println(minLoc + " " + " loc! " + rc.getRoundNum());
 
             if (minLoc != null) {
-                Direction dir = Movement.tryMove(rc, minLoc, prevDirection);
-                if (dir == null) {
-                    System.out.println("null somehow");
-                    minLoc = null;
-                } else if (rc.canMove(dir)){
-                    rc.move(dir);
-                    return;
-                }
+                moveToLocation(minLoc);
             }
             // If I have an anchor singularly focus on getting it to the first island I see
             int[] islands = rc.senseNearbyIslands();
@@ -121,45 +111,14 @@ public class Carrier {
             }
             if (mini!=42069) {
 
-                Direction dir = Movement.tryMove(rc, minLoc, prevDirection);
-                if (dir == null) {
-                    minLoc = null;
-                } else if (rc.canMove(dir)){
-                    rc.move(dir);
-                    return;
-                }
+                moveToLocation(minLoc);
+
             }
             else {
+                System.out.println("Current direction " + curDir);
                 System.out.println(rc.getRoundNum() + " " + " reached!");
-                if (!rc.isMovementReady()) return;
-                if (moveCount==0 || !rc.canMove(curDir)) {
-                    moveCount=4;
-                    Direction newDirects[] = {
-                            curDir,
-                            curDir.rotateRight(),
-                            curDir.rotateLeft(),
-                            curDir.rotateRight().rotateRight(),
-                            curDir.rotateLeft().rotateLeft(),
-                    };
-                    for (int i=0; i<20; i++) {
-                        curDir = newDirects[rng.nextInt(newDirects.length)];
-                        if (rc.canMove(curDir)) {
-                            rc.move(curDir);
-                            return;
-                        }
-                    }
-                    while (true) {
-                        curDir = directions[rng.nextInt(directions.length)];
-                        if (rc.canMove(curDir)) {
-                            rc.move(curDir);
-                            return;
-                        }
-                    }
-                }
-                moveCount--;
-                if (rc.canMove(curDir)) {
-                    rc.move(curDir);
-                }
+
+                moveRandom();
             }
         } else {
             System.out.println("HHHHHHHHHHHHHIIIIIIIIIIIIIIIIIIIII");
@@ -184,11 +143,11 @@ public class Carrier {
                 // Explore, find a new well
                 exploreturns++;
                 Direction newDirects[] = {
-                    curDir,
-                    curDir.rotateRight(),
-                    curDir.rotateLeft(),
-                    curDir.rotateRight().rotateRight(),
-                    curDir.rotateLeft().rotateLeft(),
+                        curDir,
+                        curDir.rotateRight(),
+                        curDir.rotateLeft(),
+                        curDir.rotateRight().rotateRight(),
+                        curDir.rotateLeft().rotateLeft(),
                 };
                 curDir = newDirects[rng.nextInt(newDirects.length)];
                 for (int i=0; i<6; i++) {
@@ -216,12 +175,7 @@ public class Carrier {
                 rc.setIndicatorString("Going to well " + target.toString() + " " + choice + " " + wells.size() + " " + rc.getLocation().isWithinDistanceSquared(target, 1));
                 System.out.println(rc.getRoundNum());
                 while (!rc.getLocation().isWithinDistanceSquared(target, 1)) {
-                    Direction dir = Movement.tryMove(rc, target, prevDirection);
-                    if (dir != null && rc.canMove(dir)) {
-                        rc.move(dir);
-                    } else {
-                        break;
-                    }
+                    moveToLocation(target);
                 }
             }
 
@@ -239,13 +193,9 @@ public class Carrier {
             }
             if (mined) {
                 while (!rc.getLocation().isWithinDistanceSquared(parentLoc, 1)) {
-                    Direction dir = Movement.tryMove(rc, parentLoc, prevDirection);
-                    if (dir != null && rc.canMove(dir)) {
-                        rc.move(dir);
-                    } else {
-                        break;
-                    }
+                    moveToLocation(parentLoc);
                 }
+
                 rc.setIndicatorString("Returning to HQ " + rc.getLocation().isWithinDistanceSquared(parentLoc, 1) + " " + (rc.getResourceAmount(ResourceType.ADAMANTIUM) + rc.getResourceAmount(ResourceType.MANA) + rc.getResourceAmount(ResourceType.ELIXIR)));
                 MapLocation curLoc = rc.getLocation();
                 if (curLoc.isWithinDistanceSquared(parentLoc, 1)) {
