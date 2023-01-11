@@ -48,7 +48,8 @@ public class Amplifier extends Robot {
                     arr[x][y] = 2;
 
                     // CHECK FOR CLOUD AFTER THIS
-
+                } else if (mapInfo.hasCloud()) {
+                    arr[x][y] = 3;
                 } else if (rc.sensePassability(loc)) {
                     arr[x][y] = 4;
                 } else {
