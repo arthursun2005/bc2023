@@ -76,11 +76,11 @@ public class Carrier extends Robot {
                 }
             }
         }
-        if (rc.getAnchor() == null && takenAnchor == false) {
+        /*if (rc.getAnchor() == null && takenAnchor == false) {
             rc.setIndicatorString("Trying to move to " + parentLoc);
             moveToLocation(parentLoc);
             return;
-        }
+        }*/
 
         if (rc.getAnchor() != null) {
             if ((rc.senseIsland(rc.getLocation()) != -1) && rc.senseTeamOccupyingIsland(rc.senseIsland(rc.getLocation())) != rc.getTeam() &&rc.canPlaceAnchor()) {
@@ -120,6 +120,7 @@ public class Carrier extends Robot {
 
                 moveRandom();
             }
+            return;
         } else {
             System.out.println("HHHHHHHHHHHHHIIIIIIIIIIIIIIIIIIIII");
             // I guess I'll try to find a well?
@@ -142,7 +143,7 @@ public class Carrier extends Robot {
                 System.out.println("EXPLORINGGgGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG\n");
                 // Explore, find a new well
                 exploreturns++;
-                Direction newDirects[] = {
+                /*Direction newDirects[] = {
                         curDir,
                         curDir.rotateRight(),
                         curDir.rotateLeft(),
@@ -161,6 +162,14 @@ public class Carrier extends Robot {
                             seenWells.add(loc);
                         }
                     }
+                }*/
+                moveRandom();
+                WellInfo[] nearbyWells = rc.senseNearbyWells();
+                for (int j=0; j<nearbyWells.length; j++) {;
+                    WellInfo testing = nearbyWells[j];
+                    MapLocation loc = testing.getMapLocation();
+                    target = loc;
+                    seenWells.add(loc);
                 }
                 if (target == null) {
                     rc.setIndicatorString("Exploring");
@@ -174,25 +183,24 @@ public class Carrier extends Robot {
             if (!mined && !rc.getLocation().isWithinDistanceSquared(target, 1)) {
                 rc.setIndicatorString("Going to well " + target.toString() + " " + choice + " " + wells.size() + " " + rc.getLocation().isWithinDistanceSquared(target, 1));
                 System.out.println(rc.getRoundNum());
-                while (!rc.getLocation().isWithinDistanceSquared(target, 1)) {
+                if (!rc.getLocation().isWithinDistanceSquared(target, 1)) {
                     moveToLocation(target);
                 }
             }
 
             rc.setIndicatorString("nothing to do " + target.toString() + " " + mined + " " + rc.getLocation().isWithinDistanceSquared(target, 1) + " " + rc.canCollectResource(target, 1) + " " + rc.getActionCooldownTurns() + " " + (rc.getResourceAmount(ResourceType.ADAMANTIUM) + rc.getResourceAmount(ResourceType.MANA) + rc.getResourceAmount(ResourceType.ELIXIR)));
 
-            while (!mined && rc.getLocation().isWithinDistanceSquared(target, 1) && rc.canCollectResource(target, 1)) {
+            if (!mined && rc.getLocation().isWithinDistanceSquared(target, 1) && rc.canCollectResource(target, 1)) {
                 System.out.println("MINININININININININING");
                 rc.setIndicatorString("Mining");
                 rc.collectResource(target, -1);
                 holding = rc.getResourceAmount(ResourceType.ADAMANTIUM) + rc.getResourceAmount(ResourceType.MANA) + rc.getResourceAmount(ResourceType.ELIXIR);
                 if (holding == GameConstants.CARRIER_CAPACITY) {
                     mined = true;
-                    break;
                 }
             }
             if (mined) {
-                while (!rc.getLocation().isWithinDistanceSquared(parentLoc, 1)) {
+                if (!rc.getLocation().isWithinDistanceSquared(parentLoc, 1)) {
                     moveToLocation(parentLoc);
                 }
 

@@ -50,19 +50,19 @@ public class Movement {
 
             if (turningLeft) {
                 for (int i = 0; i < 8; i++) {
-                    if (rc.onTheMap(currentLocation.add(checkDir)) && rc.canSenseRobotAtLocation(currentLocation.add(checkDir))
+                    /*if (rc.onTheMap(currentLocation.add(checkDir)) && rc.canSenseRobotAtLocation(currentLocation.add(checkDir))
                             && rc.senseRobotAtLocation(currentLocation.add(checkDir)).getTeam() == rc.getTeam().opponent())  {
                         return Direction.CENTER;
-                    }
+                    }*/
                     if (canMove(checkDir)) break;
                     checkDir = checkDir.rotateRight();
                 }
             } else {
                 for (int i = 0; i < 8; i++) {
-                    if (rc.onTheMap(currentLocation.add(checkDir)) && rc.canSenseRobotAtLocation(currentLocation.add(checkDir))
+                    /*if (rc.onTheMap(currentLocation.add(checkDir)) && rc.canSenseRobotAtLocation(currentLocation.add(checkDir))
                             && rc.senseRobotAtLocation(currentLocation.add(checkDir)).getTeam() == rc.getTeam().opponent())  {
                         return Direction.CENTER;
-                    }
+                    }*/
                     if (canMove(checkDir)) break;
                     checkDir = checkDir.rotateLeft();
                 }
@@ -96,10 +96,10 @@ public class Movement {
                 return alongWall(desired);
             }
 
-            if (rc.onTheMap(currentLocation.add(checkDir)) && rc.canSenseRobotAtLocation(currentLocation.add(checkDir))
+            /*if (rc.onTheMap(currentLocation.add(checkDir)) && rc.canSenseRobotAtLocation(currentLocation.add(checkDir))
                     && rc.senseRobotAtLocation(currentLocation.add(checkDir)).getTeam() == rc.getTeam().opponent())  {
                 return Direction.CENTER;
-            }
+            }*/
             if (canMove(checkDir)) {
                 break;
             }
@@ -118,10 +118,10 @@ public class Movement {
         Direction left = togo.rotateLeft();
         Direction right = togo.rotateRight();
 
-        if (rc.onTheMap(currentLocation.add(togo)) && rc.canSenseRobotAtLocation(currentLocation.add(togo))
+        /*if (rc.onTheMap(currentLocation.add(togo)) && rc.canSenseRobotAtLocation(currentLocation.add(togo))
                 && rc.senseRobotAtLocation(currentLocation.add(togo)).getTeam() == rc.getTeam().opponent())  {
             return Direction.CENTER;
-        }
+        }*/
         if (canMove(togo)) {
             return togo;
         }

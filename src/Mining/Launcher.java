@@ -23,7 +23,7 @@ public class Launcher extends Robot {
             }
         }
 
-        if (partnerID == -1) {
+        /*if (partnerID == -1) {
             int mini=42069;
             int best=0;
             for (int i=0; i<10; i++) {
@@ -40,7 +40,7 @@ public class Launcher extends Robot {
             if (rc.canWriteSharedArray(best,0)) {
                 rc.writeSharedArray(best,0);
             }
-        }
+        }*/
         // Try to attack someone
         int radius = rc.getType().actionRadiusSquared;
         Team opponent = rc.getTeam().opponent();
@@ -62,7 +62,7 @@ public class Launcher extends Robot {
             }
             return;
         }
-        // should probably put this in a function
+        
         moveRandom();
     }
 }
