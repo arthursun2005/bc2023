@@ -1,4 +1,4 @@
-package omegaASS;
+package amplifier;
 
 import battlecode.common.*;
 
@@ -8,8 +8,7 @@ public class Carrier extends Robot {
     static MapLocation parentLoc = null;
     static boolean takenAnchor = false;
 
-    static MapLocation prevLocation = null;
-    static Direction prevDirection = null;
+
 
     static boolean canMove(Direction desired) throws GameActionException {
         return rc.canMove(desired) && !rc.senseMapInfo(rc.getLocation().add(desired)).getCurrentDirection().equals(desired.opposite());
@@ -19,12 +18,6 @@ public class Carrier extends Robot {
     }
 
     public void runUnit() throws GameActionException {
-        if (prevLocation == null) {
-            prevLocation = rc.getLocation();
-        } else if (!rc.getLocation().equals(prevLocation)) {
-            prevDirection = prevLocation.directionTo(rc.getLocation());
-            prevLocation = rc.getLocation();
-        }
 
         if (parentLoc == null) {
             RobotInfo[] friends = rc.senseNearbyRobots(42069,rc.getTeam());
@@ -114,33 +107,8 @@ public class Carrier extends Robot {
             else {
                 System.out.println("Current direction " + curDir);
                 System.out.println(rc.getRoundNum() + " " + " reached!");
-                if (!rc.isMovementReady()) return;
-                if (moveCount==0 || !canMove(curDir)) {
-                    moveCount=4;
-                    Direction newDirects[] = {
-                            curDir,
-                            curDir.rotateRight(),
-                            curDir.rotateLeft(),
-                            curDir.rotateRight().rotateRight(),
-                            curDir.rotateLeft().rotateLeft(),
-                    };
-                    for (int i=0; i<20; i++) {
-                        curDir = newDirects[rng.nextInt(newDirects.length)];
-                        if (canMove(curDir)) {
-                            rc.move(curDir);
-                            return;
-                        }
-                    }
-                    while (true) {
-                        curDir = directions[rng.nextInt(directions.length)];
-                        if (canMove(curDir)) {
-                            rc.move(curDir);
-                            return;
-                        }
-                    }
-                }
-                moveCount--;
-                rc.move(curDir);
+
+                moveRandom();
             }
         }
     }

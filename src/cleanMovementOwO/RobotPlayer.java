@@ -1,9 +1,8 @@
-package Betterbug;
+package cleanMovementOwO;
 
-import battlecode.common.Clock;
-import battlecode.common.GameActionException;
-import battlecode.common.MapLocation;
-import battlecode.common.RobotController;
+import battlecode.common.*;
+
+import java.util.Random;
 
 /**
  * RobotPlayer is the class that describes your main robot strategy.
@@ -79,7 +78,6 @@ public strictfp class RobotPlayer {
             } catch (Exception e) {
                 System.out.println(rc.getType() + " Exception");
                 e.printStackTrace();
-
             } finally {
                 Clock.yield();
             }

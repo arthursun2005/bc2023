@@ -1,4 +1,4 @@
-package Betterbug;
+package cleanMovementOwO;
 
 import battlecode.common.*;
 
@@ -8,20 +8,16 @@ public class Carrier extends Robot {
     static MapLocation parentLoc = null;
     static boolean takenAnchor = false;
 
-    static MapLocation prevLocation = null;
-    static Direction prevDirection = null;
 
+
+    static boolean canMove(Direction desired) throws GameActionException {
+        return rc.canMove(desired) && !rc.senseMapInfo(rc.getLocation().add(desired)).getCurrentDirection().equals(desired.opposite());
+    }
     public Carrier(RobotController rc) throws GameActionException {
         super(rc);
     }
 
     public void runUnit() throws GameActionException {
-        if (prevLocation == null) {
-            prevLocation = rc.getLocation();
-        } else if (!rc.getLocation().equals(prevLocation)) {
-            prevDirection = prevLocation.directionTo(rc.getLocation());
-            prevLocation = rc.getLocation();
-        }
 
         if (parentLoc == null) {
             RobotInfo[] friends = rc.senseNearbyRobots(42069,rc.getTeam());
@@ -80,7 +76,7 @@ public class Carrier extends Robot {
                     System.out.println("null somehow");
                     minLoc = null;
                 } else {
-                    rc.move(dir);
+                    if (rc.canMove(dir)) rc.move(dir);
                     return;
                 }
             }
@@ -109,9 +105,10 @@ public class Carrier extends Robot {
                 }
             }
             else {
+                System.out.println("Current direction " + curDir);
                 System.out.println(rc.getRoundNum() + " " + " reached!");
                 if (!rc.isMovementReady()) return;
-                if (moveCount==0 || !rc.canMove(curDir)) {
+                if (moveCount==0 || !canMove(curDir)) {
                     moveCount=4;
                     Direction newDirects[] = {
                             curDir,
@@ -122,14 +119,14 @@ public class Carrier extends Robot {
                     };
                     for (int i=0; i<20; i++) {
                         curDir = newDirects[rng.nextInt(newDirects.length)];
-                        if (rc.canMove(curDir)) {
+                        if (canMove(curDir)) {
                             rc.move(curDir);
                             return;
                         }
                     }
                     while (true) {
                         curDir = directions[rng.nextInt(directions.length)];
-                        if (rc.canMove(curDir)) {
+                        if (canMove(curDir)) {
                             rc.move(curDir);
                             return;
                         }

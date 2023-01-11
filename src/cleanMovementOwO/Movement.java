@@ -1,4 +1,4 @@
-package omegaASS;
+package cleanMovementOwO;
 
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
@@ -35,7 +35,6 @@ public class Movement {
 //        }
 
         if (shouldRight) {
-            rc.setIndicatorString("YAY");
             Direction checkDir = lastDirection;
 
             if (lastDirection == Direction.CENTER) {
@@ -164,13 +163,12 @@ public class Movement {
 
         // bruh rip
 */
-        return null;
+        return Direction.CENTER;
     }
 
     static MapLocation prevLocation = null;
 
     static Direction tryMove(RobotController rc, MapLocation currentTarget, Direction previous) throws GameActionException {
-        System.out.println("CALLED");
         if (previous != null && lastDirection == Direction.CENTER) lastDirection = previous;
         else {
             if (prevLocation == null) {
@@ -180,10 +178,9 @@ public class Movement {
                 prevLocation = rc.getLocation();
             }
         }
-        rc.setIndicatorString("STATE" + currentState);
         if (lastDirection == Direction.CENTER) lastDirection = Direction.NORTH;
 
-        if (!rc.isMovementReady()) return null;
+        if (!rc.isMovementReady()) return Direction.CENTER;
         Movement.rc = rc;
 
         if (oldTarget == null) oldTarget = currentTarget;
@@ -198,7 +195,7 @@ public class Movement {
 
         currentLocation = rc.getLocation();
         Direction togo = currentLocation.directionTo(oldTarget);
-        if (togo.equals(Direction.CENTER)) return null;
+        if (togo.equals(Direction.CENTER)) return Direction.CENTER;
 
         if (currentState.equals(State.WALL)) {
             if (currentLocation.distanceSquaredTo(oldTarget) < lastWall.distanceSquaredTo(oldTarget)) {
@@ -219,7 +216,6 @@ public class Movement {
 
             // cant go forwards
 
-            rc.setIndicatorString("WALL");
             currentState = State.WALL;
             switchable = true;
             lastWall = currentLocation;
@@ -232,7 +228,7 @@ public class Movement {
             return lastDirection = nextMove;
         }
 
-        return null;
+        return Direction.CENTER;
     }
 
 }

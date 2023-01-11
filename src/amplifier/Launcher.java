@@ -1,24 +1,14 @@
-package omegaASS;
+package amplifier;
 
 import battlecode.common.*;
 public class Launcher extends Robot {
     static MapLocation parentLoc = null;
     static int partnerID = -1;
-
-    static MapLocation prevLocation = null;
-    static Direction prevDirection = null;
-
     public Launcher(RobotController rc) throws GameActionException {
         super(rc);
 
     }
     public void runUnit() throws GameActionException {
-        if (prevLocation == null) {
-            prevLocation = rc.getLocation();
-        } else if (!rc.getLocation().equals(prevLocation)) {
-            prevDirection = prevLocation.directionTo(rc.getLocation());
-            prevLocation = rc.getLocation();
-        }
 
         if (parentLoc == null) {
             RobotInfo[] friends = rc.senseNearbyRobots(42069,rc.getTeam());
@@ -28,7 +18,6 @@ public class Launcher extends Robot {
                     if (rc.getLocation().distanceSquaredTo(friend.location)<mini) {
                         mini = rc.getLocation().distanceSquaredTo(friend.location);
                         parentLoc = friend.location;
-                        rc.setIndicatorString("parentLoc " + parentLoc);
                     }
                 }
             }
@@ -60,7 +49,6 @@ public class Launcher extends Robot {
             for (RobotInfo enemy : enemies) {
                 MapLocation toAttack = enemy.location;
                 if (rc.canAttack(toAttack)) {
-                    rc.setIndicatorString("Attacking");
                     rc.attack(toAttack);
                     return;
                 }
@@ -68,39 +56,13 @@ public class Launcher extends Robot {
         }
         if (rc.canSenseRobot(partnerID)) {
             RobotInfo partner = rc.senseRobot(partnerID);
-            Direction dir = Movement.tryMove(rc, partner.location,prevDirection);
+            Direction dir = Movement.tryMove(rc, partner.location, prevDirection);
             if (dir != null && rc.canMove(dir)) {
                 rc.move(dir);
             }
             return;
         }
         // should probably put this in a function
-        if (!rc.isMovementReady()) return;
-        if (moveCount==0 || !rc.canMove(curDir)) {
-            moveCount=4;
-            Direction newDirects[] = {
-                    curDir,
-                    curDir.rotateRight(),
-                    curDir.rotateLeft(),
-                    curDir.rotateRight().rotateRight(),
-                    curDir.rotateLeft().rotateLeft(),
-            };
-            for (int i=0; i<20; i++) {
-                curDir = newDirects[rng.nextInt(newDirects.length)];
-                if (rc.canMove(curDir)) {
-                    rc.move(curDir);
-                    return;
-                }
-            }
-            while (true) {
-                curDir = directions[rng.nextInt(directions.length)];
-                if (rc.canMove(curDir)) {
-                    rc.move(curDir);
-                    return;
-                }
-            }
-        }
-        moveCount--;
-        rc.move(curDir);
+        moveRandom();
     }
 }

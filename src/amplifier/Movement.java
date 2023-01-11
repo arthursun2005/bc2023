@@ -1,4 +1,4 @@
-package omegaASS;
+package amplifier;
 
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
@@ -35,7 +35,6 @@ public class Movement {
 //        }
 
         if (shouldRight) {
-            rc.setIndicatorString("YAY");
             Direction checkDir = lastDirection;
 
             if (lastDirection == Direction.CENTER) {
@@ -170,7 +169,6 @@ public class Movement {
     static MapLocation prevLocation = null;
 
     static Direction tryMove(RobotController rc, MapLocation currentTarget, Direction previous) throws GameActionException {
-        System.out.println("CALLED");
         if (previous != null && lastDirection == Direction.CENTER) lastDirection = previous;
         else {
             if (prevLocation == null) {
@@ -180,7 +178,6 @@ public class Movement {
                 prevLocation = rc.getLocation();
             }
         }
-        rc.setIndicatorString("STATE" + currentState);
         if (lastDirection == Direction.CENTER) lastDirection = Direction.NORTH;
 
         if (!rc.isMovementReady()) return null;
@@ -219,7 +216,6 @@ public class Movement {
 
             // cant go forwards
 
-            rc.setIndicatorString("WALL");
             currentState = State.WALL;
             switchable = true;
             lastWall = currentLocation;

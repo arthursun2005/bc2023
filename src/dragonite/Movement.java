@@ -1,4 +1,4 @@
-package omegaASS;
+package dragonite;
 
 import battlecode.common.Direction;
 import battlecode.common.GameActionException;
@@ -9,6 +9,7 @@ enum State {
     WALL,
     NORMAL
 }
+
 public class Movement {
 
     static MapLocation oldTarget;
@@ -22,15 +23,8 @@ public class Movement {
     static boolean turningLeft = true;
     static boolean shouldRight = true;
 
-    static boolean switchable = false;
-
-    static boolean canMove(Direction desired) throws GameActionException {
-        if (currentState == State.WALL) return rc.canMove(desired) && rc.senseMapInfo(currentLocation.add(desired)).getCurrentDirection().equals(Direction.CENTER);
-        return rc.canMove(desired) && !rc.senseMapInfo(currentLocation.add(desired)).getCurrentDirection().equals(desired.opposite());
-    }
-
     static Direction alongWall(Direction desired) throws GameActionException {
-//        if (canMove(desired)) {
+//        if (rc.canMove(desired)) {
 //            return desired;
 //        }
 
@@ -55,7 +49,7 @@ public class Movement {
                             && rc.senseRobotAtLocation(currentLocation.add(checkDir)).getTeam() == rc.getTeam().opponent())  {
                         return Direction.CENTER;
                     }
-                    if (canMove(checkDir)) break;
+                    if (rc.canMove(checkDir)) break;
                     checkDir = checkDir.rotateRight();
                 }
             } else {
@@ -64,7 +58,7 @@ public class Movement {
                             && rc.senseRobotAtLocation(currentLocation.add(checkDir)).getTeam() == rc.getTeam().opponent())  {
                         return Direction.CENTER;
                     }
-                    if (canMove(checkDir)) break;
+                    if (rc.canMove(checkDir)) break;
                     checkDir = checkDir.rotateLeft();
                 }
             }
@@ -76,9 +70,9 @@ public class Movement {
 
         Direction checkDir = lastDirection;
 
-        /*if (!rc.onTheMap(currentLocation.add(checkDir))) {
+        if (!rc.onTheMap(currentLocation.add(checkDir))) {
             turningLeft = !turningLeft;
-        }*/
+        }
 
         if (turningLeft) {
             checkDir = checkDir.rotateLeft().rotateLeft();
@@ -88,20 +82,18 @@ public class Movement {
 
 
         for (int i = 0; i < 8; i++) {
-            MapLocation temp = currentLocation.add(checkDir);
-
-            if (!rc.onTheMap(temp) && switchable) {
-                turningLeft = !turningLeft;
-                lastDirection = lastDirection.opposite();
-                switchable = false;
-                return alongWall(desired);
-            }
+//            MapLocation temp = currentLocation.add(checkDir);
+//            if (!rc.onTheMap(temp)) {
+//                turningLeft = !turningLeft;
+//                lastDirection = lastDirection.opposite();
+//                return alongWall(desired);
+//            }
 
             if (rc.onTheMap(currentLocation.add(checkDir)) && rc.canSenseRobotAtLocation(currentLocation.add(checkDir))
                     && rc.senseRobotAtLocation(currentLocation.add(checkDir)).getTeam() == rc.getTeam().opponent())  {
                 return Direction.CENTER;
             }
-            if (canMove(checkDir)) {
+            if (rc.canMove(checkDir)) {
                 break;
             }
 
@@ -123,10 +115,10 @@ public class Movement {
                 && rc.senseRobotAtLocation(currentLocation.add(togo)).getTeam() == rc.getTeam().opponent())  {
             return Direction.CENTER;
         }
-        if (canMove(togo)) {
+        if (rc.canMove(togo)) {
             return togo;
         }
-/*
+
         MapLocation tryLeft = currentLocation.add(left);
         MapLocation tryRight = currentLocation.add(right);
 
@@ -135,14 +127,14 @@ public class Movement {
                     && rc.senseRobotAtLocation(currentLocation.add(left)).getTeam() == rc.getTeam().opponent())  {
                 return Direction.CENTER;
             }
-            if (canMove(left)) {
+            if (rc.canMove(left)) {
                 return left;
             }
             if (rc.onTheMap(currentLocation.add(right)) && rc.canSenseRobotAtLocation(currentLocation.add(right))
                     && rc.senseRobotAtLocation(currentLocation.add(right)).getTeam() == rc.getTeam().opponent())  {
                 return Direction.CENTER;
             }
-            if (canMove(right)) {
+            if (rc.canMove(right)) {
                 return right;
             }
         } else {
@@ -150,38 +142,24 @@ public class Movement {
                     && rc.senseRobotAtLocation(currentLocation.add(right)).getTeam() == rc.getTeam().opponent())  {
                 return Direction.CENTER;
             }
-            if (canMove(right)) {
+            if (rc.canMove(right)) {
                 return right;
             }
             if (rc.onTheMap(currentLocation.add(left)) && rc.canSenseRobotAtLocation(currentLocation.add(left))
                     && rc.senseRobotAtLocation(currentLocation.add(left)).getTeam() == rc.getTeam().opponent())  {
                 return Direction.CENTER;
             }
-            if (canMove(left)) {
+            if (rc.canMove(left)) {
                 return left;
             }
         }
 
         // bruh rip
-*/
+
         return null;
     }
-
-    static MapLocation prevLocation = null;
-
     static Direction tryMove(RobotController rc, MapLocation currentTarget, Direction previous) throws GameActionException {
-        System.out.println("CALLED");
         if (previous != null && lastDirection == Direction.CENTER) lastDirection = previous;
-        else {
-            if (prevLocation == null) {
-                prevLocation = rc.getLocation();
-            } else if (!rc.getLocation().equals(prevLocation)) {
-                lastDirection = prevLocation.directionTo(rc.getLocation());
-                prevLocation = rc.getLocation();
-            }
-        }
-        rc.setIndicatorString("STATE" + currentState);
-        if (lastDirection == Direction.CENTER) lastDirection = Direction.NORTH;
 
         if (!rc.isMovementReady()) return null;
         Movement.rc = rc;
@@ -210,18 +188,12 @@ public class Movement {
 
         if (currentState.equals(State.NORMAL)) {
             Direction nextMove = normal(togo);
-            if (nextMove != null) {
-                return lastDirection = nextMove;
-            }
-            else {
-                lastDirection = togo;
-            }
+            if (nextMove != null) return lastDirection = nextMove;
 
             // cant go forwards
 
             rc.setIndicatorString("WALL");
             currentState = State.WALL;
-            switchable = true;
             lastWall = currentLocation;
             shouldRight = true;
         }

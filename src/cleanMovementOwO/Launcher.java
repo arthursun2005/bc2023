@@ -1,24 +1,14 @@
-package omegaASS;
+package cleanMovementOwO;
 
 import battlecode.common.*;
 public class Launcher extends Robot {
     static MapLocation parentLoc = null;
     static int partnerID = -1;
-
-    static MapLocation prevLocation = null;
-    static Direction prevDirection = null;
-
     public Launcher(RobotController rc) throws GameActionException {
         super(rc);
 
     }
     public void runUnit() throws GameActionException {
-        if (prevLocation == null) {
-            prevLocation = rc.getLocation();
-        } else if (!rc.getLocation().equals(prevLocation)) {
-            prevDirection = prevLocation.directionTo(rc.getLocation());
-            prevLocation = rc.getLocation();
-        }
 
         if (parentLoc == null) {
             RobotInfo[] friends = rc.senseNearbyRobots(42069,rc.getTeam());
@@ -28,7 +18,6 @@ public class Launcher extends Robot {
                     if (rc.getLocation().distanceSquaredTo(friend.location)<mini) {
                         mini = rc.getLocation().distanceSquaredTo(friend.location);
                         parentLoc = friend.location;
-                        rc.setIndicatorString("parentLoc " + parentLoc);
                     }
                 }
             }
@@ -60,7 +49,6 @@ public class Launcher extends Robot {
             for (RobotInfo enemy : enemies) {
                 MapLocation toAttack = enemy.location;
                 if (rc.canAttack(toAttack)) {
-                    rc.setIndicatorString("Attacking");
                     rc.attack(toAttack);
                     return;
                 }
@@ -68,10 +56,7 @@ public class Launcher extends Robot {
         }
         if (rc.canSenseRobot(partnerID)) {
             RobotInfo partner = rc.senseRobot(partnerID);
-            Direction dir = Movement.tryMove(rc, partner.location,prevDirection);
-            if (dir != null && rc.canMove(dir)) {
-                rc.move(dir);
-            }
+            moveToLocation(partner.location);
             return;
         }
         // should probably put this in a function
