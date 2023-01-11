@@ -28,7 +28,6 @@ public class Launcher extends Robot {
                     if (rc.getLocation().distanceSquaredTo(friend.location)<mini) {
                         mini = rc.getLocation().distanceSquaredTo(friend.location);
                         parentLoc = friend.location;
-                        rc.setIndicatorString("parentLoc " + parentLoc);
                     }
                 }
             }
@@ -60,7 +59,6 @@ public class Launcher extends Robot {
             for (RobotInfo enemy : enemies) {
                 MapLocation toAttack = enemy.location;
                 if (rc.canAttack(toAttack)) {
-                    rc.setIndicatorString("Attacking");
                     rc.attack(toAttack);
                     return;
                 }
