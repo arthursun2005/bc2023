@@ -1,4 +1,4 @@
-package omegaASS;
+package Betterbug;
 
 import battlecode.common.*;
 
@@ -11,9 +11,6 @@ public class Carrier extends Robot {
     static MapLocation prevLocation = null;
     static Direction prevDirection = null;
 
-    static boolean canMove(Direction desired) throws GameActionException {
-        return rc.canMove(desired) && !rc.senseMapInfo(rc.getLocation().add(desired)).getCurrentDirection().equals(desired.opposite());
-    }
     public Carrier(RobotController rc) throws GameActionException {
         super(rc);
     }
@@ -112,10 +109,9 @@ public class Carrier extends Robot {
                 }
             }
             else {
-                System.out.println("Current direction " + curDir);
                 System.out.println(rc.getRoundNum() + " " + " reached!");
                 if (!rc.isMovementReady()) return;
-                if (moveCount==0 || !canMove(curDir)) {
+                if (moveCount==0 || !rc.canMove(curDir)) {
                     moveCount=4;
                     Direction newDirects[] = {
                             curDir,
@@ -126,14 +122,14 @@ public class Carrier extends Robot {
                     };
                     for (int i=0; i<20; i++) {
                         curDir = newDirects[rng.nextInt(newDirects.length)];
-                        if (canMove(curDir)) {
+                        if (rc.canMove(curDir)) {
                             rc.move(curDir);
                             return;
                         }
                     }
                     while (true) {
                         curDir = directions[rng.nextInt(directions.length)];
-                        if (canMove(curDir)) {
+                        if (rc.canMove(curDir)) {
                             rc.move(curDir);
                             return;
                         }

@@ -22,8 +22,12 @@ public class Movement {
     static boolean turningLeft = true;
     static boolean shouldRight = true;
 
+    static boolean canMove(Direction desired) throws GameActionException {
+        return rc.canMove(desired) && !rc.senseMapInfo(currentLocation.add(desired)).getCurrentDirection().equals(desired.opposite());
+    }
+
     static Direction alongWall(Direction desired) throws GameActionException {
-//        if (rc.canMove(desired)) {
+//        if (canMove(desired)) {
 //            return desired;
 //        }
 
@@ -48,7 +52,7 @@ public class Movement {
                             && rc.senseRobotAtLocation(currentLocation.add(checkDir)).getTeam() == rc.getTeam().opponent())  {
                         return Direction.CENTER;
                     }
-                    if (rc.canMove(checkDir)) break;
+                    if (canMove(checkDir)) break;
                     checkDir = checkDir.rotateRight();
                 }
             } else {
@@ -57,7 +61,7 @@ public class Movement {
                             && rc.senseRobotAtLocation(currentLocation.add(checkDir)).getTeam() == rc.getTeam().opponent())  {
                         return Direction.CENTER;
                     }
-                    if (rc.canMove(checkDir)) break;
+                    if (canMove(checkDir)) break;
                     checkDir = checkDir.rotateLeft();
                 }
             }
@@ -92,7 +96,7 @@ public class Movement {
                     && rc.senseRobotAtLocation(currentLocation.add(checkDir)).getTeam() == rc.getTeam().opponent())  {
                 return Direction.CENTER;
             }
-            if (rc.canMove(checkDir)) {
+            if (canMove(checkDir)) {
                 break;
             }
 
@@ -114,7 +118,7 @@ public class Movement {
                 && rc.senseRobotAtLocation(currentLocation.add(togo)).getTeam() == rc.getTeam().opponent())  {
             return Direction.CENTER;
         }
-        if (rc.canMove(togo)) {
+        if (canMove(togo)) {
             return togo;
         }
 
@@ -126,14 +130,14 @@ public class Movement {
                     && rc.senseRobotAtLocation(currentLocation.add(left)).getTeam() == rc.getTeam().opponent())  {
                 return Direction.CENTER;
             }
-            if (rc.canMove(left)) {
+            if (canMove(left)) {
                 return left;
             }
             if (rc.onTheMap(currentLocation.add(right)) && rc.canSenseRobotAtLocation(currentLocation.add(right))
                     && rc.senseRobotAtLocation(currentLocation.add(right)).getTeam() == rc.getTeam().opponent())  {
                 return Direction.CENTER;
             }
-            if (rc.canMove(right)) {
+            if (canMove(right)) {
                 return right;
             }
         } else {
@@ -141,14 +145,14 @@ public class Movement {
                     && rc.senseRobotAtLocation(currentLocation.add(right)).getTeam() == rc.getTeam().opponent())  {
                 return Direction.CENTER;
             }
-            if (rc.canMove(right)) {
+            if (canMove(right)) {
                 return right;
             }
             if (rc.onTheMap(currentLocation.add(left)) && rc.canSenseRobotAtLocation(currentLocation.add(left))
                     && rc.senseRobotAtLocation(currentLocation.add(left)).getTeam() == rc.getTeam().opponent())  {
                 return Direction.CENTER;
             }
-            if (rc.canMove(left)) {
+            if (canMove(left)) {
                 return left;
             }
         }
@@ -158,6 +162,7 @@ public class Movement {
         return null;
     }
     static Direction tryMove(RobotController rc, MapLocation currentTarget, Direction previous) throws GameActionException {
+        System.out.println("CALLED");
         if (previous != null && lastDirection == Direction.CENTER) lastDirection = previous;
 
         if (!rc.isMovementReady()) return null;
