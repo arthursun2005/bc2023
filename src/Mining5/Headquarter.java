@@ -20,7 +20,8 @@ public class Headquarter extends Robot {
     }
 
     static int carrierCount = 0;
-
+    static int launcherCount = 0;
+    static int anchorCount = 0;
     static MapLocation getClosestMine() {
         WellInfo[] wells = rc.senseNearbyWells();
 
@@ -63,20 +64,32 @@ public class Headquarter extends Robot {
 ////                globalDir = dir;
 //            }
 //        }
-        if (rc.canBuildAnchor(Anchor.STANDARD) && rc.getRoundNum() >= 100) {
+        if (rc.canBuildAnchor(Anchor.STANDARD) && launcherCount + carrierCount >= 100 && anchorCount <= 2) {
             // If we can build an anchor do it!
+
+            if (!rc.canBuildAnchor(Anchor.STANDARD)) return;
             rc.buildAnchor(Anchor.STANDARD);
             rc.setIndicatorString("Building anchor! " + rc.getAnchor());
+            anchorCount++;
             return;
         }
 
         RobotType toMake = null;
-
-        if (rc.getResourceAmount(ResourceType.MANA)-rc.getResourceAmount(ResourceType.ADAMANTIUM) >= 60) {
+        if (rc.getRoundNum() <= 2) {
             toMake = RobotType.LAUNCHER;
+            launcherCount++;
         }
 
-        if (rc.getResourceAmount(ResourceType.ADAMANTIUM) >= 50 && (carrierCount < 40 || rc.getAnchor() != null) && (toMake == null || rng.nextInt(2) == 1)) {
+        if (toMake == null && (launcherCount * 2 <= carrierCount) && rc.getResourceAmount(ResourceType.MANA) >= 60) {
+            toMake = RobotType.LAUNCHER;
+            launcherCount++;
+        } else if (rc.getResourceAmount(ResourceType.MANA)-rc.getResourceAmount(ResourceType.ADAMANTIUM) >= 60) {
+            toMake = RobotType.LAUNCHER;
+            launcherCount++;
+            //should probably make sure we build anchors now
+        }
+
+        if (toMake == null && rc.getResourceAmount(ResourceType.ADAMANTIUM) >= 50) {
             toMake = RobotType.CARRIER;
             carrierCount++;
         }
