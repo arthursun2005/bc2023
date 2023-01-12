@@ -110,9 +110,9 @@ public class Carrier extends Robot {
                 target = null;
                 needInstruction = false;
                 mined = false;
-                choice = rng.nextInt(wells.size()+1);
-                if (choice != wells.size()) {
-                    target = wells.get(choice);
+                choice = rng.nextInt(allWells.size()+1);
+                if (choice != allWells.size()) {
+                    target = allWells.get(choice);
                     int ada = getCount(0), mana = getCount(1);
                     /*if (Math.abs(ada-mana) > 500 || rng.nextInt(10) == 0) {
                         // 10% chance to always choose the one with less
@@ -131,9 +131,9 @@ public class Carrier extends Robot {
 
                 exploreturns = 0;
             }
-            if (target == null && wells.size() > 0 && (exploreturns > 40 || rc.getRoundNum() > 500)) {
+            if (target == null && allWells.size() > 0 && (exploreturns > 40 || rc.getRoundNum() > 500)) {
                 // Didn't find anything within 40 rounds, change target
-                choice = rng.nextInt(wells.size());
+                choice = rng.nextInt(allWells.size());
                 exploreturns = 0;
             }
             if (target == null) {
@@ -161,28 +161,27 @@ public class Carrier extends Robot {
                 }*/
                 moveRandom();
                 WellInfo[] nearbyWells = rc.senseNearbyWells();
-                for (int j=0; j<nearbyWells.length; j++) {;
+                for (int j=0; j<nearbyWells.length; j++) {
                     WellInfo testing = nearbyWells[j];
                     MapLocation loc = testing.getMapLocation();
                     target = loc;
                 }
                 if (target == null) {
-                    rc.setIndicatorString("Exploring " + wells.size());
+                    rc.setIndicatorString("Exploring " + allWells.size());
                     return;
                 }
-            }   
-
+            } 
             int holding = rc.getWeight();
             if (!mined && !rc.getLocation().isWithinDistanceSquared(target, 1)) {
-                rc.setIndicatorString("Going to well " + getCount(0) + " " + getCount(1) + " " + getCount(2) + " " + target.toString() + " " + choice + " " + wells.size() + " " + rc.getLocation().isWithinDistanceSquared(target, 1) + " " + wells.size());
+                rc.setIndicatorString("Going to well " + getCount(0) + " " + getCount(1) + " " + getCount(2) + " " + target.toString() + " " + choice + " " + allWells.size() + " " + rc.getLocation().isWithinDistanceSquared(target, 1));
                 if (!rc.getLocation().isWithinDistanceSquared(target, 1)) {
                     moveToLocation(target);
                 }
             }
 
-            rc.setIndicatorString("nothing to do " + getCount(0) + " " + getCount(1) + " " + getCount(2) + " " + target.toString() + " " + target.toString() + " " + wells.size() + " " + mined + " " + rc.getLocation().isWithinDistanceSquared(target, 1) + " " + rc.canCollectResource(target, 1) + " " + rc.getActionCooldownTurns() + " " + rc.getWeight());
+            rc.setIndicatorString("nothing to do " + getCount(0) + " " + getCount(1) + " " + getCount(2) + " " + target.toString() + " " + target.toString() + " " + allWells.size() + " " + mined + " " + rc.getLocation().isWithinDistanceSquared(target, 1) + " " + rc.canCollectResource(target, 1) + " " + rc.getActionCooldownTurns() + " " + rc.getWeight());
             if (!mined && rc.getLocation().isWithinDistanceSquared(target, 1) && rc.canCollectResource(target, 1)) {
-                rc.setIndicatorString("Mining " + getCount(0) + " " + getCount(1) + " " + getCount(2) + " " + wells.size());
+                rc.setIndicatorString("Mining " + getCount(0) + " " + getCount(1) + " " + getCount(2) + " " + allWells.size());
                 rc.collectResource(target, -1);
                 holding = rc.getWeight();
                 if (holding == GameConstants.CARRIER_CAPACITY) {
@@ -194,7 +193,7 @@ public class Carrier extends Robot {
                     moveToLocation(parentLoc);
                 }
 
-                rc.setIndicatorString("Returning to HQ " + getCount(0) + " " + getCount(1) + " " + getCount(2) + " " + target.toString() + " " + wells.size() + " " + rc.getLocation().isWithinDistanceSquared(parentLoc, 1) + " " + rc.getWeight());
+                rc.setIndicatorString("Returning to HQ " + getCount(0) + " " + getCount(1) + " " + getCount(2) + " " + target.toString() + " " + allWells.size() + " " + rc.getLocation().isWithinDistanceSquared(parentLoc, 1) + " " + rc.getWeight());
                 MapLocation curLoc = rc.getLocation();
                 if (curLoc.isWithinDistanceSquared(parentLoc, 1)) {
                     int ada = rc.getResourceAmount(ResourceType.ADAMANTIUM), mana = rc.getResourceAmount(ResourceType.MANA), elixir = rc.getResourceAmount(ResourceType.ELIXIR);
