@@ -19,16 +19,19 @@ public strictfp class RobotPlayer {
                 robot = new Launcher(rc);
                 break;
             case BOOSTER:
+                robot = new Booster(rc);
                 break;
             case DESTABILIZER:
                 break;
             case AMPLIFIER:
+                robot = new Amplifier(rc);
                 break;
         }
 
         while (true) {
             try {
                 if (robot != null) {
+                    robot.prepare();
                     robot.run();
                 }
             } catch (GameActionException e) {
