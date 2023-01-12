@@ -19,11 +19,8 @@ public class Headquarter extends Robot {
 
     }
 
-    static int carrierCount = 0;
-    static int launcherCount = 0;
     static int anchorCount = 0;
     static MapLocation getClosestMine() {
-        WellInfo[] wells = rc.senseNearbyWells();
 
         // IS THIS A BUG ?????
         // IS THIS A BUG ?????
@@ -38,16 +35,16 @@ public class Headquarter extends Robot {
 
         int closestDist = 1_000_000, closestIdx = -1;
 
-        for (int i = 0; i < wells.length; i++) {
+        for (int i = 0; i < wellUtility.wells.size(); i++) {
             // guaranteed to be one
-            int dist = wells[i].getMapLocation().distanceSquaredTo(rc.getLocation());
+            int dist = wellUtility.wells.get(i).distanceSquaredTo(rc.getLocation());
             if (dist < closestDist) {
                 closestDist = dist;
                 closestIdx = i;
             }
         }
 
-        return wells[closestIdx].getMapLocation();
+        return wellUtility.wells.get(closestIdx);
     }
 
     public void runUnit() throws GameActionException {
@@ -64,6 +61,15 @@ public class Headquarter extends Robot {
 ////                globalDir = dir;
 //            }
 //        }
+
+        int launcherCount = communication.readLauncherCount();
+        int carrierCount = communication.readCarrierCount();
+
+        System.out.println(launcherCount + " count  " + carrierCount);
+
+        if (rc.getRoundNum() == 1000) {
+            rc.resign();
+        }
         if (rc.canBuildAnchor(Anchor.STANDARD) && launcherCount + carrierCount >= 100 && anchorCount <= 2) {
             // If we can build an anchor do it!
 
@@ -77,21 +83,59 @@ public class Headquarter extends Robot {
         RobotType toMake = null;
         if (rc.getRoundNum() <= 2) {
             toMake = RobotType.LAUNCHER;
-            launcherCount++;
+            communication.increaseLauncherCount();
         }
 
-        if (toMake == null && (launcherCount * 2 <= carrierCount) && rc.getResourceAmount(ResourceType.MANA) >= 60) {
+        if (toMake == null && ((launcherCount <= carrierCount) || (rc.getRoundNum() >= 120 && launcherCount <= carrierCount * 8)) && rc.getResourceAmount(ResourceType.MANA) >= 60) {
             toMake = RobotType.LAUNCHER;
-            launcherCount++;
+            communication.increaseLauncherCount();
         } else if (rc.getResourceAmount(ResourceType.MANA)-rc.getResourceAmount(ResourceType.ADAMANTIUM) >= 60) {
             toMake = RobotType.LAUNCHER;
-            launcherCount++;
+            communication.increaseLauncherCount();
             //should probably make sure we build anchors now
         }
 
-        if (toMake == null && rc.getResourceAmount(ResourceType.ADAMANTIUM) >= 50) {
+        if (toMake == null && rc.getResourceAmount(ResourceType.ADAMANTIUM) >= 50 && carrierCount <= hqCount * 40 + rc.getRoundNum() / 10) {
             toMake = RobotType.CARRIER;
-            carrierCount++;
+            communication.increaseCarrierCount();
+        }
+
+        if (toMake == RobotType.CARRIER && rc.getRoundNum() <= 20) {
+            // spwan it close to the mine
+
+            MapLocation ideal = getClosestMine();
+            MapLocation newLoc = null;
+            Direction dir;
+
+            boolean found = false;
+
+            int closest = 1_000_000;
+            MapLocation closestLoc = null;
+
+            for (int dx = -3; dx <= 3; dx++ ) {
+                for (int dy = -3; dy <= 3; dy++ ) {
+                    if (dx * dx + dy * dy > 9) continue;
+                    MapLocation temp = new MapLocation(ideal.x + dx, ideal.y + dy);
+                    if (rc.onTheMap(temp) && rc.canBuildRobot(RobotType.CARRIER, temp) && temp.distanceSquaredTo(ideal) < closest) {
+                        System.out.println(closest + " " + temp + " " + ideal);
+                        closest = temp.distanceSquaredTo(ideal);
+                        closestLoc = temp;
+                        found = true;
+                    }
+                }
+            }
+            if (found) {
+                newLoc = closestLoc;
+            } else {
+                // eh just do it anywhere
+                do {
+                    dir = directions[rng.nextInt(directions.length)];
+                    newLoc = rc.getLocation().add(dir);
+                } while (!rc.canBuildRobot(RobotType.CARRIER, newLoc));
+            }
+
+            rc.buildRobot(RobotType.CARRIER, newLoc);
+            return;
         }
 
         if (toMake != null) {

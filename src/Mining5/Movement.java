@@ -24,6 +24,8 @@ public class Movement {
 
     static boolean switchable = false;
 
+    static int bugLength = 0;
+
     static boolean canMove(Direction desired) throws GameActionException {
         if (currentState == State.WALL) return rc.canMove(desired) && rc.senseMapInfo(currentLocation.add(desired)).getCurrentDirection().equals(Direction.CENTER);
         return rc.canMove(desired) && !rc.senseMapInfo(currentLocation.add(desired)).getCurrentDirection().equals(desired.opposite());
@@ -34,7 +36,7 @@ public class Movement {
 
         turningLeft = true;
         shouldRight = true;
-
+        bugLength = 0;
         switchable = false;
     }
 
@@ -47,7 +49,7 @@ public class Movement {
                 bestDir.rotateLeft().rotateLeft(),
                 bestDir.rotateRight().rotateRight(),
                 bestDir.rotateRight().rotateRight().rotateRight(),
-                bestDir.rotateLeft().rotateLeft().rotateRight(),
+                bestDir.rotateLeft().rotateLeft().rotateLeft(),
                 Direction.CENTER
         };
 
@@ -62,7 +64,12 @@ public class Movement {
     static Direction alongWall(Direction desired) throws GameActionException {
 //        if (canMove(desired)) {
 //            return desired;
-//        }
+//        }\
+
+        if (bugLength > Math.max(rc.getMapHeight(), rc.getMapWidth()) / 1.5) {
+            hardReset();
+            return getGreedyDirection();
+        }
 
         if (shouldRight) {
             Direction checkDir = lastDirection;
@@ -81,8 +88,9 @@ public class Movement {
             if (turningLeft) {
                 for (int i = 0; i < 8; i++) {
                     if (rc.onTheMap(currentLocation.add(checkDir)) && rc.canSenseRobotAtLocation(currentLocation.add(checkDir)))  {
-                        hardReset();
-                        return getGreedyDirection();
+//                        hardReset();
+//                        return getGreedyDirection();
+//                        return Direction.CENTER;
                     }
                     if (canMove(checkDir)) break;
                     checkDir = checkDir.rotateRight();
@@ -90,8 +98,9 @@ public class Movement {
             } else {
                 for (int i = 0; i < 8; i++) {
                     if (rc.onTheMap(currentLocation.add(checkDir)) && rc.canSenseRobotAtLocation(currentLocation.add(checkDir)))  {
-                        hardReset();
-                        return getGreedyDirection();
+//                        hardReset();
+//                        return getGreedyDirection();
+//                        return Direction.CENTER;
                     }
                     if (canMove(checkDir)) break;
                     checkDir = checkDir.rotateLeft();
@@ -149,8 +158,9 @@ public class Movement {
         Direction right = togo.rotateRight();
 
         if (rc.onTheMap(currentLocation.add(togo)) && rc.canSenseRobotAtLocation(currentLocation.add(togo)))  {
-            hardReset();
-            return getGreedyDirection();
+//            hardReset();
+//            return getGreedyDirection();
+//            return Direction.CENTER;
         }
         if (canMove(togo)) {
             return togo;
@@ -218,6 +228,7 @@ public class Movement {
         if (!oldTarget.equals(currentTarget)) {
             oldTarget = currentTarget;
             currentState = State.NORMAL;
+            bugLength = 0;
             lastDirection = Direction.CENTER;
 
             if (previous != null) lastDirection = previous;
@@ -230,6 +241,7 @@ public class Movement {
         if (currentState.equals(State.WALL)) {
             if (currentLocation.distanceSquaredTo(oldTarget) < lastWall.distanceSquaredTo(oldTarget)) {
                 currentState = State.NORMAL;
+                bugLength = 0;
                 shouldRight = true;
             }
         }
@@ -238,6 +250,7 @@ public class Movement {
         if (currentState.equals(State.NORMAL)) {
             Direction nextMove = normal(togo);
             if (nextMove != null) {
+                bugLength = 0;
                 return lastDirection = nextMove;
             }
             else {
@@ -253,6 +266,7 @@ public class Movement {
         }
 
         if (currentState.equals(State.WALL)) {
+            bugLength++;
             Direction nextMove = alongWall(togo);
 
             return lastDirection = nextMove;

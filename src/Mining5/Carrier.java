@@ -2,16 +2,15 @@ package Mining5;
 
 import battlecode.common.*;
 
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
 public class Carrier extends Robot {
 
     static MapLocation minLoc = null;
-    static MapLocation parentLoc = null;
+    static MapLocation parentHQ = null;
     static boolean takenAnchor = false;
-    static ArrayList<MapLocation> wells = new ArrayList<>();
-    static int curWellSharedArray = 50;
     static int choice = 0;
-    static int exploreturns = 0;
     static boolean needInstruction = true;
     static MapLocation target = null;
     static boolean mined = false;
@@ -24,38 +23,91 @@ public class Carrier extends Robot {
     public void init() {
 
     }
-    static void updateWells(RobotController rc) throws GameActionException {
-        while (curWellSharedArray < 64) {
-            int wellEncode = rc.readSharedArray(curWellSharedArray)-1;
-            if (wellEncode < 0) break;
-            int wellX = wellEncode / 69;
-            int wellY = wellEncode % 69;
-            wells.add(new MapLocation(wellX, wellY));
-            isWell[wellX][wellY] = true;
-            curWellSharedArray++;
+    public void haveAnchor() throws GameActionException {
+        MapLocation me = rc.getLocation();
+
+        if ((rc.senseIsland(rc.getLocation()) != -1) && rc.senseTeamOccupyingIsland(rc.senseIsland(rc.getLocation())) != rc.getTeam() &&rc.canPlaceAnchor()) {
+            rc.setIndicatorString("Huzzah, placed anchor!");
+            rc.placeAnchor();
+            for (int i=1; i<=30; i++) {
+                if (rc.readSharedArray(i)==0 && rc.canWriteSharedArray(i,me.x*69+me.y+1)) {
+                    rc.writeSharedArray(i,me.x*69+me.y+1);
+                    break;
+                }
+            }
+            return;
         }
-        if (!rc.canWriteSharedArray(0, 0)) return;
-        for (MapLocation newWell : seenWells) {
-            if (!isWell[newWell.x][newWell.y] && curWellSharedArray < 64) {
-                isWell[newWell.x][newWell.y] = true;
-                rc.writeSharedArray(curWellSharedArray, newWell.x*69+newWell.y+1);
-                curWellSharedArray++;
+
+        if (!rc.isMovementReady()) return;
+        System.out.println(minLoc + " " + " loc! " + rc.getRoundNum());
+
+        if (minLoc != null) {
+            moveToLocation(minLoc);
+        }
+        // If I have an anchor singularly focus on getting it to the first island I see
+        int[] islands = rc.senseNearbyIslands();
+        int mini = 42069;
+        for (int id : islands) {
+            if (rc.senseTeamOccupyingIsland(id) == rc.getTeam())  continue;
+//                if (rc.senseAnchor(id). == ) continue;
+            MapLocation[] thisIslandLocs = rc.senseNearbyIslandLocations(id);
+            for (MapLocation nLoc : thisIslandLocs) {
+                if (me.distanceSquaredTo(nLoc) < mini) {
+                    mini=me.distanceSquaredTo(nLoc);
+                    minLoc=nLoc;
+                }
             }
         }
-        seenWells.clear();
+        if (mini!=42069) {
+
+            moveToLocation(minLoc);
+
+        }
+        else {
+            System.out.println("Current direction " + curDir);
+            System.out.println(rc.getRoundNum() + " " + " reached!");
+
+            moveRandom();
+        }
+        return;
+    }
+
+    public void runAwayFromDanger() throws GameActionException
+    {
+        RobotInfo[] enemies = rc.senseNearbyRobots(-1, rc.getTeam().opponent());
+        int dist = -1;
+        MapLocation danger = null;
+        for (RobotInfo ri : enemies)
+        {
+            if (ri.type.equals(RobotType.LAUNCHER))
+            {
+                int w = ri.getLocation().distanceSquaredTo(rc.getLocation());
+                if (dist == -1 || w < dist)
+                {
+                    dist = w;
+                    danger = ri.getLocation();
+                }
+            }
+        }
+
+        if (danger == null) return;
+        int holding = rc.getResourceAmount(ResourceType.ADAMANTIUM) + rc.getResourceAmount(ResourceType.MANA) + rc.getResourceAmount(ResourceType.ELIXIR);
+        if (holding > 0) mined = true;
+        tryMove(danger.directionTo(rc.getLocation()));
+
     }
 
     public void runUnit() throws GameActionException {
 
-        if (parentLoc == null) {
+        if (parentHQ == null) {
             RobotInfo[] friends = rc.senseNearbyRobots(42069,rc.getTeam());
             int mini=42069;
             for (RobotInfo friend : friends) {
                 if (friend.type == RobotType.HEADQUARTERS) {
                     if (rc.getLocation().distanceSquaredTo(friend.location)<mini) {
                         mini = rc.getLocation().distanceSquaredTo(friend.location);
-                        parentLoc = friend.location;
-                        rc.setIndicatorString("parentLoc " + parentLoc);
+                        parentHQ = friend.location;
+                        rc.setIndicatorString("parentLoc " + parentHQ);
                     }
                 }
             }
@@ -79,124 +131,54 @@ public class Carrier extends Robot {
             return;
         }*/
 
+        runAwayFromDanger();
+
         if (rc.getAnchor() != null) {
-            if ((rc.senseIsland(rc.getLocation()) != -1) && rc.senseTeamOccupyingIsland(rc.senseIsland(rc.getLocation())) != rc.getTeam() &&rc.canPlaceAnchor()) {
-                rc.setIndicatorString("Huzzah, placed anchor!");
-                rc.placeAnchor();
-                for (int i=1; i<=30; i++) {
-                    if (rc.readSharedArray(i)==0 && rc.canWriteSharedArray(i,me.x*69+me.y+1)) {
-                        rc.writeSharedArray(i,me.x*69+me.y+1);
-                        break;
-                    }
-                }
-                return;
-            }
-
-            if (!rc.isMovementReady()) return;
-            System.out.println(minLoc + " " + " loc! " + rc.getRoundNum());
-
-            if (minLoc != null) {
-                moveToLocation(minLoc);
-            }
-            // If I have an anchor singularly focus on getting it to the first island I see
-            int[] islands = rc.senseNearbyIslands();
-            int mini = 42069;
-            for (int id : islands) {
-                if (rc.senseTeamOccupyingIsland(id) == rc.getTeam())  continue;
-//                if (rc.senseAnchor(id). == ) continue;
-                MapLocation[] thisIslandLocs = rc.senseNearbyIslandLocations(id);
-                for (MapLocation nLoc : thisIslandLocs) {
-                    if (me.distanceSquaredTo(nLoc) < mini) {
-                        mini=me.distanceSquaredTo(nLoc);
-                        minLoc=nLoc;
-                    }
-                }
-            }
-            if (mini!=42069) {
-
-                moveToLocation(minLoc);
-
-            }
-            else {
-                System.out.println("Current direction " + curDir);
-                System.out.println(rc.getRoundNum() + " " + " reached!");
-
-                moveRandom();
-            }
-            return;
+            haveAnchor();
         } else {
             // I guess I'll try to find a well?
             // Shared array locations 50 onwards will be well locations
-            updateWells(rc);
             if (needInstruction) {
                 target = null;
                 needInstruction = false;
                 mined = false;
-                choice = rng.nextInt(wells.size()+1);
-                if (choice != wells.size()) target = wells.get(choice);
-                exploreturns = 0;
+//                choice = rng.nextInt(wells.size());
+//                if (choice != wells.size()) target = wells.get(choice);
             }
-            if (target == null && wells.size() > 0 && (exploreturns > 40 || rc.getRoundNum() > 500)) {
-                // Didn't find anything within 40 rounds, change target
-                choice = rng.nextInt(wells.size());
-                exploreturns = 0;
-            }
-            if (target == null) {
-                // Explore, find a new well
-                exploreturns++;
-                /*Direction newDirects[] = {
-                        curDir,
-                        curDir.rotateRight(),
-                        curDir.rotateLeft(),
-                        curDir.rotateRight().rotateRight(),
-                        curDir.rotateLeft().rotateLeft(),
-                };
-                curDir = newDirects[rng.nextInt(newDirects.length)];
-                for (int i=0; i<6; i++) {
-                    if (rc.canMove(curDir)) {
-                        rc.move(curDir);
-                        WellInfo[] nearbyWells = rc.senseNearbyWells();
-                        for (int j=0; j<nearbyWells.length; j++) {;
-                            WellInfo testing = nearbyWells[j];
-                            MapLocation loc = testing.getMapLocation();
-                            target = loc;
-                            seenWells.add(loc);
-                        }
-                    }
-                }*/
-                moveRandom();
-                WellInfo[] nearbyWells = rc.senseNearbyWells();
-                for (int j=0; j<nearbyWells.length; j++) {;
-                    WellInfo testing = nearbyWells[j];
-                    MapLocation loc = testing.getMapLocation();
-                    target = loc;
-                    seenWells.add(loc);
-                }
-                if (target == null) {
-                    rc.setIndicatorString("Exploring " + wells.size());
-                    return;
-                }
-            } else {
-                WellInfo[] nearbyWells = rc.senseNearbyWells();
-                for (int j=0; j<nearbyWells.length; j++) {;
-                    seenWells.add(nearbyWells[j].getMapLocation());
-                }
-            }
+            if (target == null && wellUtility.wells.size() > 0) {
+                // new target
+                choice = rng.nextInt(wellUtility.wells.size());
 
+                Collections.sort(WellUtility.wells, new Comparator<MapLocation>() {
+                    public int compare(MapLocation a, MapLocation b) {
+                        return rc.getLocation().distanceSquaredTo(a) - rc.getLocation().distanceSquaredTo(b);
+                    }
+                });
+
+                if (rc.getRoundNum() <= 100) {
+                    target = WellUtility.wells.get(0);
+                } else {
+
+                    target = wellUtility.wells.get(rng.nextInt(wellUtility.wells.size()));
+                }
+            } else if (target == null) {
+                // bad
+                return;
+            }
 
 
             int holding = rc.getResourceAmount(ResourceType.ADAMANTIUM) + rc.getResourceAmount(ResourceType.MANA) + rc.getResourceAmount(ResourceType.ELIXIR);
-            if (!mined && !rc.getLocation().isWithinDistanceSquared(target, 1)) {
-                rc.setIndicatorString("Going to well " + target.toString() + " " + choice + " " + wells.size() + " " + rc.getLocation().isWithinDistanceSquared(target, 1) + " " + wells.size());
-                if (!rc.getLocation().isWithinDistanceSquared(target, 1)) {
+            if (!mined && !rc.getLocation().isWithinDistanceSquared(target, 2)) {
+                rc.setIndicatorString("Going to well " + target.toString() + " " + choice + " " + wellUtility.wells.size() + " " + rc.getLocation().isWithinDistanceSquared(target, 1) + " " + wellUtility.wells.size());
+                if (!rc.getLocation().isWithinDistanceSquared(target, 2)) {
                     moveToLocation(target);
                 }
             }
 
-            rc.setIndicatorString("nothing to do " + target.toString() + " " + wells.size() + " " + mined + " " + rc.getLocation().isWithinDistanceSquared(target, 1) + " " + rc.canCollectResource(target, 1) + " " + rc.getActionCooldownTurns() + " " + (rc.getResourceAmount(ResourceType.ADAMANTIUM) + rc.getResourceAmount(ResourceType.MANA) + rc.getResourceAmount(ResourceType.ELIXIR)));
+            rc.setIndicatorString("nothing to do " + target.toString() + " " + wellUtility.wells.size() + " " + mined + " " + rc.getLocation().isWithinDistanceSquared(target, 1) + " " + rc.canCollectResource(target, 1) + " " + rc.getActionCooldownTurns() + " " + (rc.getResourceAmount(ResourceType.ADAMANTIUM) + rc.getResourceAmount(ResourceType.MANA) + rc.getResourceAmount(ResourceType.ELIXIR)));
 
-            if (!mined && rc.getLocation().isWithinDistanceSquared(target, 1) && rc.canCollectResource(target, 1)) {
-                rc.setIndicatorString("Mining " + wells.size());
+            if (!mined && rc.getLocation().isWithinDistanceSquared(target, 2) && rc.canCollectResource(target, 1)) {
+                rc.setIndicatorString("Mining " + wellUtility.wells.size());
                 rc.collectResource(target, -1);
                 holding = rc.getResourceAmount(ResourceType.ADAMANTIUM) + rc.getResourceAmount(ResourceType.MANA) + rc.getResourceAmount(ResourceType.ELIXIR);
                 if (holding == GameConstants.CARRIER_CAPACITY) {
@@ -204,22 +186,30 @@ public class Carrier extends Robot {
                 }
             }
             if (mined) {
-                if (!rc.getLocation().isWithinDistanceSquared(parentLoc, 1)) {
-                    moveToLocation(parentLoc);
+                // parentHQ
+                MapLocation current;
+                if (rc.getRoundNum() <= 200) {
+                    current = nearestHQ();
+                } else {
+                    current = HQLocations.get(rng.nextInt(HQLocations.size()));
+//                    current = parentHQ;
+                }
+                if (!rc.getLocation().isWithinDistanceSquared(current, 2)) {
+                    moveToLocation(current);
                 }
 
-                rc.setIndicatorString("Returning to HQ " + wells.size() + " " + rc.getLocation().isWithinDistanceSquared(parentLoc, 1) + " " + (rc.getResourceAmount(ResourceType.ADAMANTIUM) + rc.getResourceAmount(ResourceType.MANA) + rc.getResourceAmount(ResourceType.ELIXIR)));
+                rc.setIndicatorString("Returning to HQ " + wellUtility.wells.size() + " " + rc.getLocation().isWithinDistanceSquared(current, 2) + " " + (rc.getResourceAmount(ResourceType.ADAMANTIUM) + rc.getResourceAmount(ResourceType.MANA) + rc.getResourceAmount(ResourceType.ELIXIR)));
                 MapLocation curLoc = rc.getLocation();
-                if (curLoc.isWithinDistanceSquared(parentLoc, 1)) {
+                if (curLoc.isWithinDistanceSquared(current, 2)) {
                     int ada = rc.getResourceAmount(ResourceType.ADAMANTIUM), mana = rc.getResourceAmount(ResourceType.MANA), elixir = rc.getResourceAmount(ResourceType.ELIXIR);
-                    if (ada > 0 && rc.canTransferResource(parentLoc, ResourceType.ADAMANTIUM, ada)) {
-                        rc.transferResource(parentLoc, ResourceType.ADAMANTIUM, ada);
+                    if (ada > 0 && rc.canTransferResource(current, ResourceType.ADAMANTIUM, ada)) {
+                        rc.transferResource(current, ResourceType.ADAMANTIUM, ada);
                     }
-                    if (mana > 0 && rc.canTransferResource(parentLoc, ResourceType.MANA, mana)) {
-                        rc.transferResource(parentLoc, ResourceType.MANA, mana);
+                    if (mana > 0 && rc.canTransferResource(current, ResourceType.MANA, mana)) {
+                        rc.transferResource(current, ResourceType.MANA, mana);
                     }
-                    if (elixir > 0 && rc.canTransferResource(parentLoc, ResourceType.ELIXIR, elixir)) {
-                        rc.transferResource(parentLoc, ResourceType.ELIXIR, elixir);
+                    if (elixir > 0 && rc.canTransferResource(current, ResourceType.ELIXIR, elixir)) {
+                        rc.transferResource(current, ResourceType.ELIXIR, elixir);
                     }
                     holding = rc.getResourceAmount(ResourceType.ADAMANTIUM) + rc.getResourceAmount(ResourceType.MANA) + rc.getResourceAmount(ResourceType.ELIXIR);
                     if (holding == 0) {
