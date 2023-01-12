@@ -35,9 +35,9 @@ public abstract class Robot {
 
 // WELL FINDING
     static ArrayList<WellInfo> seenWells = new ArrayList<>();
-    static int curWellSharedArray = 40;
+    static int curWellSharedArray = 50;
     static boolean[][] isWell = new boolean[64][64];
-    static ArrayList<MapLocation> wells = new ArrayList<>();
+    static ArrayList<MapLocation> allWells = new ArrayList<>();
     static ArrayList<MapLocation> adaWells = new ArrayList<>();
     static ArrayList<MapLocation> manaWells = new ArrayList<>();
     static ArrayList<MapLocation> elixirWells = new ArrayList<>();
@@ -58,7 +58,7 @@ public abstract class Robot {
             int wellType = wellEncode % 3;
             int wellX = wellPos / 69;
             int wellY = wellPos % 69;
-            wells.add(new MapLocation(wellX, wellY));
+            allWells.add(new MapLocation(wellX, wellY));
             if (wellType == 0) {
                 adaWells.add(new MapLocation(wellX, wellY));
             }
