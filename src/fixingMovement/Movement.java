@@ -29,6 +29,36 @@ public class Movement {
         return rc.canMove(desired) && !rc.senseMapInfo(currentLocation.add(desired)).getCurrentDirection().equals(desired.opposite());
     }
 
+    static void hardReset() {
+        lastDirection = Direction.CENTER;
+
+        turningLeft = true;
+        shouldRight = true;
+
+        switchable = false;
+    }
+
+    static Direction getGreedyDirection() {
+        Direction bestDir = rc.getLocation().directionTo(oldTarget);
+
+        Direction[] directions = {bestDir,
+                bestDir.rotateRight(),
+                bestDir.rotateLeft(),
+                bestDir.rotateLeft().rotateLeft(),
+                bestDir.rotateRight().rotateRight(),
+                bestDir.rotateRight().rotateRight().rotateRight(),
+                bestDir.rotateLeft().rotateLeft().rotateRight(),
+                Direction.CENTER
+        };
+
+        for (int i = 0; i < directions.length; i++) {
+            if (rc.canMove(directions[i])) {
+                return directions[i];
+            }
+        }
+
+        return Direction.CENTER;
+    }
     static Direction alongWall(Direction desired) throws GameActionException {
 //        if (canMove(desired)) {
 //            return desired;
@@ -50,19 +80,19 @@ public class Movement {
 
             if (turningLeft) {
                 for (int i = 0; i < 8; i++) {
-                    /*if (rc.onTheMap(currentLocation.add(checkDir)) && rc.canSenseRobotAtLocation(currentLocation.add(checkDir))
-                            && rc.senseRobotAtLocation(currentLocation.add(checkDir)).getTeam() == rc.getTeam().opponent())  {
-                        return Direction.CENTER;
-                    }*/
+                    if (rc.onTheMap(currentLocation.add(checkDir)) && rc.canSenseRobotAtLocation(currentLocation.add(checkDir)))  {
+                        hardReset();
+                        return getGreedyDirection();
+                    }
                     if (canMove(checkDir)) break;
                     checkDir = checkDir.rotateRight();
                 }
             } else {
                 for (int i = 0; i < 8; i++) {
-                    /*if (rc.onTheMap(currentLocation.add(checkDir)) && rc.canSenseRobotAtLocation(currentLocation.add(checkDir))
-                            && rc.senseRobotAtLocation(currentLocation.add(checkDir)).getTeam() == rc.getTeam().opponent())  {
-                        return Direction.CENTER;
-                    }*/
+                    if (rc.onTheMap(currentLocation.add(checkDir)) && rc.canSenseRobotAtLocation(currentLocation.add(checkDir)))  {
+                        hardReset();
+                        return getGreedyDirection();
+                    }
                     if (canMove(checkDir)) break;
                     checkDir = checkDir.rotateLeft();
                 }
@@ -96,10 +126,10 @@ public class Movement {
                 return alongWall(desired);
             }
 
-            /*if (rc.onTheMap(currentLocation.add(checkDir)) && rc.canSenseRobotAtLocation(currentLocation.add(checkDir))
-                    && rc.senseRobotAtLocation(currentLocation.add(checkDir)).getTeam() == rc.getTeam().opponent())  {
-                return Direction.CENTER;
-            }*/
+            if (rc.onTheMap(currentLocation.add(checkDir)) && rc.canSenseRobotAtLocation(currentLocation.add(checkDir)))  {
+                hardReset();
+                return getGreedyDirection();
+            }
             if (canMove(checkDir)) {
                 break;
             }
@@ -118,10 +148,10 @@ public class Movement {
         Direction left = togo.rotateLeft();
         Direction right = togo.rotateRight();
 
-        /*if (rc.onTheMap(currentLocation.add(togo)) && rc.canSenseRobotAtLocation(currentLocation.add(togo))
-                && rc.senseRobotAtLocation(currentLocation.add(togo)).getTeam() == rc.getTeam().opponent())  {
-            return Direction.CENTER;
-        }*/
+        if (rc.onTheMap(currentLocation.add(togo)) && rc.canSenseRobotAtLocation(currentLocation.add(togo)))  {
+            hardReset();
+            return getGreedyDirection();
+        }
         if (canMove(togo)) {
             return togo;
         }
