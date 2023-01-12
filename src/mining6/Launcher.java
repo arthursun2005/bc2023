@@ -1,4 +1,4 @@
-package Mining5;
+package mining6;
 
 import battlecode.common.*;
 
@@ -7,21 +7,17 @@ import java.util.Collections;
 public class Launcher extends Robot {
     static MapLocation parentLoc = null;
     ArrayList<Integer> randomPermutation = new ArrayList<>();
-    MapLocation toGuard = null;
 
-    MapLocation lastSeen = null;
     static boolean attacking = false;
     public Launcher(RobotController rc) throws GameActionException {
         super(rc);
-        for (int i = 0; i < 14; i++) {
+        for (int i = 0; i < 90; i++) {
             randomPermutation.add(i);
         }
+
         Collections.shuffle(randomPermutation);
 
-        int next = rng.nextInt(4);
-
-        if (next == 0) {
-            rc.setIndicatorString(Integer.toString(next));
+        if (rng.nextInt(4) != 0) {
             attacking = true;
         }
     }
@@ -29,7 +25,6 @@ public class Launcher extends Robot {
     }
     public void runUnit() throws GameActionException {
 
-        System.out.println("bruh");
         if (parentLoc == null) {
             RobotInfo[] friends = rc.senseNearbyRobots(42069,rc.getTeam());
             int mini=42069;
@@ -47,6 +42,14 @@ public class Launcher extends Robot {
         int radius = rc.getType().actionRadiusSquared;
         Team opponent = rc.getTeam().opponent();
         RobotInfo[] enemies = rc.senseNearbyRobots(radius, opponent);
+        // ArrayList<MapLocation> attackCoords = new ArrayList<>();
+        // for (int i=0; i<enemies.length; i++) {
+        //     MapLocation coords = enemies[i].location;
+        //     if (rc.canAttack(coords)) attackCoords.add(coords);
+        // }
+        // if (attackCoords.size() > 0) {
+        //     rc.attack(attackCoords.get(rng.nextInt(attackCoords.size())));
+        // }
         if (enemies.length > 0) {
             for (RobotInfo enemy : enemies) {
                 MapLocation toAttack = enemy.location;
@@ -57,21 +60,35 @@ public class Launcher extends Robot {
             }
         }
 
-        if (attacking) {
-            rc.setIndicatorString("I am ATTACKING ");
-
+        if (true) {
             moveRandom();
         } else {
 
             // Location to guard
-            if (toGuard == null) {
-                for (int i = 0; i < 14; i++) {
+            MapLocation toGuard = null;
 
-                    int current = (randomPermutation.get(i));
+            for (int i = 0; i < 100; i++) {
+                if (randomPermutation.get(i) <= 59) {
+                    // it's an island
+                    // check .get(i) / 2
+                    int current = (randomPermutation.get(i)) / 2 + 1;
+                    int comm = rc.readSharedArray(current);
+
+                    if (comm != 0) {
+                        comm--;
+                        int x = comm / 69, y = comm % 69;
+                        toGuard = new MapLocation(x, y);
+                        break;
+                    }
+                } else {
+                    // assign to wells
+                    int current = (randomPermutation.get(i) - 10);
+
+                    if (current > 63) continue;
 
                     // [50, 63]
 
-                    int comm = rc.readSharedArray(current + 50);
+                    int comm = rc.readSharedArray(current);
                     if (comm != 0) {
                         comm--;
                         int x = comm / 69, y = comm % 69;
@@ -81,43 +98,26 @@ public class Launcher extends Robot {
                 }
             }
 
-
             if (toGuard != null) {
                 rc.setIndicatorString("I am guarding " + toGuard);
-
-                RobotInfo[] robotInfos = rc.senseNearbyRobots();
-
-                for (int i = 0; i  < robotInfos.length; i++) {
-                    if (robotInfos[i].getTeam().equals(rc.getTeam().opponent())) {
-                        lastSeen = robotInfos[i].location;
-                    }
-                }
-
-                if (rc.getLocation().distanceSquaredTo(toGuard) <= 2) {
+                if (rc.getLocation().distanceSquaredTo(toGuard) <= 5) {
                     // Destination + (3, 0)
 
-                    if (lastSeen == null) {
-                        Direction targetDirection = toGuard.directionTo(parentLoc).rotateRight().rotateRight();
-                        if (targetDirection == Direction.CENTER) {
-                            targetDirection = Direction.NORTH;
-                        }
-                        Direction[] possible = new Direction[5];
-                        for (int i = 0; i < 5; i++) {
-                            possible[i] = targetDirection;
-                            targetDirection = targetDirection.rotateRight();
-                        }
-
-                        moveToLocation(rc.getLocation().add(possible[rng.nextInt(possible.length)]));
-                    } else {
-                        moveToLocation(lastSeen);
+                    Direction targetDirection = rc.getLocation().directionTo(toGuard).rotateRight().rotateRight();
+                    if (targetDirection == Direction.CENTER) {
+                        targetDirection = Direction.NORTH;
+                    }
+                    Direction[] possible = new Direction[5];
+                    for (int i = 0; i < 5; i++) {
+                        possible[i] = targetDirection;
+                        targetDirection = targetDirection.rotateRight();
                     }
 
+                    moveToLocation(rc.getLocation().add(possible[rng.nextInt(possible.length)]));
                 } else{
                     moveToLocation(toGuard);
                 }
             } else {
-                rc.setIndicatorString("I am randoming ");
-
                 moveRandom();
             }
 

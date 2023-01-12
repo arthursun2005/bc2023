@@ -1,42 +1,26 @@
-package Mining4;
+package mining6;
+
 import battlecode.common.*;
+
 import java.util.ArrayList;
 public class Carrier extends Robot {
+
     static MapLocation minLoc = null;
     static MapLocation parentLoc = null;
     static boolean takenAnchor = false;
-    static ArrayList<MapLocation> wells = new ArrayList<>();
-    static int curWellSharedArray = 50;
     static int choice = 0;
     static int exploreturns = 0;
     static boolean needInstruction = true;
     static MapLocation target = null;
     static boolean mined = false;
+
+
     public Carrier(RobotController rc) throws GameActionException {
         super(rc);
     }
+
     public void init() {
 
-    }
-    static void updateWells(RobotController rc) throws GameActionException {
-        while (curWellSharedArray < 64) {
-            int wellEncode = rc.readSharedArray(curWellSharedArray)-1;
-            if (wellEncode < 0) break;
-            int wellX = wellEncode / 69;
-            int wellY = wellEncode % 69;
-            wells.add(new MapLocation(wellX, wellY));
-            isWell[wellX][wellY] = true;
-            curWellSharedArray++;
-        }
-        if (!rc.canWriteSharedArray(0, 0)) return;
-        for (MapLocation newWell : seenWells) {
-            if (!isWell[newWell.x][newWell.y] && curWellSharedArray < 64) {
-                isWell[newWell.x][newWell.y] = true;
-                rc.writeSharedArray(curWellSharedArray, newWell.x*69+newWell.y+1);
-                curWellSharedArray++;
-            }
-        }
-        seenWells.clear();
     }
 
     public void runUnit() throws GameActionException {
@@ -120,14 +104,31 @@ public class Carrier extends Robot {
             return;
         } else {
             // I guess I'll try to find a well?
-            // Shared array locations 50 onwards will be well locations
-            updateWells(rc);
+            // Shared array locations 40 onwards will be well locations
+            updateWells();
             if (needInstruction) {
                 target = null;
                 needInstruction = false;
                 mined = false;
                 choice = rng.nextInt(wells.size()+1);
-                if (choice != wells.size()) target = wells.get(choice);
+                if (choice != wells.size()) {
+                    target = wells.get(choice);
+                    int ada = getCount(0), mana = getCount(1);
+                    /*if (Math.abs(ada-mana) > 500 || rng.nextInt(10) == 0) {
+                        // 10% chance to always choose the one with less
+                        // If difference is too large, always choose the one with less;
+                        if (getCount(0) > getCount(1)) {
+                            if (manaWells.size() > 0) {
+                                target = manaWells.get(rng.nextInt(manaWells.size()));
+                            }
+                        } else {
+                            if (adaWells.size() > 0) {
+                                target = adaWells.get(rng.nextInt(adaWells.size()));
+                            }
+                        }
+                    }*/
+                }
+
                 exploreturns = 0;
             }
             if (target == null && wells.size() > 0 && (exploreturns > 40 || rc.getRoundNum() > 500)) {
@@ -164,35 +165,26 @@ public class Carrier extends Robot {
                     WellInfo testing = nearbyWells[j];
                     MapLocation loc = testing.getMapLocation();
                     target = loc;
-                    seenWells.add(loc);
                 }
                 if (target == null) {
                     rc.setIndicatorString("Exploring " + wells.size());
                     return;
                 }
-            } else {
-                WellInfo[] nearbyWells = rc.senseNearbyWells();
-                for (int j=0; j<nearbyWells.length; j++) {;
-                    seenWells.add(nearbyWells[j].getMapLocation());
-                }
-            }
+            }   
 
-
-
-            int holding = rc.getResourceAmount(ResourceType.ADAMANTIUM) + rc.getResourceAmount(ResourceType.MANA) + rc.getResourceAmount(ResourceType.ELIXIR);
+            int holding = rc.getWeight();
             if (!mined && !rc.getLocation().isWithinDistanceSquared(target, 1)) {
-                rc.setIndicatorString("Going to well " + target.toString() + " " + choice + " " + wells.size() + " " + rc.getLocation().isWithinDistanceSquared(target, 1) + " " + wells.size());
+                rc.setIndicatorString("Going to well " + getCount(0) + " " + getCount(1) + " " + getCount(2) + " " + target.toString() + " " + choice + " " + wells.size() + " " + rc.getLocation().isWithinDistanceSquared(target, 1) + " " + wells.size());
                 if (!rc.getLocation().isWithinDistanceSquared(target, 1)) {
                     moveToLocation(target);
                 }
             }
 
-            rc.setIndicatorString("nothing to do " + target.toString() + " " + wells.size() + " " + mined + " " + rc.getLocation().isWithinDistanceSquared(target, 1) + " " + rc.canCollectResource(target, 1) + " " + rc.getActionCooldownTurns() + " " + (rc.getResourceAmount(ResourceType.ADAMANTIUM) + rc.getResourceAmount(ResourceType.MANA) + rc.getResourceAmount(ResourceType.ELIXIR)));
-
+            rc.setIndicatorString("nothing to do " + getCount(0) + " " + getCount(1) + " " + getCount(2) + " " + target.toString() + " " + target.toString() + " " + wells.size() + " " + mined + " " + rc.getLocation().isWithinDistanceSquared(target, 1) + " " + rc.canCollectResource(target, 1) + " " + rc.getActionCooldownTurns() + " " + rc.getWeight());
             if (!mined && rc.getLocation().isWithinDistanceSquared(target, 1) && rc.canCollectResource(target, 1)) {
-                rc.setIndicatorString("Mining " + wells.size());
+                rc.setIndicatorString("Mining " + getCount(0) + " " + getCount(1) + " " + getCount(2) + " " + wells.size());
                 rc.collectResource(target, -1);
-                holding = rc.getResourceAmount(ResourceType.ADAMANTIUM) + rc.getResourceAmount(ResourceType.MANA) + rc.getResourceAmount(ResourceType.ELIXIR);
+                holding = rc.getWeight();
                 if (holding == GameConstants.CARRIER_CAPACITY) {
                     mined = true;
                 }
@@ -202,20 +194,23 @@ public class Carrier extends Robot {
                     moveToLocation(parentLoc);
                 }
 
-                rc.setIndicatorString("Returning to HQ " + wells.size() + " " + rc.getLocation().isWithinDistanceSquared(parentLoc, 1) + " " + (rc.getResourceAmount(ResourceType.ADAMANTIUM) + rc.getResourceAmount(ResourceType.MANA) + rc.getResourceAmount(ResourceType.ELIXIR)));
+                rc.setIndicatorString("Returning to HQ " + getCount(0) + " " + getCount(1) + " " + getCount(2) + " " + target.toString() + " " + wells.size() + " " + rc.getLocation().isWithinDistanceSquared(parentLoc, 1) + " " + rc.getWeight());
                 MapLocation curLoc = rc.getLocation();
                 if (curLoc.isWithinDistanceSquared(parentLoc, 1)) {
                     int ada = rc.getResourceAmount(ResourceType.ADAMANTIUM), mana = rc.getResourceAmount(ResourceType.MANA), elixir = rc.getResourceAmount(ResourceType.ELIXIR);
                     if (ada > 0 && rc.canTransferResource(parentLoc, ResourceType.ADAMANTIUM, ada)) {
                         rc.transferResource(parentLoc, ResourceType.ADAMANTIUM, ada);
+                        updateCount(0, ada);
                     }
                     if (mana > 0 && rc.canTransferResource(parentLoc, ResourceType.MANA, mana)) {
                         rc.transferResource(parentLoc, ResourceType.MANA, mana);
+                        updateCount(1, mana);
                     }
                     if (elixir > 0 && rc.canTransferResource(parentLoc, ResourceType.ELIXIR, elixir)) {
                         rc.transferResource(parentLoc, ResourceType.ELIXIR, elixir);
+                        updateCount(2, elixir);
                     }
-                    holding = rc.getResourceAmount(ResourceType.ADAMANTIUM) + rc.getResourceAmount(ResourceType.MANA) + rc.getResourceAmount(ResourceType.ELIXIR);
+                    holding = rc.getWeight();
                     if (holding == 0) {
                         needInstruction = true;
                     }
