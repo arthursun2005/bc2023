@@ -30,6 +30,7 @@ public strictfp class RobotPlayer {
         while (true) {
             try {
                 if (robot != null) {
+                    robot.prepare();
                     robot.run();
                 }
             } catch (GameActionException e) {
