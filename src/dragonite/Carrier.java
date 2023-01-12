@@ -13,8 +13,9 @@ public class Carrier extends Robot
 
     public void run() throws GameActionException
     {
-        spreadOut(false);
-        tracker.updateWells();
+        moveTo(new MapLocation(5, 18));
+        // spreadOut(false);
+        // tracker.updateWells();
         /*
         WellInfo[] nearbyWells = rc.senseNearbyWells();
         if (nearbyWells.length > 0)
