@@ -16,6 +16,7 @@ public class Launcher extends Robot
         RobotInfo[] enemies = rc.senseNearbyRobots(radius, opponent);
         MapLocation attackLoc = null;
         int minHealth = -1;
+        int theID = -1;
         for (RobotInfo enemy : enemies) {
             MapLocation toAttack = enemy.location;
             if (rc.canAttack(toAttack)) {
@@ -24,6 +25,7 @@ public class Launcher extends Robot
                 if (minHealth == -1 || adjustedHealth < minHealth)
                 {
                     minHealth = adjustedHealth;
+                    theID = enemy.getID();
                     attackLoc = toAttack;
                 }
             }
@@ -31,6 +33,10 @@ public class Launcher extends Robot
         if (attackLoc != null)
         {
             rc.attack(attackLoc);
+            if (rc.getID() < theID)
+            {
+                moveAway(attackLoc);
+            }
             return true;
         }
         return false;
