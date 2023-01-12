@@ -5,36 +5,101 @@ import battlecode.common.*;
 public class Carrier extends Robot
 {
     static Tracker tracker;
+    static int NEAR_HQ_DIST = 15;
+    static int PRETTY_NEAR_HQ_DIST = 35;
 
     public Carrier(RobotController rc) throws GameActionException
     {
         super(rc);
     }
 
+    public void tryMine(MapLocation well) throws GameActionException
+    {
+        if (rc.canCollectResource(well, -1))
+        {
+            rc.collectResource(well, -1);
+        }
+    }
+
+    public void tryTakeAnchor(MapLocation HQLoc) throws GameActionException
+    {
+        if (rc.canTakeAnchor(HQLoc, Anchor.STANDARD)) {
+            rc.setIndicatorString("Taking standard Anchor UwU");
+            rc.takeAnchor(HQLoc, Anchor.STANDARD);
+        }
+    }
+
+    public void IWantToPlaceMyAnchor() throws GameActionException
+    {
+        if ((rc.senseIsland(rc.getLocation()) != -1) && rc.senseTeamOccupyingIsland(rc.senseIsland(rc.getLocation())) != rc.getTeam() && rc.canPlaceAnchor()) {
+            System.out.println("Lessgo I placed my favourite anchor!!!");
+            rc.placeAnchor();
+            return;
+        }
+
+        tracker.updateIslands(rc);
+
+        if (!rc.isMovementReady())
+            return;
+
+        MapLocation island = tracker.getOptimalIsland();
+
+        if (island != null)
+        {
+            moveTo(island);
+        }else{
+            spreadOut(false);
+        }
+    }
+
     public void run() throws GameActionException
     {
-        moveTo(new MapLocation(5, 18));
-        // spreadOut(false);
-        // tracker.updateWells();
-        /*
-        WellInfo[] nearbyWells = rc.senseNearbyWells();
-        if (nearbyWells.length > 0)
+        tracker.updateWells(rc);
+        MapLocation HQLoc = getClosestHQLoc();
+        tryTakeAnchor(HQLoc);
+        if (rc.getAnchor() != null)
         {
-            MapLocation loc = null;
-            int dist = -1;
-            for (WellInfo wi : nearbyWells)
+            IWantToPlaceMyAnchor();
+            return;
+        }
+        boolean shouldReturnToHQ = false;
+        if (rc.getWeight() == GameConstants.CARRIER_CAPACITY)
+        {
+            shouldReturnToHQ = true;
+        }
+        if (rc.getWeight() >= 8 * GameConstants.CARRIER_CAPACITY / 11 && rc.getLocation().distanceSquaredTo(HQLoc) <= PRETTY_NEAR_HQ_DIST)
+        {
+            shouldReturnToHQ = true;
+        }
+        if (rc.getWeight() >= GameConstants.CARRIER_CAPACITY / 3 && rc.getLocation().distanceSquaredTo(HQLoc) <= NEAR_HQ_DIST)
+        {
+            shouldReturnToHQ = true;
+        }
+        if (shouldReturnToHQ)
+        {
+            int ada = rc.getResourceAmount(ResourceType.ADAMANTIUM), mana = rc.getResourceAmount(ResourceType.MANA), elixir = rc.getResourceAmount(ResourceType.ELIXIR);
+            if (ada > 0 && rc.canTransferResource(HQLoc, ResourceType.ADAMANTIUM, ada))
             {
-                int w = rc.getLocation().distanceSquaredTo(wi.getMapLocation());
-                if (dist == -1 || w < dist)
-                {
-                    dist = w;
-                    loc = wi.getMapLocation();
-                }
+                rc.transferResource(HQLoc, ResourceType.ADAMANTIUM, ada);
             }
-            moveTo(loc);
+            if (mana > 0 && rc.canTransferResource(HQLoc, ResourceType.MANA, mana))
+            {
+                rc.transferResource(HQLoc, ResourceType.MANA, mana);
+            }
+            if (elixir > 0 && rc.canTransferResource(HQLoc, ResourceType.ELIXIR, elixir))
+            {
+                rc.transferResource(HQLoc, ResourceType.ELIXIR, elixir);
+            }
+            moveTo(HQLoc);
+            return;
+        }
+        MapLocation well = tracker.getOptimalWell();
+        if (well != null)
+        {
+            tryMine(well);
+            moveTo(well);
             return;
         }
         spreadOut(false);
-        */
     }
 }
