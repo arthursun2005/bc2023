@@ -4,6 +4,8 @@ import battlecode.common.*;
 
 public class Carrier extends Robot
 {
+    static Tracker tracker;
+
     public Carrier(RobotController rc) throws GameActionException
     {
         super(rc);
@@ -12,6 +14,7 @@ public class Carrier extends Robot
     public void run() throws GameActionException
     {
         spreadOut(false);
+        tracker.updateWells();
         /*
         WellInfo[] nearbyWells = rc.senseNearbyWells();
         if (nearbyWells.length > 0)

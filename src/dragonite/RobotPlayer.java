@@ -19,6 +19,7 @@ public strictfp class RobotPlayer {
                 robot = new Launcher(rc);
                 break;
             case BOOSTER:
+                robot = new Booster(rc);
                 break;
             case DESTABILIZER:
                 break;
