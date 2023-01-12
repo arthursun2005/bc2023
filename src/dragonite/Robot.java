@@ -26,6 +26,57 @@ public abstract class Robot
         rng = new Random(rc.getID());
     }
 
+    static Direction[] getGreedyDirections(Direction bestDir) throws GameActionException
+    {
+        Direction[] directions = {
+            bestDir,
+            bestDir.rotateRight(),
+            bestDir.rotateLeft(),
+            bestDir.rotateLeft().rotateLeft(),
+            bestDir.rotateRight().rotateRight(),
+            bestDir.rotateRight().rotateRight().rotateRight(),
+            bestDir.rotateLeft().rotateLeft().rotateRight(),
+        };
+        return directions;
+    }
+
+    public MapLocation getClosestHQLoc() throws GameActionException
+    {
+        int dist = -1;
+        MapLocation loc = null;
+        int cnt = rc.readSharedArray(63);
+        for (int i = 0; i < cnt; i++)
+        {
+            MapLocation c = readCoords(i);
+            int w = rc.getLocation().distanceSquaredTo(c);
+            if (dist == -1 || w < dist)
+            {
+                dist = w;
+                loc = c;
+            }
+        }
+        return loc;
+    }
+
+    public boolean writeCoords(int idx, MapLocation loc) throws GameActionException
+    {
+        int value = loc.x + loc.y * 69;
+        if (rc.canWriteSharedArray(idx, value))
+        {
+            rc.writeSharedArray(idx, value);
+            return true;
+        }
+        return false;
+    }
+
+    public MapLocation readCoords(int idx) throws GameActionException
+    {
+        int value = rc.readSharedArray(idx);
+        int x = value % 69;
+        int y = value / 69;
+        return new MapLocation(x, y);
+    }
+
     public void prepare() throws GameActionException
     {
         if (parentLoc == null && !rc.getType().equals(RobotType.HEADQUARTERS))
