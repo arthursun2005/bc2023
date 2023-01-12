@@ -1,4 +1,4 @@
-package Mining4;
+package viho;
 
 import battlecode.common.*;
 

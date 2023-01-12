@@ -1,4 +1,4 @@
-package Mining4;
+package viho2;
 
 import battlecode.common.*;
 
@@ -42,17 +42,22 @@ public class Launcher extends Robot {
         int radius = rc.getType().actionRadiusSquared;
         Team opponent = rc.getTeam().opponent();
         RobotInfo[] enemies = rc.senseNearbyRobots(radius, opponent);
-        if (enemies.length > 0) {
-            for (RobotInfo enemy : enemies) {
-                MapLocation toAttack = enemy.location;
-                if (rc.canAttack(toAttack)) {
-                    rc.attack(toAttack);
-                    break;
-                }
+        for (RobotInfo enemy : enemies) {
+            MapLocation toAttack = enemy.location;
+            if (rc.canAttack(toAttack)) {
+                rc.attack(toAttack);
+                break;
             }
         }
 
         if (true) {
+            for (RobotInfo enemy : enemies) {
+                if (enemy.getType() == RobotType.HEADQUARTERS) {
+                    moveToLocation(enemy.location);
+                    return;
+                }
+            }
+
             moveRandom();
         } else {
 
