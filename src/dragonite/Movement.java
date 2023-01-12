@@ -28,7 +28,7 @@ public class Movement {
         if (currentState == State.WALL) return rc.canMove(desired) && rc.senseMapInfo(currentLocation.add(desired)).getCurrentDirection().equals(Direction.CENTER);
         return rc.canMove(desired) && !rc.senseMapInfo(currentLocation.add(desired)).getCurrentDirection().equals(desired.opposite());
     }
-    
+
     static void hardReset() {
         lastDirection = Direction.CENTER;
 
@@ -37,7 +37,7 @@ public class Movement {
 
         switchable = false;
     }
-    
+
     static Direction getGreedyDirection() {
         Direction bestDir = rc.getLocation().directionTo(oldTarget);
 
@@ -47,7 +47,7 @@ public class Movement {
                 bestDir.rotateLeft().rotateLeft(),
                 bestDir.rotateRight().rotateRight(),
                 bestDir.rotateRight().rotateRight().rotateRight(),
-                bestDir.rotateLeft().rotateLeft().rotateRight(),
+                bestDir.rotateLeft().rotateLeft().rotateLeft(),
                 Direction.CENTER
         };
 

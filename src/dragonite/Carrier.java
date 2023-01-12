@@ -5,8 +5,8 @@ import battlecode.common.*;
 public class Carrier extends Robot
 {
     static Tracker tracker;
-    static int NEAR_HQ_DIST = 15;
-    static int PRETTY_NEAR_HQ_DIST = 35;
+    static int NEAR_HQ_DIST = 35;
+    static int PRETTY_NEAR_HQ_DIST = 48;
 
     public Carrier(RobotController rc) throws GameActionException
     {
@@ -52,10 +52,35 @@ public class Carrier extends Robot
         }
     }
 
+    public void runAwayFromDanger(MapLocation HQLoc) throws GameActionException
+    {
+        RobotInfo[] enemies = rc.senseNearbyRobots(-1, rc.getTeam().opponent());
+        int dist = -1;
+        MapLocation danger = null;
+        for (RobotInfo ri : enemies)
+        {
+            if (ri.type.equals(RobotType.LAUNCHER))
+            {
+                int w = ri.getLocation().distanceSquaredTo(rc.getLocation());
+                if (dist == -1 || w < dist)
+                {
+                    dist = w;
+                    danger = ri.getLocation();
+                }
+            }
+        }
+        if (danger != null)
+        {
+            moveAway(danger);
+            moveTo(HQLoc);
+        }
+    }
+
     public void run() throws GameActionException
     {
         tracker.updateWells(rc);
         MapLocation HQLoc = getClosestHQLoc();
+        runAwayFromDanger(HQLoc);
         tryTakeAnchor(HQLoc);
         if (rc.getAnchor() != null)
         {

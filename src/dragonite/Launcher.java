@@ -19,7 +19,8 @@ public class Launcher extends Robot
         for (RobotInfo enemy : enemies) {
             MapLocation toAttack = enemy.location;
             if (rc.canAttack(toAttack)) {
-                int adjustedHealth = enemy.getHealth() * 696969 + enemy.getID();
+                int adjustedHealth = enemy.getHealth() * 123456 + enemy.getID();
+                if (enemy.type.equals(RobotType.LAUNCHER)) adjustedHealth -= 123456789;
                 if (minHealth == -1 || adjustedHealth < minHealth)
                 {
                     minHealth = adjustedHealth;
@@ -35,7 +36,7 @@ public class Launcher extends Robot
         return false;
     }
 
-    public void tryChaseOrRetreat() throws GameActionException
+    public boolean tryChaseOrRetreat() throws GameActionException
     {
         Team opponent = rc.getTeam().opponent();
         RobotInfo[] friends = rc.senseNearbyRobots(-1, rc.getTeam());
@@ -58,7 +59,8 @@ public class Launcher extends Robot
                 enemyOffensiveCnt++;
             }
 
-            int adjustedHealth = enemy.getHealth() * 696969 + enemy.getID();
+            int adjustedHealth = enemy.getHealth() * 123456 + enemy.getID();
+            if (enemy.type.equals(RobotType.LAUNCHER)) adjustedHealth -= 123456789;
             if (minHealth == -1 || adjustedHealth < minHealth)
             {
                 minHealth = adjustedHealth;
@@ -70,19 +72,52 @@ public class Launcher extends Robot
         {
             // retreat
             moveTo(getClosestHQLoc());
-        }else{
+        }else if (friendOffensiveCnt > enemyOffensiveCnt + 5) {
             // attack
             if (weakLoc != null)
             {
                 moveTo(weakLoc);
             }
         }
+        return enemies.length > 0;
+    }
+
+    public void tryProtect() throws GameActionException
+    {
+        RobotInfo[] friends = rc.senseNearbyRobots(-1, rc.getTeam());
+        MapLocation HQLoc = getClosestHQLoc();
+        int dist = rc.getLocation().distanceSquaredTo(HQLoc);
+        MapLocation weakLoc = null;
+        for (RobotInfo friend : friends)
+        {
+            int w = friend.getLocation().distanceSquaredTo(HQLoc);
+            if (w > dist)
+            {
+                dist = w;
+                weakLoc = friend.getLocation();
+            }
+        }
+
+        if (weakLoc != null)
+        {
+            moveTo(weakLoc);
+        }
     }
 
     public void run() throws GameActionException
     {
         tryAttack();
-        tryChaseOrRetreat();
-        spreadOut(false);
+        if (tryChaseOrRetreat())
+        {
+            return;
+        }
+        // tryProtect();
+        if (rng.nextBoolean())
+        {
+            MapLocation center = new MapLocation(rc.getMapWidth() / 2, rc.getMapHeight() / 2);
+            moveTo(center);
+            return;
+        }
+        spreadOut(true);
     }
 }

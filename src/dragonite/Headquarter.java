@@ -60,9 +60,6 @@ public class Headquarter extends Robot
         MapLocation well = tracker.getOptimalWell();
         boolean made = false;
 
-        int ada = rc.getResourceAmount(ResourceType.ADAMANTIUM);
-        int mana = rc.getResourceAmount(ResourceType.MANA);
-
         if (totalAda - anchorsMade * 666 >= 0 && totalMana - anchorsMade * 369 >= 0)
         {
             if (rc.canBuildAnchor(Anchor.STANDARD))
@@ -102,10 +99,13 @@ public class Headquarter extends Robot
 
         if (made)
         {
-            if (ada - mana >= 300)
+            int ada = rc.getResourceAmount(ResourceType.ADAMANTIUM);
+            int mana = rc.getResourceAmount(ResourceType.MANA);
+
+            if (ada - mana >= 150)
             {
                 toMake = RobotType.CARRIER;
-            }else if (mana >= 90 || mana - ada >= 60)
+            }else if (mana >= 90 || mana - ada >= 150)
             {
                 toMake = RobotType.LAUNCHER;
             }else{

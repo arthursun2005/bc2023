@@ -27,7 +27,11 @@ public class Tracker
             int dist = -1;
             for (WellInfo wi : nearbyWells)
             {
-                if (rc.senseNearbyRobots(wi.getMapLocation(), 2, rc.getTeam()).length >= 6)
+                if (rc.senseNearbyRobots(wi.getMapLocation(), 2, rc.getTeam()).length >= 5)
+                {
+                    continue;
+                }
+                if (rc.getType().equals(RobotType.CARRIER) && rc.getID() % 3 != 0 && wi.getResourceType().equals(ResourceType.ADAMANTIUM))
                 {
                     continue;
                 }

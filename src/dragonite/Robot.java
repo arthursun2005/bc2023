@@ -26,7 +26,7 @@ public abstract class Robot
         rng = new Random(rc.getID());
     }
 
-    static Direction[] getGreedyDirections(Direction bestDir) throws GameActionException
+    public Direction[] getGreedyDirections(Direction bestDir) throws GameActionException
     {
         Direction[] directions = {
             bestDir,
@@ -35,7 +35,7 @@ public abstract class Robot
             bestDir.rotateLeft().rotateLeft(),
             bestDir.rotateRight().rotateRight(),
             bestDir.rotateRight().rotateRight().rotateRight(),
-            bestDir.rotateLeft().rotateLeft().rotateRight(),
+            bestDir.rotateLeft().rotateLeft().rotateLeft(),
         };
         return directions;
     }
@@ -118,6 +118,12 @@ public abstract class Robot
             Direction dir = movement.tryMove(rc, loc, prevDirection);
             tryMove(dir);
         }
+    }
+
+    public void moveAway(MapLocation loc) throws GameActionException
+    {
+        MapLocation me = rc.getLocation();
+        moveTo(new MapLocation(8 * me.x - 7 * loc.x, 8 * me.y - 7 * loc.y));
     }
 
     public void spreadOut(boolean all) throws GameActionException
