@@ -91,6 +91,10 @@ public class Launcher extends Robot
         for (RobotInfo friend : friends)
         {
             int w = friend.getLocation().distanceSquaredTo(HQLoc);
+            if (friend.type.equals(RobotType.CARRIER))
+            {
+                w += 123456789;
+            }
             if (w > dist)
             {
                 dist = w;
@@ -112,12 +116,10 @@ public class Launcher extends Robot
             return;
         }
         // tryProtect();
-        if (rng.nextBoolean())
-        {
-            MapLocation center = new MapLocation(rc.getMapWidth() / 2, rc.getMapHeight() / 2);
-            moveTo(center);
-            return;
-        }
+
+        MapLocation center = new MapLocation(rc.getMapWidth() / 2, rc.getMapHeight() / 2);
+        moveTo(center);
+
         spreadOut(true);
     }
 }
