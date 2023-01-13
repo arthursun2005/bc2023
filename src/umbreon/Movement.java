@@ -25,6 +25,8 @@ public class Movement {
 
     static Random rng = null;
 
+    static int bugLength = 0;
+
     static boolean canMove(Direction desired) throws GameActionException {
         if (currentState == State.WALL) return rc.canMove(desired) && rc.senseMapInfo(currentLocation.add(desired)).getCurrentDirection().equals(Direction.CENTER);
         return rc.canMove(desired) && !rc.senseMapInfo(currentLocation.add(desired)).getCurrentDirection().equals(desired.opposite());
@@ -35,7 +37,7 @@ public class Movement {
 
         turningLeft = true;
         shouldRight = true;
-
+        bugLength = 0;
         switchable = false;
     }
 
@@ -64,7 +66,12 @@ public class Movement {
         if (rng == null) rng = new Random(rc.getID());
 //        if (canMove(desired)) {
 //            return desired;
-//        }
+//        }\
+
+        if (bugLength > Math.max(rc.getMapHeight(), rc.getMapWidth()) / 1.5) {
+            hardReset();
+            return getGreedyDirection();
+        }
 
         if (shouldRight) {
             Direction checkDir = lastDirection;
@@ -83,8 +90,9 @@ public class Movement {
             if (turningLeft) {
                 for (int i = 0; i < 8; i++) {
                     if (rc.onTheMap(currentLocation.add(checkDir)) && rc.canSenseRobotAtLocation(currentLocation.add(checkDir)))  {
-                        hardReset();
-                        return getGreedyDirection();
+//                        hardReset();
+//                        return getGreedyDirection();
+//                        return Direction.CENTER;
                     }
                     if (canMove(checkDir)) break;
                     checkDir = checkDir.rotateRight();
@@ -92,8 +100,9 @@ public class Movement {
             } else {
                 for (int i = 0; i < 8; i++) {
                     if (rc.onTheMap(currentLocation.add(checkDir)) && rc.canSenseRobotAtLocation(currentLocation.add(checkDir)))  {
-                        hardReset();
-                        return getGreedyDirection();
+//                        hardReset();
+//                        return getGreedyDirection();
+//                        return Direction.CENTER;
                     }
                     if (canMove(checkDir)) break;
                     checkDir = checkDir.rotateLeft();
@@ -129,8 +138,8 @@ public class Movement {
             }
 
             if (rc.onTheMap(currentLocation.add(checkDir)) && rc.canSenseRobotAtLocation(currentLocation.add(checkDir)))  {
-                hardReset();
-                return getGreedyDirection();
+//                hardReset();
+//                return getGreedyDirection();
             }
             if (canMove(checkDir)) {
                 break;
@@ -151,8 +160,9 @@ public class Movement {
         Direction right = togo.rotateRight();
 
         if (rc.onTheMap(currentLocation.add(togo)) && rc.canSenseRobotAtLocation(currentLocation.add(togo)))  {
-            hardReset();
-            return getGreedyDirection();
+//            hardReset();
+//            return getGreedyDirection();
+//            return Direction.CENTER;
         }
         if (canMove(togo)) {
             return togo;
@@ -199,9 +209,108 @@ public class Movement {
     }
 
     static MapLocation prevLocation = null;
+    public boolean[][] inbound = new boolean[9][9];
+//
+//    static Direction tryBFS(MapLocation currentTarget) throws GameActionException {
+//        MapInfo[] infos = rc.senseNearbyMapInfos();
+//
+//        int arr[][] = new int[9][9];
+//        boolean seen[][] = new boolean[9][9];
+//        int from[][] = new int[9][9];
+//
+//        MapLocation starting = rc.getLocation();
+//
+//        for (int i = 0; i < infos.length; i++) {
+//            MapLocation mapLocation = infos[i].getMapLocation();
+//
+//            if (!infos[i].isPassable()) {
+//                arr[mapLocation.x - starting.x + 4][mapLocation.y - starting.y + 4] = 2;
+//            } else if(rc.senseRobotAtLocation(mapLocation) != null) {
+//                arr[mapLocation.x - starting.x + 4][mapLocation.y - starting.y + 4] = 2;
+//            } else if (infos[i].getCurrentDirection() != Direction.CENTER) {
+//                arr[mapLocation.x - starting.x + 4][mapLocation.y - starting.y + 4] = 2 + infos[i].getCurrentDirection().getDirectionOrderNum();
+//            } else {
+//                arr[mapLocation.x - starting.x + 4][mapLocation.y - starting.y + 4] = 1;
+//            }
+//        }
+//
+//        int dx = 4, dy = 4;
+//
+//        Queue.queuePush(dx * 10 + dy);
+//
+//        while (!Queue.queueEmpty()) {
+//            int current = Queue.queuePop();
+//
+//            int x = current / 10, y = current % 10;
+//
+//            for (int cx = -1; cx <= 1; cx++) {
+//                for (int cy = -1; cy <= 1; cy++) {
+//                    int nx = x + cx, ny = y + cy;
+//                    if (nx < 0 || nx >= 9 || ny < 0 || ny >= 9) continue;
+//                    if (arr[nx][ny] == 0 || arr[nx][ny] == 2) continue;
+//
+//                    // if current or empty
+//                    if (arr[nx][ny] == 1 && !seen[nx][ny]) {
+//                        seen[nx][ny] = true;
+//                        Queue.queuePush(nx * 10 + ny);
+//                        from[nx][ny] = current;
+//                    }
+//
+//                    // current
+//
+//                    Direction currentDir = Direction.DIRECTION_ORDER[arr[nx][ny]];
+//                    int nnx = currentDir.getDeltaX() + nx, nny = currentDir.getDeltaY() + ny;
+//                    if (nnx < 0 || nnx >= 9 || nny < 0 || nny >= 9) continue;
+//                    if (arr[nnx][nny] == 0) continue;
+//
+//                    if (arr[nnx][nny] == 1) {
+//                        nnx = nx; nny = ny;
+//                    }
+//
+//                    if (!seen[nnx][nny]) {
+//                        seen[nnx][nny] = true;
+//                        Queue.queuePush(nnx * 10 + nny);
+//                        from[nnx][nny] = nx * 10 + ny;
+//                        from[nx][ny] = current;
+//                    }
+//                }
+//            }
+//        }
+//
+//        int cx = currentTarget.x - starting.x + 4, cy = currentTarget.y - starting.y + 4;
+//        int lastLoc = 0;
+//        while (from[cx][cy] != 0) {
+//            lastLoc = cx * 10 + cy;
+//            int pos = from[cx][cy];
+//            cx = pos / 10;
+//            cy = pos % 10;
+//        }
+//
+//        if (lastLoc == 0) {
+//            // cannot find path (probs shoudl do something later)
+//            System.out.println("FKFKFKFKFKF BFS DIED FKFKF");
+//            return Direction.CENTER;
+//        } else {
+//            return (new MapLocation(4, 4).directionTo(new MapLocation(lastLoc / 10, lastLoc % 10)));
+//        }
+//    }
+
 
     static Direction tryMove(RobotController rc, MapLocation currentTarget, Direction previous) throws GameActionException {
         if (rng == null) rng = new Random(rc.getID());
+//        if (rc.canSenseLocation(currentTarget)) {
+//            hardReset();
+//            if (rc.getType() == RobotType.CARRIER) {
+//                int holding = rc.getResourceAmount(ResourceType.ADAMANTIUM) + rc.getResourceAmount(ResourceType.MANA) + rc.getResourceAmount(ResourceType.ELIXIR);
+//                if (rc.getMovementCooldownTurns() + (3 * holding / 8) + 5 < 10) {
+//                    return tryBFS(currentTarget);
+//                }
+//            }
+//            return tryBFS(currentTarget);
+//        }
+
+
+
         if (previous != null && lastDirection == Direction.CENTER) lastDirection = previous;
         else {
             if (prevLocation == null) {
@@ -211,9 +320,7 @@ public class Movement {
                 prevLocation = rc.getLocation();
             }
         }
-        if (lastDirection == Direction.CENTER) {
-            lastDirection = Direction.values()[rng.nextInt(8)+1];
-        }
+        if (lastDirection == Direction.CENTER) lastDirection = Direction.values()[rng.nextInt(8)+1];
 
         if (!rc.isMovementReady()) return null;
         Movement.rc = rc;
@@ -223,6 +330,7 @@ public class Movement {
         if (!oldTarget.equals(currentTarget)) {
             oldTarget = currentTarget;
             currentState = State.NORMAL;
+            bugLength = 0;
             lastDirection = Direction.CENTER;
 
             if (previous != null) lastDirection = previous;
@@ -235,6 +343,7 @@ public class Movement {
         if (currentState.equals(State.WALL)) {
             if (currentLocation.distanceSquaredTo(oldTarget) < lastWall.distanceSquaredTo(oldTarget)) {
                 currentState = State.NORMAL;
+                bugLength = 0;
                 shouldRight = true;
             }
         }
@@ -243,6 +352,7 @@ public class Movement {
         if (currentState.equals(State.NORMAL)) {
             Direction nextMove = normal(togo);
             if (nextMove != null) {
+                bugLength = 0;
                 return lastDirection = nextMove;
             }
             else {
@@ -258,6 +368,7 @@ public class Movement {
         }
 
         if (currentState.equals(State.WALL)) {
+            bugLength++;
             Direction nextMove = alongWall(togo);
 
             return lastDirection = nextMove;

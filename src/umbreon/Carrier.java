@@ -15,6 +15,7 @@ public class Carrier extends Robot
 
     public void tryMine(MapLocation well) throws GameActionException
     {
+        if (well == null) return;
         if (rc.canCollectResource(well, -1))
         {
             rc.collectResource(well, -1);
@@ -79,7 +80,9 @@ public class Carrier extends Robot
         tracker.updateWells(rc);
         tracker.updateIslands(rc);
         MapLocation HQLoc = getClosestHQLoc();
+        tryAttack();
         runAwayFromDanger(HQLoc);
+        tryAttack();
         tryTakeAnchor(HQLoc);
         if (rc.getAnchor() != null)
         {
@@ -99,8 +102,10 @@ public class Carrier extends Robot
         {
             shouldReturnToHQ = true;
         }
+        MapLocation well = tracker.getOptimalWell();
         if (shouldReturnToHQ)
         {
+            tryMine(well);
             int ada = rc.getResourceAmount(ResourceType.ADAMANTIUM), mana = rc.getResourceAmount(ResourceType.MANA), elixir = rc.getResourceAmount(ResourceType.ELIXIR);
             if (ada > 0 && rc.canTransferResource(HQLoc, ResourceType.ADAMANTIUM, ada))
             {
@@ -115,11 +120,14 @@ public class Carrier extends Robot
                 rc.transferResource(HQLoc, ResourceType.ELIXIR, elixir);
             }
             moveTo(HQLoc);
+            moveTo(HQLoc);
+            tryMine(well);
             return;
         }
-        MapLocation well = tracker.getOptimalWell();
         if (well != null)
         {
+            tryMine(well);
+            moveTo(well);
             tryMine(well);
             moveTo(well);
             tryMine(well);

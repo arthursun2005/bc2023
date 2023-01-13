@@ -9,35 +9,6 @@ public class Launcher extends Robot
         super(rc);
     }
 
-    public boolean tryAttack() throws GameActionException
-    {
-        int radius = rc.getType().actionRadiusSquared;
-        Team opponent = rc.getTeam().opponent();
-        RobotInfo[] enemies = rc.senseNearbyRobots(radius, opponent);
-        MapLocation attackLoc = null;
-        int minHealth = -1;
-        int theID = -1;
-        for (RobotInfo enemy : enemies) {
-            MapLocation toAttack = enemy.location;
-            if (rc.canAttack(toAttack)) {
-                int adjustedHealth = enemy.getHealth() * 123456 + enemy.getID();
-                if (enemy.type.equals(RobotType.LAUNCHER)) adjustedHealth -= 123456789;
-                if (minHealth == -1 || adjustedHealth < minHealth)
-                {
-                    minHealth = adjustedHealth;
-                    theID = enemy.getID();
-                    attackLoc = toAttack;
-                }
-            }
-        }
-        if (attackLoc != null)
-        {
-            rc.attack(attackLoc);
-            return true;
-        }
-        return false;
-    }
-
     public boolean tryChaseOrRetreat() throws GameActionException
     {
         Team opponent = rc.getTeam().opponent();
@@ -71,11 +42,11 @@ public class Launcher extends Robot
             }
         }
 
-        if (enemyOffensiveCnt > friendOffensiveCnt + 5)
+        if (enemyOffensiveCnt > friendOffensiveCnt + 10)
         {
             // retreat
             moveTo(getClosestHQLoc());
-        }else if (friendOffensiveCnt > enemyOffensiveCnt + 30) {
+        }else if (friendOffensiveCnt > enemyOffensiveCnt + 20) {
             // attack
             if (weakLoc != null)
             {
@@ -124,7 +95,7 @@ public class Launcher extends Robot
 
         MapLocation HQLoc = getClosestHQLoc();
 
-        RobotInfo[] friends = rc.senseNearbyRobots(42069,rc.getTeam());
+        RobotInfo[] friends = rc.senseNearbyRobots(8, rc.getTeam());
         int mini=rc.getID();
         MapLocation bestie = null;
         int lowerCount = 0;
@@ -140,16 +111,31 @@ public class Launcher extends Robot
         }
 
         if (mini < rc.getID() && lowerCount < 9) {
-            moveTo(bestie);
+            if (rc.getLocation().distanceSquaredTo(bestie) > 2)
+            {
+                moveTo(bestie);
+            }
         }
-        else {
-            if (rc.getRoundNum() < 20)
+        else{
+
+            if (turnCount < 20)
             {
                 MapLocation center = new MapLocation(rc.getMapWidth() / 2, rc.getMapHeight() / 2);
                 moveTo(center);
             }else{
                 moveRandom();
             }
+
+            /*
+            if (true)//rc.getID() % 3 == 0)
+            {
+                moveRandom();
+                // spreadOut(false);
+            }else{
+                MapLocation center = new MapLocation(rc.getMapWidth() / 2, rc.getMapHeight() / 2);
+                moveTo(center);
+            }
+            */
         }
         // tryProtect();
 

@@ -102,10 +102,10 @@ public class Headquarter extends Robot
             int ada = rc.getResourceAmount(ResourceType.ADAMANTIUM);
             int mana = rc.getResourceAmount(ResourceType.MANA);
 
-            if (ada - mana >= 150)
+            if (ada - mana >= 90)
             {
                 toMake = RobotType.CARRIER;
-            }else if ((mana >= 75 || mana - ada >= 150) && rc.getRoundNum() >= 3)
+            }else if ((mana >= 75 || mana - ada >= 60) && rc.getRoundNum() >= 3)
             {
                 toMake = RobotType.LAUNCHER;
             }else{

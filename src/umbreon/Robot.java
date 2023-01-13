@@ -20,6 +20,7 @@ public abstract class Robot
 
     static Movement movement;
     static Frontier frontier;
+    static int turnCount = 0;
 
     static Direction[] directions = Direction.values();
 
@@ -41,6 +42,35 @@ public abstract class Robot
             bestDir.rotateLeft().rotateLeft().rotateLeft(),
         };
         return directions;
+    }
+
+    public boolean tryAttack() throws GameActionException
+    {
+        int radius = rc.getType().actionRadiusSquared;
+        Team opponent = rc.getTeam().opponent();
+        RobotInfo[] enemies = rc.senseNearbyRobots(radius, opponent);
+        MapLocation attackLoc = null;
+        int minHealth = -1;
+        int theID = -1;
+        for (RobotInfo enemy : enemies) {
+            MapLocation toAttack = enemy.location;
+            if (rc.canAttack(toAttack)) {
+                int adjustedHealth = ((enemy.getHealth() + 5) / 6) * 123456 + enemy.getID();
+                if (enemy.type.equals(RobotType.LAUNCHER)) adjustedHealth -= 123456789;
+                if (minHealth == -1 || adjustedHealth < minHealth)
+                {
+                    minHealth = adjustedHealth;
+                    theID = enemy.getID();
+                    attackLoc = toAttack;
+                }
+            }
+        }
+        if (attackLoc != null)
+        {
+            rc.attack(attackLoc);
+            return true;
+        }
+        return false;
     }
 
     public MapLocation getClosestHQLoc() throws GameActionException
@@ -100,6 +130,8 @@ public abstract class Robot
             prevDirection = prevLocation.directionTo(rc.getLocation());
             prevLocation = rc.getLocation();
         }
+
+        turnCount += 1;
     }
 
     abstract void run() throws GameActionException;
