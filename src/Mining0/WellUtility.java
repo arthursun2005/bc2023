@@ -92,6 +92,7 @@ public class WellUtility {
             return;
         }
         for (WellInfo newWell : toAdd) {
+            if (curWellSharedArray >= 64) return;
             MapLocation newWellPos = newWell.getMapLocation();
             ResourceType newWellType = newWell.getResourceType();
             int newWellTypeCode = 0;

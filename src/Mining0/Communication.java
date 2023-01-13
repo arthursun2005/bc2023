@@ -32,5 +32,15 @@ public class Communication {
         return rc.readSharedArray(LAUNCHER);
     }
 
+    public void updateCount(int resource, int delta) throws GameActionException {
+        // 0 = ada, 1 = mana, 2 = elixir
+        int cur = rc.readSharedArray(33+resource) + delta;
+        if (rc.canWriteSharedArray(33+resource, cur)) {
+            rc.writeSharedArray(33+resource, cur);
+        }
+    }
 
+    public int getCount(int resource) throws GameActionException {
+        return rc.readSharedArray(33+resource);
+    }
 }

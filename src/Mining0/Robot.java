@@ -39,7 +39,6 @@ public abstract class Robot {
     static ArrayList<MapLocation> HQLocations = new ArrayList<>();
     // WELL FINDING
     static WellUtility wellUtility;
-
 // END WELL FINDING
 
     public Robot(RobotController rc) {
@@ -48,6 +47,8 @@ public abstract class Robot {
 
         wellUtility = new WellUtility(rc);
         communication = new Communication(rc);
+
+
     }
 
     abstract void init() throws GameActionException;
@@ -116,15 +117,18 @@ public abstract class Robot {
             tryMove(dir);
         }
     }
-    public void moveToLocation(MapLocation loc) throws GameActionException {
+    public boolean moveToLocation(MapLocation loc) throws GameActionException {
         // CHECK IF MOVE IS VALID
 
         if (rc.isMovementReady()) {
             Direction dir = movement.tryMove(rc, loc, prevDirection);
             if (dir != null && rc.canMove(dir)) {
                 rc.move(dir);
-            } else return;
+                return true;
+            } else return false;
         }
+
+        return false;
     }
 
     public void moveToLocationRepeat(MapLocation loc) throws GameActionException {
