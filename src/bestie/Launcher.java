@@ -1,4 +1,4 @@
-package turquoise2;
+package bestie;
 
 import battlecode.common.*;
 
@@ -121,12 +121,34 @@ public class Launcher extends Robot
             tryAttack();
             return;
         }
+
+        RobotInfo[] friends = rc.senseNearbyRobots(42069,rc.getTeam());
+        int mini=rc.getID();
+        MapLocation bestie = null;
+        int lowerCount = 0;
+
+        for (RobotInfo friend : friends) {
+            if (friend.type == RobotType.LAUNCHER) {
+                if (friend.getID() < rc.getID()) lowerCount++;
+                if (friend.getID() < mini) {
+                    mini=friend.getID();
+                    bestie=friend.getLocation();
+                }
+            }
+        }
+
+        if (mini<rc.getID() && lowerCount<5) {
+            moveTo(bestie);
+        }
+        else {
+            moveRandom();
+        }
         // tryProtect();
 
-        MapLocation center = new MapLocation(rc.getMapWidth() / 2, rc.getMapHeight() / 2);
+        /*MapLocation center = new MapLocation(rc.getMapWidth() / 2, rc.getMapHeight() / 2);
         moveTo(center);
 
-        spreadOut(true);
+        spreadOut(true);*/
         tryAttack();
     }
 }
