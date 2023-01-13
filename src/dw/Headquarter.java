@@ -43,6 +43,7 @@ public class Headquarter extends Robot
 
     public boolean tryMake(MapLocation loc) throws GameActionException
     {
+        if (loc==null) return false;
 
         if (rc.canBuildRobot(toMake, loc))
         {
@@ -76,35 +77,48 @@ public class Headquarter extends Robot
     public MapLocation getOptimalMine() throws GameActionException {
 
         MapLocation ideal = tracker.getClosestMine();
-        MapLocation newLoc = null;
-        Direction dir;
-
-        boolean found = false;
 
         int closest = 1_000_000;
         MapLocation closestLoc = null;
 
         for (int dx = -3; dx <= 3; dx++ ) {
             for (int dy = -3; dy <= 3; dy++ ) {
-                if (dx * dx + dy * dy > 9) continue;
-                MapLocation temp = new MapLocation(ideal.x + dx, ideal.y + dy);
+                if (dx * dx + dy * dy > 10) continue;
+                MapLocation temp = new MapLocation(rc.getLocation().x + dx, rc.getLocation().y + dy);
                 if (rc.onTheMap(temp) && rc.canBuildRobot(RobotType.CARRIER, temp) && temp.distanceSquaredTo(ideal) < closest) {
                     System.out.println(closest + " " + temp + " " + ideal);
                     closest = temp.distanceSquaredTo(ideal);
                     closestLoc = temp;
-                    found = true;
                 }
             }
         }
 
-        return newLoc;
+        return closestLoc;
+    }
+
+    public MapLocation getOptimalSpawn() throws GameActionException {
+
+        MapLocation ideal = new MapLocation(rc.getMapWidth() / 2, rc.getMapHeight() / 2);
+
+        int closest = 1_000_000;
+        MapLocation closestLoc = null;
+
+        for (int dx = -3; dx <= 3; dx++ ) {
+            for (int dy = -3; dy <= 3; dy++ ) {
+                if (dx * dx + dy * dy > 10) continue;
+                MapLocation temp = new MapLocation(rc.getLocation().x + dx, rc.getLocation().y + dy);
+                if (rc.onTheMap(temp) && rc.canBuildRobot(RobotType.LAUNCHER, temp) && temp.distanceSquaredTo(ideal) < closest) {
+                    System.out.println(closest + " " + temp + " " + ideal);
+                    closest = temp.distanceSquaredTo(ideal);
+                    closestLoc = temp;
+                }
+            }
+        }
+        return closestLoc;
     }
 
     public void run() throws GameActionException
     {
-        if (rc.getRoundNum() == 1) {
-
-        }
         Tracker.updateWells();
         MapLocation well = Tracker.getClosestMine();
         boolean made = false;
@@ -120,7 +134,20 @@ public class Headquarter extends Robot
             return;
         }
 
-        if (/*enemyHQIsDangerouslyCloseLmfao() && */rc.getRoundNum() <= 3)
+        int ada = rc.getResourceAmount(ResourceType.ADAMANTIUM);
+        int mana = rc.getResourceAmount(ResourceType.MANA);
+
+        if (ada - mana >= 150)
+        {
+            toMake = RobotType.CARRIER;
+        }else if (mana >= 75 || mana - ada >= 150)
+        {
+            toMake = RobotType.LAUNCHER;
+        }else{
+            toMake = RobotType.CARRIER;
+        }
+
+        if (rc.getRoundNum() <= 3)
         {
             toMake = RobotType.LAUNCHER;
         }
@@ -133,29 +160,8 @@ public class Headquarter extends Robot
 
         if (toMake.equals(RobotType.LAUNCHER))
         {
-            MapLocation center = new MapLocation(rc.getMapWidth() / 2, rc.getMapHeight() / 2);
-            Direction bestDir = rc.getLocation().directionTo(center);
-            if (bestDir == null || bestDir.equals(Direction.CENTER))
-            {
-                bestDir = Direction.values()[rng.nextInt(8)+1];
-            }
-            made = tryMake(bestDir);
-        }
-
-        if (made)
-        {
-            int ada = rc.getResourceAmount(ResourceType.ADAMANTIUM);
-            int mana = rc.getResourceAmount(ResourceType.MANA);
-
-            if (ada - mana >= 150)
-            {
-                toMake = RobotType.CARRIER;
-            }else if ((mana >= 75 || mana - ada >= 150) && rc.getRoundNum() >= 3)
-            {
-                toMake = RobotType.LAUNCHER;
-            }else{
-                toMake = RobotType.CARRIER;
-            }
+            MapLocation loc = getOptimalSpawn();
+            made = tryMake(loc);
         }
     }
 }
