@@ -99,7 +99,7 @@ public class Carrier extends Robot
             target = null;
             mined = false;
         }
-        tryMove(danger.directionTo(rc.getLocation()));
+        moveTo(tracker.getClosestHQLoc());
         return true;
     }
 
