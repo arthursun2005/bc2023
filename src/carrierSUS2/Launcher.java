@@ -1,4 +1,4 @@
-package carrierSUS;
+package carrierSUS2;
 
 import battlecode.common.*;
 
@@ -141,7 +141,7 @@ public class Launcher extends Robot
         }
 
         MapLocation oppositeLoc = new MapLocation(rc.getMapWidth()-parentLoc.x-1,rc.getMapHeight()-parentLoc.y-1);
-        if (rc.getLocation().distanceSquaredTo(oppositeLoc)<=rc.getLocation().distanceSquaredTo(parentLoc)) {
+        if (rc.getLocation().distanceSquaredTo(oppositeLoc)*2<=rc.getLocation().distanceSquaredTo(parentLoc)) {
             crossed = true;
         }
 
