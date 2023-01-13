@@ -43,7 +43,7 @@ public class Launcher extends Robot
         Team opponent = rc.getTeam().opponent();
         RobotInfo[] friends = rc.senseNearbyRobots(-1, rc.getTeam());
         RobotInfo[] enemies = rc.senseNearbyRobots(-1, opponent);
-        int friendOffensiveCnt = 0;
+        int friendOffensiveCnt = 5 + rc.getHealth();
         int enemyOffensiveCnt = 0;
         MapLocation weakLoc = null;
         int minHealth = -1;
@@ -71,11 +71,11 @@ public class Launcher extends Robot
             }
         }
 
-        if (enemyOffensiveCnt > friendOffensiveCnt + 5)
+        if (enemyOffensiveCnt > friendOffensiveCnt + 10)
         {
             // retreat
             moveTo(tracker.getClosestHQLoc());
-        }else if (friendOffensiveCnt > enemyOffensiveCnt + 10) {
+        }else if (friendOffensiveCnt > enemyOffensiveCnt + 20) {
             // attack
             if (weakLoc != null)
             {
@@ -83,7 +83,7 @@ public class Launcher extends Robot
             }
         }
 
-        if (enemies.length == 1 && enemies[0].type.equals(RobotType.HEADQUARTERS)) return false;
+        if (enemies.length == 1 && enemies[0].type.equals(RobotType.HEADQUARTERS) && rc.getID() % 5 != 0) return false;
         return enemies.length > 0;
     }
 
@@ -139,13 +139,26 @@ public class Launcher extends Robot
         }
 
         if (mini < rc.getID() && lowerCount < 9) {
-            moveTo(bestie);
+            if (rc.getLocation().distanceSquaredTo(bestie) > 2)
+            {
+                moveTo(bestie);
+            }
         }
         else {
+            // if (turnCount < 20)
+            // {
+            //     MapLocation center = new MapLocation(rc.getMapWidth() / 2, rc.getMapHeight() / 2);
+            //     moveTo(center);
+            // }else{
+            //     moveRandom();
+            // }
             if (turnCount < 20)
             {
-                MapLocation center = new MapLocation(rc.getMapWidth() / 2, rc.getMapHeight() / 2);
-                moveTo(center);
+                if (rc.getRoundNum() % 5 == 0)
+                {
+                    MapLocation center = new MapLocation(rc.getMapWidth() / 2, rc.getMapHeight() / 2);
+                    moveTo(center);
+                }
             }else{
                 moveRandom();
             }

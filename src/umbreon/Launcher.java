@@ -120,8 +120,11 @@ public class Launcher extends Robot
 
             if (turnCount < 20)
             {
-                MapLocation center = new MapLocation(rc.getMapWidth() / 2, rc.getMapHeight() / 2);
-                moveTo(center);
+                if (rc.getRoundNum() % 5 == 0)
+                {
+                    MapLocation center = new MapLocation(rc.getMapWidth() / 2, rc.getMapHeight() / 2);
+                    moveTo(center);
+                }
             }else{
                 moveRandom();
             }
