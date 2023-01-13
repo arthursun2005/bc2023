@@ -1,6 +1,5 @@
 package carrierSUCKS;
 
-import Mining0.CustomWell;
 import battlecode.common.*;
 
 import java.util.*;
