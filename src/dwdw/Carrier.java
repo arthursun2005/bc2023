@@ -1,4 +1,4 @@
-package wd;
+package dwdw;
 
 import battlecode.common.*;
 

@@ -1,4 +1,4 @@
-package wd;
+package dwdw;
 
 import battlecode.common.*;
 
@@ -134,6 +134,8 @@ public class Tracker
             }
         });
 
+
+        if (wells.isEmpty()) return null;
         return wells.get(rng.nextInt(Math.min(wells.size(), 2))).getMapLocation();
     }
     static void senseWells() throws GameActionException {
@@ -229,7 +231,7 @@ public class Tracker
             {
                 continue;
             }
-            if (rc.getRoundNum() <= 80 && rc.getMapWidth() <= 22 && rc.getMapHeight() <= 22 && rc.getType().equals(RobotType.CARRIER) && well.getResourceType() == ResourceType.ADAMANTIUM && rc.getID() % 3 != 0) {
+            if (rc.getRoundNum() <= 600 && rc.getMapWidth() <= 22 && rc.getMapHeight() <= 22 && rc.getType().equals(RobotType.CARRIER) && well.getResourceType() == ResourceType.ADAMANTIUM) {
                 continue;
             }
             if (rc.getRoundNum() > 80 && rc.getType().equals(RobotType.CARRIER) && rc.getID() % 3 != 0 && well.getResourceType() == ResourceType.ADAMANTIUM)
@@ -296,16 +298,16 @@ public class Tracker
 
     static void readHQLoc() throws GameActionException {
 
-        if (!calcHQ && rc.canWriteSharedArray(0, 0)) {
-            calcHQ = true;
-            for (int i = 40; i < 50; i++) {
-                if (rc.readSharedArray(i) != 0) {
-                    int decode = rc.readSharedArray(i);
-                    hqCount++;
-                    HQLocations.add(new MapLocation(decode / 69, decode % 69));
-                }
+        calcHQ = true;
+        System.out.println("called");
+        for (int i = 40; i < 50; i++) {
+            if (rc.readSharedArray(i) != 0) {
+                int decode = rc.readSharedArray(i);
+                hqCount++;
+                HQLocations.add(new MapLocation(decode / 69, decode % 69));
             }
         }
+
     }
 
     static MapLocation getClosestHQLoc() {
