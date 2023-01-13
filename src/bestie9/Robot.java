@@ -11,7 +11,7 @@ public abstract class Robot
     static Random rng;
     static RobotController rc;
 
-    static int moveCount = 0;
+    static int moveCount = 5;
     static Direction curDir = Direction.CENTER;
 
     static MapLocation parentLoc = null;
@@ -168,7 +168,9 @@ public abstract class Robot
     }
 
     static void moveRandom() throws GameActionException {
-        if (curDir == Direction.CENTER) curDir = Direction.values()[rng.nextInt(8)+1];
+//        if (curDir == Direction.CENTER) curDir = Direction.values()[rng.nextInt(8)+1];
+        if (curDir == Direction.CENTER) curDir = rc.getLocation().directionTo(new MapLocation(rc.getMapWidth() / 2, rc.getMapHeight() / 2));
+
         if (rc.isMovementReady()) {
             if (moveCount==0 || !rc.canMove(curDir)) {
                 moveCount=4;
