@@ -140,7 +140,6 @@ public class Tracker
     static void senseWells() throws GameActionException {
         if (rc.getType() != RobotType.AMPLIFIER) {
             WellInfo[] nearbyWells = rc.senseNearbyWells();
-            System.out.println(nearbyWells.length + " " + rc.getID());
             for (int j=0; j<nearbyWells.length; j++) {;
                 WellInfo testing = nearbyWells[j];
                 seenWells.add(testing);
@@ -225,7 +224,6 @@ public class Tracker
         int width = rc.getMapWidth();
         int height = rc.getMapHeight();
         for (CustomWell well : wells) {
-            System.out.println(rc.getID() + ": " + well.getMapLocation());
             MapLocation loc = well.getMapLocation();
             int w = rc.getLocation().distanceSquaredTo(loc);
             if (rc.senseNearbyRobots(loc, 2, rc.getTeam()).length >= 7)

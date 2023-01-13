@@ -21,6 +21,7 @@ public abstract class Robot
     static Movement movement;
     static Frontier frontier;
     static Direction[] directions = Direction.values();
+    static int turnCount = 0;
 
     static Tracker tracker;
     public Robot(RobotController rc)
@@ -93,6 +94,8 @@ public abstract class Robot
         }
 
         tracker.senseWells();
+
+        turnCount++;
     }
     abstract void run() throws GameActionException;
 

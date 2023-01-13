@@ -322,7 +322,6 @@ public class Movement {
         }
         if (lastDirection == Direction.CENTER) lastDirection = Direction.values()[rng.nextInt(8)+1];
 
-        System.out.println(lastDirection + " " + rc.getID());
         if (!rc.isMovementReady()) return null;
         Movement.rc = rc;
 

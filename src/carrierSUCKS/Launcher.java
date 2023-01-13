@@ -142,10 +142,19 @@ public class Launcher extends Robot
             moveTo(bestie);
         }
         else {
+            if (turnCount < 20)
+            {
+                MapLocation center = new MapLocation(rc.getMapWidth() / 2, rc.getMapHeight() / 2);
+                moveTo(center);
+            }else{
+                moveRandom();
+            }
+            /*
             tryProtect();
             // moveRandom();
             MapLocation center = new MapLocation(rc.getMapWidth() / 2, rc.getMapHeight() / 2);
             moveTo(center);
+            */
         }
         // tryProtect();
 
