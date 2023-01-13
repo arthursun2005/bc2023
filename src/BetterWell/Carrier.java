@@ -183,10 +183,10 @@ public class Carrier extends Robot
                 }
             }
         }
-//
-//        if (hitAndRun()) {
-//            return;
-//        }
+
+        if (hitAndRun()) {
+            return;
+        }
 
         if (rc.getAnchor() != null) {
             haveAnchor();
