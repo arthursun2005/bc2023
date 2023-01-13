@@ -229,6 +229,9 @@ public class Tracker
             {
                 continue;
             }
+            if (rc.getRoundNum() <= 600 && rc.getMapWidth() <= 22 && rc.getMapHeight() <= 22 && rc.getType().equals(RobotType.CARRIER) && well.getResourceType() == ResourceType.ADAMANTIUM) {
+                continue;
+            }
             if (rc.getRoundNum() > 80 && rc.getType().equals(RobotType.CARRIER) && rc.getID() % 3 != 0 && well.getResourceType() == ResourceType.ADAMANTIUM)
             {
                 continue;
