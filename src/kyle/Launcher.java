@@ -93,12 +93,13 @@ public class Launcher extends Robot
         MapLocation HQLoc = getClosestHQLoc();
         int dist = rc.getLocation().distanceSquaredTo(HQLoc);
         MapLocation weakLoc = null;
+        MapLocation center = new MapLocation(rc.getMapWidth() / 2, rc.getMapHeight() / 2);
         for (RobotInfo friend : friends)
         {
-            int w = friend.getLocation().distanceSquaredTo(HQLoc);
+            int w = friend.getLocation().distanceSquaredTo(center);
             if (friend.type.equals(RobotType.CARRIER))
             {
-                w -= 123456789;
+                // w -= 123456789;
             }
             if (w < dist)
             {
@@ -137,11 +138,14 @@ public class Launcher extends Robot
             }
         }
 
-        if (mini<rc.getID() && lowerCount<9) {
+        if (mini < rc.getID() && lowerCount < 9) {
             moveTo(bestie);
         }
         else {
-            moveRandom();
+            tryProtect();
+            // moveRandom();
+            MapLocation center = new MapLocation(rc.getMapWidth() / 2, rc.getMapHeight() / 2);
+            moveTo(center);
         }
         // tryProtect();
 
