@@ -2,6 +2,8 @@ package Mining0;
 
 import battlecode.common.*;
 
+import java.util.Random;
+
 enum State {
     WALL,
     NORMAL
@@ -20,6 +22,8 @@ public class Movement {
     static boolean shouldRight = true;
 
     static boolean switchable = false;
+
+    static Random rng = null;
 
     static int bugLength = 0;
 
@@ -59,6 +63,7 @@ public class Movement {
         return Direction.CENTER;
     }
     static Direction alongWall(Direction desired) throws GameActionException {
+        if (rng == null) rng = new Random(rc.getID());
 //        if (canMove(desired)) {
 //            return desired;
 //        }\
@@ -72,7 +77,7 @@ public class Movement {
             Direction checkDir = lastDirection;
 
             if (lastDirection == Direction.CENTER) {
-                lastDirection = Direction.NORTH;
+                lastDirection = Direction.values()[rng.nextInt(8)+1];
             }
 
 //            if (turningLeft) {
@@ -212,6 +217,7 @@ public class Movement {
 
 
     static Direction tryMove(RobotController rc, MapLocation currentTarget, Direction previous) throws GameActionException {
+        if (rng == null) rng = new Random(rc.getID());
 //        if (rc.canSenseLocation(currentTarget)) {
 //            hardReset();
 //            return tryBFS(currentTarget);
@@ -225,7 +231,7 @@ public class Movement {
                 prevLocation = rc.getLocation();
             }
         }
-        if (lastDirection == Direction.CENTER) lastDirection = Direction.NORTH;
+        if (lastDirection == Direction.CENTER) lastDirection = Direction.values()[rng.nextInt(8)+1];
 
         System.out.println(lastDirection + " " + rc.getID());
         if (!rc.isMovementReady()) return null;

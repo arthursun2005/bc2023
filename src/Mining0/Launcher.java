@@ -117,7 +117,7 @@ public class Launcher extends Robot {
 
                     Direction targetDirection = rc.getLocation().directionTo(toGuard).rotateRight().rotateRight();
                     if (targetDirection == Direction.CENTER) {
-                        targetDirection = Direction.NORTH;
+                        targetDirection = Direction.values()[rng.nextInt(8)+1];
                     }
                     Direction[] possible = new Direction[5];
                     for (int i = 0; i < 5; i++) {

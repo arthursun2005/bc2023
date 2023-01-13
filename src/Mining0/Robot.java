@@ -23,7 +23,7 @@ public abstract class Robot {
     };
 
     static int moveCount = 0;
-    static Direction curDir = Direction.NORTH;
+    static Direction curDir = Direction.CENTER;
     static RobotController rc;
 
     static Communication communication;
@@ -139,6 +139,7 @@ public abstract class Robot {
     }
 
     static void moveRandom() throws GameActionException {
+        if (curDir == Direction.CENTER) curDir = Direction.values()[rng.nextInt(8)+1];
         if (rc.isMovementReady()) {
             if (moveCount==0 || !rc.canMove(curDir)) {
                 moveCount=4;
@@ -219,4 +220,3 @@ public abstract class Robot {
         }
     }
 }
-
