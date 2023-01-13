@@ -38,8 +38,6 @@ public class Carrier extends Robot
             return;
         }
 
-        tracker.updateIslands(rc);
-
         if (!rc.isMovementReady())
             return;
 
@@ -79,6 +77,7 @@ public class Carrier extends Robot
     public void run() throws GameActionException
     {
         tracker.updateWells(rc);
+        tracker.updateIslands(rc);
         MapLocation HQLoc = getClosestHQLoc();
         runAwayFromDanger(HQLoc);
         tryTakeAnchor(HQLoc);
