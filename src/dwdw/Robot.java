@@ -94,7 +94,7 @@ public abstract class Robot
         }
 
         if (!tracker.calcHQ) {
-            System.out.println("Left " + Clock.getBytecodesLeft());
+            System.out.println("REeeeeeeeeeeeeee " + Clock.getBytecodesLeft());
             tracker.readHQLoc();
             System.out.println(tracker.HQLocations.size());
             tracker.calcHQ = true;

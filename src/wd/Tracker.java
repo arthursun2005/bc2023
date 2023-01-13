@@ -296,7 +296,7 @@ public class Tracker
 
     static void readHQLoc() throws GameActionException {
 
-        if (!calcHQ && rc.canWriteSharedArray(0, 0)) {
+        if (!calcHQ) {
             calcHQ = true;
             for (int i = 40; i < 50; i++) {
                 if (rc.readSharedArray(i) != 0) {

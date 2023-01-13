@@ -298,13 +298,14 @@ public class Tracker
 
     static void readHQLoc() throws GameActionException {
 
-        calcHQ = true;
-        System.out.println("called");
-        for (int i = 40; i < 50; i++) {
-            if (rc.readSharedArray(i) != 0) {
-                int decode = rc.readSharedArray(i);
-                hqCount++;
-                HQLocations.add(new MapLocation(decode / 69, decode % 69));
+        if (!calcHQ) {
+            calcHQ = true;
+            for (int i = 40; i < 50; i++) {
+                if (rc.readSharedArray(i) != 0) {
+                    int decode = rc.readSharedArray(i);
+                    hqCount++;
+                    HQLocations.add(new MapLocation(decode / 69, decode % 69));
+                }
             }
         }
 
