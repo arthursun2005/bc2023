@@ -122,26 +122,30 @@ public class Carrier extends Robot {
         });
     }
 
-    static MapLocation getTarget() {
+    static MapLocation getTarget() throws GameActionException {
         MapLocation target;
 
-        if (rc.getRoundNum() <= 30) {
+        if (rc.getRoundNum() <= 20) {
             sortType(ResourceType.ELIXIR);
             return wellUtility.wells.get(0).getMapLocation();
         }
 
-        if (Math.abs(rc.getResourceAmount(ResourceType.ADAMANTIUM) - rc.getResourceAmount(ResourceType.MANA)) >= 100) {
-            if (rc.getResourceAmount(ResourceType.ADAMANTIUM) > rc.getResourceAmount(ResourceType.MANA)) {
-                sortType(ResourceType.MANA);
-                return wellUtility.wells.get(0).getMapLocation();
-            } else {
-                sortType(ResourceType.ADAMANTIUM);
-                return wellUtility.wells.get(0).getMapLocation();
-            }
+        if (rc.getRoundNum() <= 30) {
+            sortType(ResourceType.ADAMANTIUM);
+            return wellUtility.wells.get(0).getMapLocation();
         }
 
-        target = wellUtility.wells.get(rng.nextInt(wellUtility.wells.size())).getMapLocation();
-        return target;
+        if (rc.getID() % 2 == 1) {
+            sortType(ResourceType.MANA);
+            return wellUtility.wells.get(0).getMapLocation();
+        } else {
+            sortType(ResourceType.ADAMANTIUM);
+            return wellUtility.wells.get(0).getMapLocation();
+        }
+
+
+//        target = wellUtility.wells.get(rng.nextInt(wellUtility.wells.size())).getMapLocation();
+//        return target;
     }
 
     public void runUnit() throws GameActionException {
@@ -173,10 +177,10 @@ public class Carrier extends Robot {
                 }
             }
         }
-
-        if (hitAndRun()) {
-            return;
-        }
+//
+//        if (hitAndRun()) {
+//            return;
+//        }
 
         if (rc.getAnchor() != null) {
             haveAnchor();
@@ -201,8 +205,8 @@ public class Carrier extends Robot {
             int holding = rc.getResourceAmount(ResourceType.ADAMANTIUM) + rc.getResourceAmount(ResourceType.MANA) + rc.getResourceAmount(ResourceType.ELIXIR);
             if (!mined && !rc.getLocation().isWithinDistanceSquared(target, 2)) {
                 rc.setIndicatorString("Going to well " + target.toString() + " " + wellUtility.wells.size() + " " + rc.getLocation().isWithinDistanceSquared(target, 1) + " " + wellUtility.wells.size());
-                if (!rc.getLocation().isWithinDistanceSquared(target, 2)) {
-                    moveToLocationRepeat(target);
+                while (!rc.getLocation().isWithinDistanceSquared(target, 2)) {
+                    if (!moveToLocation(target)) break;
                 }
             }
 
@@ -228,8 +232,8 @@ public class Carrier extends Robot {
                     current = HQLocations.get(rng.nextInt(HQLocations.size()));
 //                    current = parentHQ;
                 }
-                if (!rc.getLocation().isWithinDistanceSquared(current, 2)) {
-                    moveToLocationRepeat(current);
+                while (!rc.getLocation().isWithinDistanceSquared(current, 2) ) {
+                    if (!moveToLocation(current)) break;
                 }
 
                 rc.setIndicatorString("Returning to HQ " + wellUtility.wells.size() + " " + rc.getLocation().isWithinDistanceSquared(current, 2) + " " + (rc.getResourceAmount(ResourceType.ADAMANTIUM) + rc.getResourceAmount(ResourceType.MANA) + rc.getResourceAmount(ResourceType.ELIXIR)));
@@ -238,12 +242,15 @@ public class Carrier extends Robot {
                     int ada = rc.getResourceAmount(ResourceType.ADAMANTIUM), mana = rc.getResourceAmount(ResourceType.MANA), elixir = rc.getResourceAmount(ResourceType.ELIXIR);
                     if (ada > 0 && rc.canTransferResource(current, ResourceType.ADAMANTIUM, ada)) {
                         rc.transferResource(current, ResourceType.ADAMANTIUM, ada);
+                        communication.updateCount(0, ada);
                     }
                     if (mana > 0 && rc.canTransferResource(current, ResourceType.MANA, mana)) {
                         rc.transferResource(current, ResourceType.MANA, mana);
+                        communication.updateCount(1, mana);
                     }
                     if (elixir > 0 && rc.canTransferResource(current, ResourceType.ELIXIR, elixir)) {
                         rc.transferResource(current, ResourceType.ELIXIR, elixir);
+                        communication.updateCount(2, elixir);
                     }
                     holding = rc.getResourceAmount(ResourceType.ADAMANTIUM) + rc.getResourceAmount(ResourceType.MANA) + rc.getResourceAmount(ResourceType.ELIXIR);
                     if (holding == 0) {

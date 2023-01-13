@@ -209,19 +209,108 @@ public class Movement {
     }
 
     static MapLocation prevLocation = null;
+    public boolean[][] inbound = new boolean[9][9];
 
-//    static Direction tryBFS(MapLocation currentTarget) {
-//        MapInfo[] infos = rc.senseMapInfo();
-//
-//    }
+    static Direction tryBFS(MapLocation currentTarget) throws GameActionException {
+        MapInfo[] infos = rc.senseNearbyMapInfos();
+
+        int arr[][] = new int[9][9];
+        boolean seen[][] = new boolean[9][9];
+        int from[][] = new int[9][9];
+
+        MapLocation starting = rc.getLocation();
+
+        for (int i = 0; i < infos.length; i++) {
+            MapLocation mapLocation = infos[i].getMapLocation();
+
+            if (!infos[i].isPassable()) {
+                arr[mapLocation.x - starting.x + 4][mapLocation.y - starting.y + 4] = 2;
+            } else if(rc.senseRobotAtLocation(mapLocation) != null) {
+                arr[mapLocation.x - starting.x + 4][mapLocation.y - starting.y + 4] = 2;
+            } else if (infos[i].getCurrentDirection() != Direction.CENTER) {
+                arr[mapLocation.x - starting.x + 4][mapLocation.y - starting.y + 4] = 2 + infos[i].getCurrentDirection().getDirectionOrderNum();
+            } else {
+                arr[mapLocation.x - starting.x + 4][mapLocation.y - starting.y + 4] = 1;
+            }
+        }
+
+        int dx = 4, dy = 4;
+
+        Queue.queuePush(dx * 10 + dy);
+
+        while (!Queue.queueEmpty()) {
+            int current = Queue.queuePop();
+
+            int x = current / 10, y = current % 10;
+
+            for (int cx = -1; cx <= 1; cx++) {
+                for (int cy = -1; cy <= 1; cy++) {
+                    int nx = x + cx, ny = y + cy;
+                    if (nx < 0 || nx >= 9 || ny < 0 || ny >= 9) continue;
+                    if (arr[nx][ny] == 0 || arr[nx][ny] == 2) continue;
+
+                    // if current or empty
+                    if (arr[nx][ny] == 1 && !seen[nx][ny]) {
+                        seen[nx][ny] = true;
+                        Queue.queuePush(nx * 10 + ny);
+                        from[nx][ny] = current;
+                    }
+
+                    // current
+
+                    Direction currentDir = Direction.DIRECTION_ORDER[arr[nx][ny]];
+                    int nnx = currentDir.getDeltaX() + nx, nny = currentDir.getDeltaY() + ny;
+                    if (nnx < 0 || nnx >= 9 || nny < 0 || nny >= 9) continue;
+                    if (arr[nnx][nny] == 0) continue;
+
+                    if (arr[nnx][nny] == 1) {
+                        nnx = nx; nny = ny;
+                    }
+
+                    if (!seen[nnx][nny]) {
+                        seen[nnx][nny] = true;
+                        Queue.queuePush(nnx * 10 + nny);
+                        from[nnx][nny] = nx * 10 + ny;
+                        from[nx][ny] = current;
+                    }
+                }
+            }
+        }
+
+        int cx = currentTarget.x - starting.x + 4, cy = currentTarget.y - starting.y + 4;
+        int lastLoc = 0;
+        while (from[cx][cy] != 0) {
+            lastLoc = cx * 10 + cy;
+            int pos = from[cx][cy];
+            cx = pos / 10;
+            cy = pos % 10;
+        }
+
+        if (lastLoc == 0) {
+            // cannot find path (probs shoudl do something later)
+            System.out.println("FKFKFKFKFKF BFS DIED FKFKF");
+            return Direction.CENTER;
+        } else {
+            return (new MapLocation(4, 4).directionTo(new MapLocation(lastLoc / 10, lastLoc % 10)));
+        }
+    }
 
 
     static Direction tryMove(RobotController rc, MapLocation currentTarget, Direction previous) throws GameActionException {
         if (rng == null) rng = new Random(rc.getID());
 //        if (rc.canSenseLocation(currentTarget)) {
 //            hardReset();
+//            if (rc.getType() == RobotType.CARRIER) {
+//                int holding = rc.getResourceAmount(ResourceType.ADAMANTIUM) + rc.getResourceAmount(ResourceType.MANA) + rc.getResourceAmount(ResourceType.ELIXIR);
+//                if (rc.getMovementCooldownTurns() + (3 * holding / 8) + 5 < 10) {
+//                    return tryBFS(currentTarget);
+//                }
+//            }
 //            return tryBFS(currentTarget);
 //        }
+
+
+
         if (previous != null && lastDirection == Direction.CENTER) lastDirection = previous;
         else {
             if (prevLocation == null) {
