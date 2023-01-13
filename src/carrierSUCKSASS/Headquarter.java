@@ -1,4 +1,4 @@
-package dw;
+package carrierSUCKSASS;
 
 import battlecode.common.*;
 
@@ -41,24 +41,6 @@ public class Headquarter extends Robot
         return false;
     }
 
-    public boolean tryMake(MapLocation loc) throws GameActionException
-    {
-
-        if (rc.canBuildRobot(toMake, loc))
-        {
-            rc.buildRobot(toMake, loc);
-            if (toMake.equals(RobotType.CARRIER))
-            {
-                totalAda += 50;
-            }else if (toMake.equals(RobotType.LAUNCHER)) {
-                totalMana += 60;
-            }
-            return true;
-        }
-
-        return false;
-    }
-
     public boolean enemyHQIsDangerouslyCloseLmfao() throws GameActionException
     {
         RobotInfo[] enemies = rc.senseNearbyRobots(-1, rc.getTeam().opponent());
@@ -71,35 +53,6 @@ public class Headquarter extends Robot
         }
         return false;
     }
-
-
-    public MapLocation getOptimalMine() throws GameActionException {
-
-        MapLocation ideal = tracker.getClosestMine();
-        MapLocation newLoc = null;
-        Direction dir;
-
-        boolean found = false;
-
-        int closest = 1_000_000;
-        MapLocation closestLoc = null;
-
-        for (int dx = -3; dx <= 3; dx++ ) {
-            for (int dy = -3; dy <= 3; dy++ ) {
-                if (dx * dx + dy * dy > 9) continue;
-                MapLocation temp = new MapLocation(ideal.x + dx, ideal.y + dy);
-                if (rc.onTheMap(temp) && rc.canBuildRobot(RobotType.CARRIER, temp) && temp.distanceSquaredTo(ideal) < closest) {
-                    System.out.println(closest + " " + temp + " " + ideal);
-                    closest = temp.distanceSquaredTo(ideal);
-                    closestLoc = temp;
-                    found = true;
-                }
-            }
-        }
-
-        return newLoc;
-    }
-
     public void run() throws GameActionException
     {
         if (rc.getRoundNum() == 1) {
@@ -120,15 +73,19 @@ public class Headquarter extends Robot
             return;
         }
 
-        if (/*enemyHQIsDangerouslyCloseLmfao() && */rc.getRoundNum() <= 3)
+        if (enemyHQIsDangerouslyCloseLmfao() && rc.getRoundNum() <= 5)
         {
             toMake = RobotType.LAUNCHER;
         }
 
         if (toMake.equals(RobotType.CARRIER))
         {
-            MapLocation loc = getOptimalMine();
-            made = tryMake(loc);
+            Direction bestDir = rc.getLocation().directionTo(well);
+            if (bestDir == null || bestDir.equals(Direction.CENTER))
+            {
+                bestDir = Direction.values()[rng.nextInt(8)+1];
+            }
+            made = tryMake(bestDir);
         }
 
         if (toMake.equals(RobotType.LAUNCHER))
