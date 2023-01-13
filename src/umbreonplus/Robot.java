@@ -1,4 +1,4 @@
-package umbreon;
+package umbreonplus;
 
 import battlecode.common.*;
 import java.util.*;
@@ -47,6 +47,10 @@ public abstract class Robot
     public boolean tryAttack() throws GameActionException
     {
         if (!rc.isActionReady()) return false;
+        if (rc.getType().equals(RobotType.CARRIER) && rc.getWeight() < 5)
+        {
+            return false;
+        }
 
         int radius = rc.getType().actionRadiusSquared;
         Team opponent = rc.getTeam().opponent();
@@ -57,8 +61,14 @@ public abstract class Robot
         for (RobotInfo enemy : enemies) {
             MapLocation toAttack = enemy.location;
             if (rc.canAttack(toAttack)) {
-                int adjustedHealth = ((enemy.getHealth() + 5) / 6) * 123456 - enemy.getID();
-                if (enemy.type.equals(RobotType.LAUNCHER)) adjustedHealth -= 123456789;
+                // int adjustedHealth = ((enemy.getHealth() + 5) / 6) * 123456 - enemy.getID();
+                // int adjustedHealth = ((enemy.getHealth() + 5) / 6) * 123456 + rc.getLocation().distanceSquaredTo(toAttack);
+                int adjustedHealth = rc.getLocation().distanceSquaredTo(toAttack) * 123456 - enemy.getID();
+
+                if (enemy.type.equals(RobotType.LAUNCHER))
+                {
+                    adjustedHealth -= 123456789;
+                }
                 if (minHealth == -69 || adjustedHealth < minHealth)
                 {
                     minHealth = adjustedHealth;
