@@ -25,7 +25,7 @@ public class Carrier extends Robot
     {
         if (rc.canTakeAnchor(HQLoc, Anchor.STANDARD))
         {
-            rc.setIndicatorString("Taking standard Anchor UwU");
+            System.out.println("Taking standard Anchor UwU");
             rc.takeAnchor(HQLoc, Anchor.STANDARD);
         }
     }
@@ -123,6 +123,7 @@ public class Carrier extends Robot
         {
             tryMine(well);
             moveTo(well);
+            tryMine(well);
             return;
         }
         spreadOut(false);
