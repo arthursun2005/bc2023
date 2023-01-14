@@ -289,7 +289,7 @@ public class Tracker
     static void writeHQLoc() throws GameActionException {
         for (int i = 40; i < 50; i++) {
             if (rc.readSharedArray(i) != 0) continue;
-            rc.writeSharedArray(i, rc.getLocation().x * 69 + rc.getLocation().y);
+            rc.writeSharedArray(i, rc.getLocation().x * 69 + rc.getLocation().y + 1);
             break;
         }
     }
@@ -300,7 +300,7 @@ public class Tracker
             calcHQ = true;
             for (int i = 40; i < 50; i++) {
                 if (rc.readSharedArray(i) != 0) {
-                    int decode = rc.readSharedArray(i);
+                    int decode = rc.readSharedArray(i) - 1;
                     hqCount++;
                     HQLocations.add(new MapLocation(decode / 69, decode % 69));
                 }
