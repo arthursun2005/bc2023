@@ -31,7 +31,9 @@ public class Tracker
     static Random rng;
 
     static RobotController rc;
-    static IslandState[][] islands = new IslandState[69][69];
+
+    // TODO: BYTECODE PROBLEM
+//    static IslandState[][] islands = new IslandState[69][69];
 
     // WELL FINDING
     static ArrayList<WellInfo> seenWells = new ArrayList<>();
@@ -168,53 +170,53 @@ public class Tracker
 //            }
 //        }
 //    }
-
-    static void updateIslands(RobotController rc) throws GameActionException
-    {
-        Tracker.rc = rc;
-
-        int[] nis = rc.senseNearbyIslands();
-        for (int id : nis) {
-            boolean occupied = rc.senseTeamOccupyingIsland(id) == rc.getTeam();
-            MapLocation[] thisIslandLocs = rc.senseNearbyIslandLocations(id);
-            for (MapLocation nLoc : thisIslandLocs)
-            {
-                if (occupied)
-                {
-                    islands[nLoc.x][nLoc.y] = IslandState.OCCUPIED;
-                }else{
-                    islands[nLoc.x][nLoc.y] = IslandState.EMPTY;
-                }
-            }
-        }
-    }
-
-    static MapLocation getOptimalIsland() throws GameActionException
-    {
-        int dist = -1;
-        MapLocation target = null;
-        int width = rc.getMapWidth();
-        int height = rc.getMapHeight();
-        for (int x = 0; x < width; x++)
-        {
-            for (int y = 0; y < height; y++)
-            {
-                if (islands[x][y] == null || islands[x][y].equals(IslandState.OCCUPIED))
-                {
-                    continue;
-                }
-                MapLocation loc = new MapLocation(x, y);
-                int w = rc.getLocation().distanceSquaredTo(loc);
-                if (dist == -1 || w < dist)
-                {
-                    dist = w;
-                    target = loc;
-                }
-            }
-        }
-        System.out.println("I'm trying to reach " + target + " which I think is an island");
-        return target;
-    }
+//
+    //    static void updateIslands(RobotController rc) throws GameActionException
+    //    {
+    //        Tracker.rc = rc;
+    //
+    //        int[] nis = rc.senseNearbyIslands();
+    //        for (int id : nis) {
+    //            boolean occupied = rc.senseTeamOccupyingIsland(id) == rc.getTeam();
+    //            MapLocation[] thisIslandLocs = rc.senseNearbyIslandLocations(id);
+    //            for (MapLocation nLoc : thisIslandLocs)
+    //            {
+    //                if (occupied)
+    //                {
+    //                    islands[nLoc.x][nLoc.y] = IslandState.OCCUPIED;
+    //                }else{
+    //                    islands[nLoc.x][nLoc.y] = IslandState.EMPTY;
+    //                }
+    //            }
+    //        }
+    //    }
+//
+//    static MapLocation getOptimalIsland() throws GameActionException
+//    {
+//        int dist = -1;
+//        MapLocation target = null;
+//        int width = rc.getMapWidth();
+//        int height = rc.getMapHeight();
+//        for (int x = 0; x < width; x++)
+//        {
+//            for (int y = 0; y < height; y++)
+//            {
+//                if (islands[x][y] == null || islands[x][y].equals(IslandState.OCCUPIED))
+//                {
+//                    continue;
+//                }
+//                MapLocation loc = new MapLocation(x, y);
+//                int w = rc.getLocation().distanceSquaredTo(loc);
+//                if (dist == -1 || w < dist)
+//                {
+//                    dist = w;
+//                    target = loc;
+//                }
+//            }
+//        }
+//        System.out.println("I'm trying to reach " + target + " which I think is an island");
+//        return target;
+//    }
 
     static MapLocation getOptimalWell() throws GameActionException
     {

@@ -120,9 +120,6 @@ public class Headquarter extends Robot
 
     public void run() throws GameActionException
     {
-        if (rc.getRoundNum() == 4) {
-            rc.resign();
-        }
         Tracker.updateWells();
         MapLocation well = Tracker.getClosestMine();
         boolean made = false;
