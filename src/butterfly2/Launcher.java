@@ -143,6 +143,8 @@ public class Launcher extends Robot
 
     static boolean crossed = false;
 
+    static int symmetry = 0;
+
     static int encode(int x, int y) {
         return x * 60 + y;
     }
@@ -192,6 +194,7 @@ public class Launcher extends Robot
             if (possi[1]+possi[2]+possi[3]==1) {
                 System.out.println("SYMMETRY FOUND" + (possi[1] == 1 ? 1 : (possi[2] == 1 ? 2 : 3)));
                 rc.setIndicatorString("SYMMETRY FOUND" + (possi[1] == 1 ? 1 : (possi[2] == 1 ? 2 : 3)));
+                symmetry = (possi[1] == 1 ? 1 : (possi[2] == 1 ? 2 : 3));
                 foundSymmetry = true;
             }
         }
@@ -226,9 +229,11 @@ public class Launcher extends Robot
         int mini=rc.getID();
         MapLocation bestie = null;
         int lowerCount = 0;
+        int launcherCount = 0;
 
         for (RobotInfo friend : friends) {
             if (friend.type == RobotType.LAUNCHER) {
+                launcherCount++;
                 if (friend.getID() < rc.getID()) lowerCount++;
                 if (friend.getID() < mini) {
                     mini=friend.getID();
@@ -255,7 +260,31 @@ public class Launcher extends Robot
                     moveTo(oppositeLoc);
                 }
             }else{
-                moveRandom();
+                if (rc.getID()%2==0) {
+                    if (launcherCount > 3) {
+                        MapLocation desti = null;
+                        switch (symmetry) {
+                            case 1: {
+                                moveTo(new MapLocation(oppositeLoc.x,parentLoc.y));
+                                break;
+                            }
+                            case 2: {
+                                moveTo(new MapLocation(parentLoc.x,oppositeLoc.y));
+                                break;
+                            }
+                            default: {
+                                moveTo(oppositeLoc);
+                                break;
+                            }
+                        }
+                    }
+                    else {
+                        moveTo(tracker.getClosestHQLoc());
+                    }
+                }
+                else {
+                    moveRandom();
+                }
             }
         }
         // tryProtect();
