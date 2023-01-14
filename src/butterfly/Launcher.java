@@ -117,6 +117,18 @@ public class Launcher extends Robot
         }
     }
 
+    static boolean isStuck(MapLocation loc) throws GameActionException {
+        for (int dx = -1; dx <= 1; dx++ ) {
+            for (int dy = -1; dy <= 1; dy++ ) {
+                MapLocation tmp = new MapLocation(loc.x + dx, loc.y + dy);
+                if (!rc.onTheMap(tmp)) continue;
+                if (!rc.canSenseLocation(tmp)) return false;
+                if (rc.sensePassability(tmp)&&rc.senseRobotAtLocation(tmp)==null) return false;
+            }
+        }
+        return true;
+    }
+
     static boolean crossed = false;
 
     public void run() throws GameActionException
@@ -161,7 +173,10 @@ public class Launcher extends Robot
         }
 
         if (mini < rc.getID() && lowerCount < 9) {
-            if (rc.getLocation().distanceSquaredTo(bestie) > 2)
+            if (isStuck(bestie)) {
+                spreadOut(true);
+            }
+            else if (rc.getLocation().distanceSquaredTo(bestie) > 2)
             {
                 moveTo(bestie);
             }
