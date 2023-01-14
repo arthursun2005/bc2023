@@ -128,6 +128,12 @@ public class Tracker
         toAdd.clear();
     }
     static MapLocation getClosestMine() {
+        if (wells.size() == 0)
+        {
+            int width = rc.getMapWidth();
+            int height = rc.getMapHeight();
+            return new MapLocation(width / 2, height / 2);
+        }
         wells.sort(new Comparator<CustomWell>() {
             public int compare(CustomWell a, CustomWell b) {
 

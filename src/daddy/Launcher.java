@@ -88,7 +88,11 @@ public class Launcher extends Robot
             }
 
             // int adjustedHealth = -countWithin(allFriends, enemy.location, radius) * 66666 + enemy.health;
-            int adjustedHealth = enemy.getHealth() * 66666 - enemy.getID();
+            // int adjustedHealth = enemy.getHealth() * 66666 - enemy.getID();
+            int U = countWithin(allFriends, enemy.location, rc.getType().visionRadiusSquared);
+            // int adjustedHealth = -U * 66666 + enemy.health;
+            // int adjustedHealth = enemy.getHealth() * 66666 - enemy.getID();
+            int adjustedHealth = (enemy.health - U * 6) * 66666 - enemy.getID();
             if (enemy.type.equals(RobotType.LAUNCHER)) adjustedHealth -= 123456789;
             if (adjustedHealth < minHealth)
             {
@@ -116,8 +120,8 @@ public class Launcher extends Robot
             {
                 if (!rc.canMove(dir)) continue;
                 MapLocation loc = rc.adjacentLocation(dir);
-                if (loc.distanceSquaredTo(weakLoc) > radius) continue;
-                int w = countWithin(enemies, loc, big) * 6666 + loc.distanceSquaredTo(weakLoc);
+                if (loc.distanceSquaredTo(weakLoc) > big) continue;
+                int w = countWithin(enemies, loc, big) * 66666 - loc.distanceSquaredTo(weakLoc);
                 if (w < hits)
                 {
                     hits = w;
@@ -172,7 +176,7 @@ public class Launcher extends Robot
             return;
         }
 
-        RobotInfo[] friends = rc.senseNearbyRobots(42069,rc.getTeam());
+        RobotInfo[] friends = rc.senseNearbyRobots(8, rc.getTeam());
         int mini=rc.getID();
         MapLocation bestie = null;
         int lowerCount = 0;
@@ -192,7 +196,7 @@ public class Launcher extends Robot
             crossed = true;
         }
 
-        if (mini < rc.getID() && lowerCount < 9) {
+        if (mini < rc.getID() && lowerCount < 13) {
             if (rc.getLocation().distanceSquaredTo(bestie) > 2)
             {
                 moveTo(bestie);
