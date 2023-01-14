@@ -78,9 +78,11 @@ public class Tracker
         MapLocation target = null;
         int width = rc.getMapWidth();
         int height = rc.getMapHeight();
-        for (int x = 0; x < width; x++)
+        int xx = rc.getLocation().x;
+        int yy = rc.getLocation().y;
+        for (int x = Math.max(0, xx - 8); x < Math.min(width, xx + 8); x++)
         {
-            for (int y = 0; y < height; y++)
+            for (int y = Math.max(0, yy - 8); y < Math.min(height, yy + 8); y++)
             {
                 if (islands[x][y] == null || islands[x][y].equals(IslandState.OCCUPIED))
                 {
@@ -99,15 +101,32 @@ public class Tracker
         return target;
     }
 
+    static int countWithin(RobotInfo[] backup, MapLocation a, int tolerance)
+    {
+        int cnt = 0;
+        for (RobotInfo ri : backup)
+        {
+            if (!ri.type.equals(rc.getType())) continue;
+            if (a.distanceSquaredTo(ri.location) <= tolerance)
+            {
+                cnt++;
+            }
+        }
+        return cnt;
+    }
+
     static MapLocation getOptimalWell() throws GameActionException
     {
         int dist = -1;
         MapLocation target = null;
         int width = rc.getMapWidth();
         int height = rc.getMapHeight();
-        for (int x = 0; x < width; x++)
+        int xx = rc.getLocation().x;
+        int yy = rc.getLocation().y;
+        RobotInfo[] friends = rc.senseNearbyRobots(-1, rc.getTeam());
+        for (int x = Math.max(0, xx - 8); x < Math.min(width, xx + 8); x++)
         {
-            for (int y = 0; y < height; y++)
+            for (int y = Math.max(0, yy - 8); y < Math.min(height, yy + 8); y++)
             {
                 if (wells[x][y] == null)
                 {
@@ -115,7 +134,7 @@ public class Tracker
                 }
                 MapLocation loc = new MapLocation(x, y);
                 int w = rc.getLocation().distanceSquaredTo(loc);
-                if (rc.senseNearbyRobots(loc, 2, rc.getTeam()).length >= 5)
+                if (countWithin(friends, loc, 2) >= 5)
                 {
                     continue;
                 }
