@@ -31,7 +31,10 @@ public class Tracker
     static Random rng;
 
     static RobotController rc;
-    static IslandState[][] islands = new IslandState[69][69];
+
+    // TODO: THIS TAKES ~ 4K BYTECODES (NEEDS CHANGING)
+//    static IslandState[][] islands = new IslandState[1][1];
+
 
     // WELL FINDING
     static ArrayList<WellInfo> seenWells = new ArrayList<>();
@@ -39,10 +42,6 @@ public class Tracker
     static int curWellSharedArray = 50;
     static boolean[][] isWell = new boolean[64][64];
     static ArrayList<CustomWell> wells = new ArrayList<>();
-    static ArrayList<MapLocation> adaWells = new ArrayList<>();
-    static ArrayList<MapLocation> manaWells = new ArrayList<>();
-    static ArrayList<MapLocation> elixirWells = new ArrayList<>();
-
     // END WELL FINDING
 
     public Tracker(RobotController rc) {
@@ -84,15 +83,15 @@ public class Tracker
             int wellX = wellPos / 69;
             int wellY = wellPos % 69;
             wells.add(new CustomWell(new MapLocation(wellX, wellY), wellTypeMap.get(wellType)));
-            if (wellType == 0) {
-                adaWells.add(new MapLocation(wellX, wellY));
-            }
-            if (wellType == 1) {
-                manaWells.add(new MapLocation(wellX, wellY));
-            }
-            if (wellType == 2) {
-                elixirWells.add(new MapLocation(wellX, wellY));
-            }
+//            if (wellType == 0) {
+//                adaWells.add(new MapLocation(wellX, wellY));
+//            }
+//            if (wellType == 1) {
+//                manaWells.add(new MapLocation(wellX, wellY));
+//            }
+//            if (wellType == 2) {
+//                elixirWells.add(new MapLocation(wellX, wellY));
+//            }
             isWell[wellX][wellY] = true;
             curWellSharedArray++;
         }
@@ -169,52 +168,55 @@ public class Tracker
 //        }
 //    }
 
-    static void updateIslands(RobotController rc) throws GameActionException
-    {
-        Tracker.rc = rc;
 
-        int[] nis = rc.senseNearbyIslands();
-        for (int id : nis) {
-            boolean occupied = rc.senseTeamOccupyingIsland(id) == rc.getTeam();
-            MapLocation[] thisIslandLocs = rc.senseNearbyIslandLocations(id);
-            for (MapLocation nLoc : thisIslandLocs)
-            {
-                if (occupied)
-                {
-                    islands[nLoc.x][nLoc.y] = IslandState.OCCUPIED;
-                }else{
-                    islands[nLoc.x][nLoc.y] = IslandState.EMPTY;
-                }
-            }
-        }
-    }
+    // TODO: NEEDS CHANGING CUZ ISLANDS[][] GOT REMOVED
+//    static void updateIslands(RobotController rc) throws GameActionException
+//    {
+//        Tracker.rc = rc;
+//
+//        int[] nis = rc.senseNearbyIslands();
+//        for (int id : nis) {
+//            boolean occupied = rc.senseTeamOccupyingIsland(id) == rc.getTeam();
+//            MapLocation[] thisIslandLocs = rc.senseNearbyIslandLocations(id);
+//            for (MapLocation nLoc : thisIslandLocs)
+//            {
+//                if (occupied)
+//                {
+//                    islands[nLoc.x][nLoc.y] = IslandState.OCCUPIED;
+//                }else{
+//                    islands[nLoc.x][nLoc.y] = IslandState.EMPTY;
+//                }
+//            }
+//        }
+//    }
 
-    static MapLocation getOptimalIsland() throws GameActionException
-    {
-        int dist = -1;
-        MapLocation target = null;
-        int width = rc.getMapWidth();
-        int height = rc.getMapHeight();
-        for (int x = 0; x < width; x++)
-        {
-            for (int y = 0; y < height; y++)
-            {
-                if (islands[x][y] == null || islands[x][y].equals(IslandState.OCCUPIED))
-                {
-                    continue;
-                }
-                MapLocation loc = new MapLocation(x, y);
-                int w = rc.getLocation().distanceSquaredTo(loc);
-                if (dist == -1 || w < dist)
-                {
-                    dist = w;
-                    target = loc;
-                }
-            }
-        }
-        System.out.println("I'm trying to reach " + target + " which I think is an island");
-        return target;
-    }
+    // TODO: NEEDS CHANGING CUZ ISLANDS[][] GOT REMOVED
+//    static MapLocation getOptimalIsland() throws GameActionException
+//    {
+//        int dist = -1;
+//        MapLocation target = null;
+//        int width = rc.getMapWidth();
+//        int height = rc.getMapHeight();
+//        for (int x = 0; x < width; x++)
+//        {
+//            for (int y = 0; y < height; y++)
+//            {
+//                if (islands[x][y] == null || islands[x][y].equals(IslandState.OCCUPIED))
+//                {
+//                    continue;
+//                }
+//                MapLocation loc = new MapLocation(x, y);
+//                int w = rc.getLocation().distanceSquaredTo(loc);
+//                if (dist == -1 || w < dist)
+//                {
+//                    dist = w;
+//                    target = loc;
+//                }
+//            }
+//        }
+//        System.out.println("I'm trying to reach " + target + " which I think is an island");
+//        return target;
+//    }
 
     static MapLocation getOptimalWell() throws GameActionException
     {
