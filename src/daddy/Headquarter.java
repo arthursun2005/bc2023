@@ -1,4 +1,4 @@
-package wd;
+package daddy;
 
 import battlecode.common.*;
 
@@ -121,7 +121,7 @@ public class Headquarter extends Robot
         MapLocation well = Tracker.getClosestMine();
         boolean made = false;
 
-        if (totalAda - anchorsMade * 500 >= 800 && totalMana - anchorsMade * 200 >= 500)
+        if (totalAda - anchorsMade * 300 >= 1500 && totalMana - anchorsMade * 200 >= 1000)
         {
             if (rc.canBuildAnchor(Anchor.STANDARD))
             {
