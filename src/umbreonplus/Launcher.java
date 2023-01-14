@@ -55,8 +55,6 @@ public class Launcher extends Robot
             if (weakLoc != null)
             {
                 moveTo(weakLoc);
-            }else{
-                return false;
             }
         }
 
@@ -116,7 +114,7 @@ public class Launcher extends Robot
             }
         }
 
-        if (mini < rc.getID() && lowerCount < 3) {
+        if (mini < rc.getID() && lowerCount < 13) {
             if (rc.getLocation().distanceSquaredTo(bestie) > 2)
             {
                 moveTo(bestie);

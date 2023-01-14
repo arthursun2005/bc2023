@@ -44,6 +44,25 @@ public abstract class Robot
         return directions;
     }
 
+    public int rDist(MapLocation a, MapLocation b)
+    {
+        return Math.max(Math.abs(b.x - a.x), Math.abs(b.y - a.y));
+    }
+
+    public int countWithin(RobotInfo[] backup, MapLocation a, int tolerance)
+    {
+        int cnt = 0;
+        for (RobotInfo ri : backup)
+        {
+            if (!ri.type.equals(rc.getType())) continue;
+            if (a.distanceSquaredTo(ri.location) <= tolerance)
+            {
+                cnt++;
+            }
+        }
+        return cnt;
+    }
+
     public boolean tryAttack() throws GameActionException
     {
         if (!rc.isActionReady()) return false;
