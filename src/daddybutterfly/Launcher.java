@@ -1,4 +1,4 @@
-package butterfly;
+package daddybutterfly;
 
 import battlecode.common.*;
 
@@ -11,23 +11,40 @@ public class Launcher extends Robot
 
     static MapLocation attackLoc = null;
 
+    public int countWithin(RobotInfo[] backup, MapLocation a, int tolerance)
+    {
+        int cnt = 0;
+        for (RobotInfo ri : backup)
+        {
+            if (!ri.type.equals(RobotType.LAUNCHER)) continue;
+            if (a.distanceSquaredTo(ri.location) <= tolerance)
+            {
+                cnt++;
+            }
+        }
+        return cnt;
+    }
+
     public boolean tryAttack() throws GameActionException
     {
         int radius = rc.getType().actionRadiusSquared;
         Team opponent = rc.getTeam().opponent();
+        RobotInfo[] friends = rc.senseNearbyRobots(-1, rc.getTeam());
         RobotInfo[] enemies = rc.senseNearbyRobots(radius, opponent);
         attackLoc = null;
-        int minHealth = -1;
-        int theID = -1;
+        int minHealth = 123456789;
         for (RobotInfo enemy : enemies) {
             MapLocation toAttack = enemy.location;
-            if (rc.canAttack(toAttack)) {
-                int adjustedHealth = enemy.getHealth() * 123456 + enemy.getID();
+            if (rc.canAttack(toAttack))
+            {
+                int U = countWithin(friends, toAttack, rc.getType().visionRadiusSquared);
+                // int adjustedHealth = -U * 66666 + enemy.health;
+                // int adjustedHealth = enemy.getHealth() * 66666 - enemy.getID();
+                int adjustedHealth = (enemy.health - U * 6) * 66666 - enemy.getID();
                 if (enemy.type.equals(RobotType.LAUNCHER)) adjustedHealth -= 123456789;
-                if (minHealth == -1 || adjustedHealth < minHealth)
+                if (adjustedHealth < minHealth)
                 {
                     minHealth = adjustedHealth;
-                    theID = enemy.getID();
                     attackLoc = toAttack;
                 }
             }
@@ -43,17 +60,19 @@ public class Launcher extends Robot
     public boolean tryChaseOrRetreat() throws GameActionException
     {
         Team opponent = rc.getTeam().opponent();
-        RobotInfo[] friends = rc.senseNearbyRobots(-1, rc.getTeam());
+        int radius = rc.getType().actionRadiusSquared;
+        RobotInfo[] allFriends = rc.senseNearbyRobots(-1, rc.getTeam());
+        RobotInfo[] friends = rc.senseNearbyRobots(3, rc.getTeam());
         RobotInfo[] enemies = rc.senseNearbyRobots(-1, opponent);
-        int friendOffensiveCnt = 5 + rc.getHealth();
+        int friendOffensiveCnt = (5 + rc.getHealth()) / 6;
         int enemyOffensiveCnt = 0;
         MapLocation weakLoc = null;
-        int minHealth = -1;
+        int minHealth = 123456789;
         for (RobotInfo friend : friends)
         {
             if (friend.type.equals(RobotType.LAUNCHER))
             {
-                friendOffensiveCnt += 5 + friend.health;
+                friendOffensiveCnt += (5 + friend.health) / 6;
             }
         }
         for (RobotInfo enemy : enemies)
@@ -61,27 +80,51 @@ public class Launcher extends Robot
             if (enemy.type.equals(RobotType.HEADQUARTERS)) continue;
             if (enemy.type.equals(RobotType.LAUNCHER))
             {
-                enemyOffensiveCnt += 5 + enemy.health;
+                enemyOffensiveCnt += (5 + enemy.health) / 6;
+            }
+            if (rc.getID() > enemy.getID())
+            {
+                enemyOffensiveCnt++;
+            }else{
+                friendOffensiveCnt++;
             }
 
-            int adjustedHealth = enemy.getHealth() * 123456 + enemy.getID();
+            // int adjustedHealth = -countWithin(allFriends, enemy.location, radius) * 66666 + enemy.health;
+            // int adjustedHealth = enemy.getHealth() * 66666 - enemy.getID();
+            int U = countWithin(allFriends, enemy.location, rc.getType().visionRadiusSquared);
+            // int adjustedHealth = -U * 66666 + enemy.health;
+            // int adjustedHealth = enemy.getHealth() * 66666 - enemy.getID();
+            int adjustedHealth = (enemy.health - U * 6) * 66666 - enemy.getID();
             if (enemy.type.equals(RobotType.LAUNCHER)) adjustedHealth -= 123456789;
-            if (minHealth == -1 || adjustedHealth < minHealth)
+            if (adjustedHealth < minHealth)
             {
                 minHealth = adjustedHealth;
-                weakLoc = enemy.getLocation();
+                weakLoc = enemy.location;
             }
         }
 
-        /*if (enemyOffensiveCnt > friendOffensiveCnt + 5)
-        {
-            // retreat
-            moveTo(tracker.getClosestHQLoc());
-        }else */
-        if (true) {
-            // attack
-            if (weakLoc != null)
+        if (weakLoc != null) {
+            // rotate
+            int big = rc.getType().visionRadiusSquared;
+            Direction best = null;
+            int hits = 123456789;
+            for (Direction dir : directions)
             {
+                if (!rc.canMove(dir)) continue;
+                MapLocation loc = rc.adjacentLocation(dir);
+                if (loc.distanceSquaredTo(weakLoc) > big) continue;
+                int w = countWithin(enemies, loc, big) * 66666 - loc.distanceSquaredTo(weakLoc);
+                if (w < hits)
+                {
+                    hits = w;
+                    best = dir;
+                }
+            }
+            if (best != null)
+            {
+                rc.move(best);
+            }
+            else {
                 moveTo(weakLoc);
             }
         }
