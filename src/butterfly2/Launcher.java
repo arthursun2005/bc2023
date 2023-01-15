@@ -294,7 +294,15 @@ public class Launcher extends Robot
                         }
                     }
                     else {
-                        moveTo(tracker.getClosestHQLoc());
+                        //moveTo(tracker.getClosestHQLoc());
+                        //moveRandom();
+                        MapLocation nearHQ = tracker.getClosestHQLoc();
+                        if (rc.getLocation().distanceSquaredTo(nearHQ) > 10) {
+                            moveTo(nearHQ);
+                        }
+                        else {
+                            spreadOut(false);
+                        }
                     }
                 }
                 else {
