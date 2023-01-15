@@ -1,4 +1,4 @@
-package butterfly2;
+package butterflydefend;
 
 import battlecode.common.*;
 
@@ -27,7 +27,7 @@ public abstract class Robot
     public Robot(RobotController rc)
     {
         Robot.rc = rc;
-        rng = new Random(rc.getID());
+        rng = new Random(rc.getID() + 135);
         tracker = new Tracker(rc);
     }
 
