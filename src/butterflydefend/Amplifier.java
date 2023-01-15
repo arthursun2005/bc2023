@@ -27,14 +27,14 @@ public class Amplifier extends Robot
                 rc.setIndicatorString("Waiting " + waiting);
                 waiting--;
                 if (waiting == 0) {
-                    cooldown = 10;
+                    cooldown = 5;
                 }
                 return;
             }
         }
         cooldown--;
         if (cooldown <= 0 && tracker.isEnemyGroup()) {
-            waiting = 10;
+            waiting = 5;
             tracker.addEnemyGroup();
             rc.setIndicatorString("Waiting " + waiting);
             return;

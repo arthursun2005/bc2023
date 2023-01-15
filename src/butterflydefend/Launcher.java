@@ -302,6 +302,28 @@ public class Launcher extends Robot
                     }
                 });
 
+//                if (rc.canWriteSharedArray(0, 0)) {
+//                    ArrayList<MapLocation> enemyGroups = tracker.getEnemyGroups();
+//                    if (enemyGroups.size() > 0 && rc.getRoundNum() % 2 == 0 && rng.nextInt(3) < 2) {
+//                        MapLocation closest = enemyGroups.get(0);
+//                        MapLocation pos = rc.getLocation();
+//                        int optDist = pos.distanceSquaredTo(closest);
+//                        for (MapLocation enemyGroup : enemyGroups) {
+//                            int curDist = pos.distanceSquaredTo(enemyGroup);
+//                            if (curDist < optDist) {
+//                                optDist = curDist;
+//                                closest = enemyGroup;
+//                            }
+//                        }
+//                        moveTo(closest);
+//                        tracker.removeEnemyGroup(closest);
+//                        rc.setIndicatorString("Going to " + closest);
+//                    } else {
+//                        moveRandom();
+//                    }
+//                } else {
+//                    moveRandom();
+//                }
 
                 if (!groups.isEmpty()) {
                     moveTo(groups.get(0));
