@@ -10,19 +10,15 @@ public class Launcher extends Robot
 {
 
 
-    static long arr[] = new long[185]; // 2^63 - 1
+    static long arr[] = new long[195]; // 2^63 - 1
     // 3 per location, 21 locations in one long, need 180
 
     static void put(int loc, int val) {
-        int idx = loc / 19, remainder = loc % 19;
-
-        arr[idx] |= ((long) val << ((remainder) * 3));
+        arr[loc / 19] |= ((long) val << ((loc % 19) * 3));
     }
 
     static int read(int loc) {
-        int idx = loc / 19, remainder = loc % 19;
-
-        return (int) ((arr[idx] >> (remainder*3))%8);
+        return (int) ((arr[loc / 19] >> ((loc % 19)*3))%8);
     }
     static int possi[] = {0,1,1,1};
 
@@ -141,6 +137,18 @@ public class Launcher extends Robot
         }
     }
 
+    static boolean isStuck(MapLocation loca) throws GameActionException {
+        for (int dx = -1; dx <= 1; dx++ ) {
+            for (int dy = -1; dy <= 1; dy++ ) {
+                MapLocation tmp = new MapLocation(loca.x + dx, loca.y + dy);
+                if (!rc.onTheMap(tmp)) continue;
+                if (!rc.canSenseLocation(tmp)) return false;
+                if (rc.sensePassability(tmp)&&rc.senseRobotAtLocation(tmp)==null) return false;
+            }
+        }
+        return true;
+    }
+
     static boolean crossed = false;
 
     static int symmetry = 0;
@@ -148,31 +156,38 @@ public class Launcher extends Robot
     static int encode(int x, int y) {
         return x * 60 + y;
     }
+
+    static RobotInfo possibleHQ = null;
+    static MapInfo mapInfo = null;
+    static int nn,no,on,oo;
+    static MapLocation loc = null;
+
     static void tryFindSymmetry() throws GameActionException {
         if (!foundSymmetry) {
-            int radius = rc.getType().visionRadiusSquared;
+            int radius = 18;
 
             MapLocation toCheck[] = rc.getAllLocationsWithinRadiusSquared(rc.getLocation(),radius);
+            int x, y, oppx, oppy, val;
             // 1 for passable, 2 for impassable
             for (int i = 0; i < toCheck.length; i++) {
-                MapLocation loc = toCheck[i];
+                loc = toCheck[i];
+                val = rc.getLocation().distanceSquaredTo(loc);
 
-                if (rc.getLocation().distanceSquaredTo(loc) < 18) continue;
+                if (val < 9 || val/2 == 8) continue;
+                //System.out.println(val);
 
                 if (!rc.canSenseLocation(loc)) continue; // 5
 
-                int x = loc.x, y = loc.y;
-                int oppx = rc.getMapWidth()-x-1, oppy = rc.getMapHeight()-y-1;
+                x = loc.x; y = loc.y;
+                oppx = rc.getMapWidth()-x-1; oppy = rc.getMapHeight()-y-1;
 
-                RobotInfo possibleHQ = rc.senseRobotAtLocation(loc); // 25
-                MapInfo mapInfo = rc.senseMapInfo(loc); // 10
+                possibleHQ = rc.senseRobotAtLocation(loc); // 25
+                mapInfo = rc.senseMapInfo(loc); // 10
 
                 if (possibleHQ != null && possibleHQ.getType().equals(RobotType.HEADQUARTERS)) {
                     put(encode(x, y), 1);
                 } else if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) {
                     put(encode(x, y), 2);
-
-                    // CHECK FOR CLOUD AFTER THIS
                 } else if (mapInfo.hasCloud()) {
                     put(encode(x, y), 3);
                 } else if (rc.sensePassability(loc)) {
@@ -181,14 +196,14 @@ public class Launcher extends Robot
                     put(encode(x, y), 5);
                 }
 
-                if (rc.getID() == 12950) {
-                    System.out.println("Explore " + x + " " + y);
-                }
-                if (read(encode(oppx, y)) != 0 && read(encode(oppx, y)) !=  read(encode(x, y))) possi[1] = 0;
-                if (read(encode(x, oppy)) != 0  && read(encode(x, oppy)) != read(encode(x, y))) possi[2] = 0;
-                if (read(encode(oppx, oppy)) != 0 && read(encode(oppx, oppy)) != read(encode(x, y))) possi[3] = 0;
+                nn=read(encode(x, y));
+                on=read(encode(oppx, y));
+                no=read(encode(x, oppy));
+                oo=read(encode(oppx, oppy));
 
-                if (rc.getID() == 12950) System.out.println(x + " " + y + ": " + read(encode(x, y)));
+                if (on != 0 && on != nn) possi[1] = 0;
+                if (no != 0 && no != nn) possi[2] = 0;
+                if (oo != 0 && oo != nn) possi[3] = 0;
             }
 
             if (possi[1]+possi[2]+possi[3]==1) {
@@ -248,21 +263,20 @@ public class Launcher extends Robot
         }
 
         if (mini < rc.getID() && lowerCount < 9) {
-            if (rc.getLocation().distanceSquaredTo(bestie) > 2)
+            if (isStuck(bestie)) {
+                spreadOut(true);
+            }
+            else if (rc.getLocation().distanceSquaredTo(bestie) > 2)
             {
                 moveTo(bestie);
             }
         }
         else {
             if (!crossed) {
-                if (rc.getRoundNum() % 2 == 0)
-                {
-                    moveTo(oppositeLoc);
-                }
+                moveTo(oppositeLoc);
             }else{
-                if (rc.getID()%2==0) {
+                if (rc.getID()%3!=0) {
                     if (launcherCount > 3) {
-                        MapLocation desti = null;
                         switch (symmetry) {
                             case 1: {
                                 moveTo(new MapLocation(oppositeLoc.x,parentLoc.y));
