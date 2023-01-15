@@ -287,7 +287,8 @@ public class Launcher extends Robot
                                 break;
                             }
                             default: {
-                                moveTo(oppositeLoc);
+                                if (possi[3]==1) moveTo(oppositeLoc);
+                                else moveTo(new MapLocation(parentLoc.x,oppositeLoc.y));
                                 break;
                             }
                         }
