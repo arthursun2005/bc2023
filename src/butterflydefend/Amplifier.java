@@ -39,7 +39,8 @@ public class Amplifier extends Robot
             rc.setIndicatorString("Waiting " + waiting);
             return;
         }
-        spreadOut(false);
+        //spreadOut(false);
+        moveRandom();
 //        moveTo(new MapLocation(rc.getMapWidth() / 2, rc.getMapHeight() / 2));
         rc.setIndicatorString("Searching " + rc.senseNearbyRobots(tracker.ENEMY_GROUP_RADIUS, rc.getTeam().opponent()).length + " " + cooldown);
     }

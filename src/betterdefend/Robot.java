@@ -1,4 +1,4 @@
-package butterflydefend;
+package betterdefend;
 
 import battlecode.common.*;
 

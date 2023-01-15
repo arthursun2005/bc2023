@@ -1,4 +1,4 @@
-package butterflydefend;
+package smartbutterfly;
 
 import battlecode.common.*;
 
@@ -27,7 +27,7 @@ public abstract class Robot
     public Robot(RobotController rc)
     {
         Robot.rc = rc;
-        rng = new Random(rc.getID() + 135);
+        rng = new Random(rc.getID());
         tracker = new Tracker(rc);
     }
 
@@ -102,7 +102,7 @@ public abstract class Robot
     public boolean tryMove(Direction dir) throws GameActionException
     {
         if (dir == null) return false;
-        if (rc.canMove(dir) && !rc.isLocationOccupied(rc.getLocation().add(dir)))
+        if (rc.canMove(dir))
         {
             rc.move(dir);
             return true;
@@ -138,26 +138,22 @@ public abstract class Robot
             {
                 Direction dir = rc.getLocation().directionTo(ri.getLocation());
                 cnt[dir.ordinal()]++;
-                //cnt[dir.opposite().ordinal()]--;
             }
         }
         int least = 696969;
         for (int i = 0; i < 8; i++)
         {
-            if (!rc.canMove(directions[i])) continue;
             least = Math.min(least, cnt[i]);
         }
         ArrayList<Direction> dirs = new ArrayList<Direction>();
         for (int i = 0; i < 8; i++)
         {
-            if (!rc.canMove(directions[i])) continue;
             if (cnt[i] == least)
             {
                 dirs.add(directions[i]);
             }
         }
         Collections.shuffle(dirs);
-        rc.setIndicatorString("has "+dirs.size());
         for (Direction dir : dirs)
         {
             if (tryMove(dir))
