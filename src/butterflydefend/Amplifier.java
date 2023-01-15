@@ -1,6 +1,7 @@
 package butterflydefend;
 
 import battlecode.common.GameActionException;
+import battlecode.common.MapLocation;
 import battlecode.common.RobotController;
 
 // HUGELY TODO
@@ -38,7 +39,8 @@ public class Amplifier extends Robot
             rc.setIndicatorString("Waiting " + waiting);
             return;
         }
-        spreadOut(true);
+        spreadOut(false);
+//        moveTo(new MapLocation(rc.getMapWidth() / 2, rc.getMapHeight() / 2));
         rc.setIndicatorString("Searching " + rc.senseNearbyRobots(tracker.ENEMY_GROUP_RADIUS, rc.getTeam().opponent()).length + " " + cooldown);
     }
 }

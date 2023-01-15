@@ -53,6 +53,9 @@ public class Headquarter extends Robot
                 totalAda += 50;
             }else if (toMake.equals(RobotType.LAUNCHER)) {
                 totalMana += 60;
+            } else if (toMake.equals(RobotType.AMPLIFIER)) {
+                totalAda += 40;
+                totalMana += 40;
             }
             return true;
         }
@@ -117,6 +120,26 @@ public class Headquarter extends Robot
         return closestLoc;
     }
 
+    public MapLocation getOptimalAmplifier() throws GameActionException {
+
+        MapLocation ideal = new MapLocation(rc.getMapWidth() / 2, rc.getMapHeight() / 2);
+
+        int closest = 1_000_000;
+        MapLocation closestLoc = null;
+
+        for (int dx = -3; dx <= 3; dx++ ) {
+            for (int dy = -3; dy <= 3; dy++ ) {
+                if (dx * dx + dy * dy > 10) continue;
+                MapLocation temp = new MapLocation(rc.getLocation().x + dx, rc.getLocation().y + dy);
+                if (rc.onTheMap(temp) && rc.canBuildRobot(RobotType.AMPLIFIER, temp) && temp.distanceSquaredTo(ideal) < closest) {
+//                    System.out.println(closest + " " + temp + " " + ideal);
+                    closest = temp.distanceSquaredTo(ideal);
+                    closestLoc = temp;
+                }
+            }
+        }
+        return closestLoc;
+    }
     public void run() throws GameActionException
     {
         Tracker.updateWells();
@@ -152,6 +175,11 @@ public class Headquarter extends Robot
             toMake = RobotType.LAUNCHER;
         }
 
+        if (rc.getRoundNum() >= 80 && ada >= 40 && mana >= 40 && rc.getRoundNum() % 10 == 0) {
+            toMake = RobotType.AMPLIFIER;
+            System.out.println(ada + " " + mana);
+        }
+
         if (toMake.equals(RobotType.CARRIER))
         {
             MapLocation loc = getOptimalMine();
@@ -161,6 +189,12 @@ public class Headquarter extends Robot
         if (toMake.equals(RobotType.LAUNCHER))
         {
             MapLocation loc = getOptimalSpawn();
+            made = tryMake(loc);
+        }
+
+        if (toMake.equals(RobotType.AMPLIFIER))
+        {
+            MapLocation loc = getOptimalAmplifier();
             made = tryMake(loc);
         }
     }

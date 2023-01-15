@@ -2,6 +2,9 @@ package butterflydefend;
 
 import battlecode.common.*;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+
 public class Launcher extends Robot
 {
 
@@ -290,38 +293,54 @@ public class Launcher extends Robot
             if (!crossed) {
                 moveTo(oppositeLoc);
             }else{
-                if (rc.getID()%3!=0) {
-                    if (launcherCount > 3) {
-                        switch (symmetry) {
-                            case 1: {
-                                moveTo(new MapLocation(oppositeLoc.x,parentLoc.y));
-                                break;
+                ArrayList<MapLocation> groups = tracker.getEnemyGroups();
+
+                groups.sort(new Comparator<MapLocation>() {
+                    public int compare(MapLocation a, MapLocation b) {
+
+                        return rc.getLocation().distanceSquaredTo(a) - rc.getLocation().distanceSquaredTo(b);
+                    }
+                });
+
+
+                if (!groups.isEmpty()) {
+                    moveTo(groups.get(0));
+                } else {
+                    if (rc.getID()%3!=0) {
+                        if (launcherCount > 3) {
+                            switch (symmetry) {
+                                case 1: {
+                                    moveTo(new MapLocation(oppositeLoc.x,parentLoc.y));
+                                    break;
+                                }
+                                case 2: {
+                                    moveTo(new MapLocation(parentLoc.x,oppositeLoc.y));
+                                    break;
+                                }
+                                default: {
+                                    if (possi[3]==1) moveTo(oppositeLoc);
+                                    else moveTo(new MapLocation(parentLoc.x,oppositeLoc.y));
+                                    break;
+                                }
                             }
-                            case 2: {
-                                moveTo(new MapLocation(parentLoc.x,oppositeLoc.y));
-                                break;
+                        }
+                        else {
+                            //moveTo(tracker.getClosestHQLoc());
+                            //moveRandom();
+                            MapLocation nearHQ = tracker.getClosestHQLoc();
+                            if (rc.getLocation().distanceSquaredTo(nearHQ) > 10) {
+                                moveTo(nearHQ);
                             }
-                            default: {
-                                if (possi[3]==1) moveTo(oppositeLoc);
-                                else moveTo(new MapLocation(parentLoc.x,oppositeLoc.y));
-                                break;
+                            else {
+                                spreadOut(false);
                             }
                         }
                     }
                     else {
-                        //moveTo(tracker.getClosestHQLoc());
-                        //moveRandom();
-                        MapLocation nearHQ = tracker.getClosestHQLoc();
-                        if (rc.getLocation().distanceSquaredTo(nearHQ) > 10) {
-                            moveTo(nearHQ);
-                        }
-                        else {
-                            spreadOut(false);
-                        }
-                    }
+                        moveRandom();
                 }
-                else {
-                    moveRandom();
+
+
 //                    System.out.println("I AM DEFENDING");
 //                    if (toGuard == null) {
 //                        toGuard = tracker.getOptimalWell();
