@@ -264,7 +264,7 @@ public class Launcher extends Robot
         }
 
         if (mini < rc.getID() && lowerCount < 9) {
-            if (mini%3 != 0) {
+            if (mini%2 != 0) {
                 if (tryChaseOrRetreat())
                 {
                     tryAttack();
@@ -284,7 +284,7 @@ public class Launcher extends Robot
             }
         }
         else {
-            if (rc.getID()%3 == 0) {
+            if (rc.getID()%2 == 0) {
                 Team opponent = rc.getTeam().opponent();
                 RobotInfo[] enemies = rc.senseNearbyRobots(20, opponent);
                 for (RobotInfo enemy : enemies) {
