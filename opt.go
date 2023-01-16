@@ -11,7 +11,7 @@ import (
     "os/exec"
 )
 
-const MAPS = "maptestsmall,AllElements,DefaultMap,Horizontal,SmallElements,Vertical"
+const MAPS = "maptestsmall,AllElements,DefaultMap,Horizontal,SmallElements,Vertical,New"
 
 func countWins(out string) (int, int) {
     A := 0

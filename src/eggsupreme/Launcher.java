@@ -111,10 +111,24 @@ public class Launcher extends Robot
                 weakLoc = enemy.location;
             }
         }
+        MapLocation[] clouds = rc.senseNearbyCloudLocations(rc.getType().actionRadiusSquared);
+        for (MapLocation cloud : clouds)
+        {
+            if (rc.getLocation().distanceSquaredTo(cloud) <= 8) continue;
+            // if (enemyOffensiveCnt > 0) 
+            enemyOffensiveCnt += 3;
+            long adjustedHealth = 1234567891011l + rc.getLocation().distanceSquaredTo(cloud);
+            if (weakLoc == null || adjustedHealth < minHealth)
+            {
+                weakLoc = new MapLocation(rc.getMapWidth()-parentLoc.x-1,rc.getMapHeight()-parentLoc.y-1);
+                // minHealth = adjustedHealth;
+                // weakLoc = cloud;
+            }
+        }
 
         // IDK MAN sob sob sob sob sob
         // enemyOffensiveCnt += rc.senseNearbyCloudLocations().length * 123456789;
-        enemyOffensiveCnt += (rc.senseNearbyCloudLocations(rc.getType().actionRadiusSquared).length - rc.senseNearbyCloudLocations(8).length) * 3;
+        // enemyOffensiveCnt += (rc.senseNearbyCloudLocations(rc.getType().actionRadiusSquared).length - rc.senseNearbyCloudLocations(8).length) * 3;
         // enemyOffensiveCnt = Math.max(enemyOffensiveCnt, revenge - 8);
 
         if (enemyOffensiveCnt != 0)
@@ -129,7 +143,7 @@ public class Launcher extends Robot
             // friendOffensiveCnt += 6;
         }
 
-        if (enemyOffensiveCnt == 0 || friendOffensiveCnt > enemyOffensiveCnt - 5) {
+        if (enemyOffensiveCnt == 0 || friendOffensiveCnt > enemyOffensiveCnt + 3) {
             // attack
             if (weakLoc != null)
             {
