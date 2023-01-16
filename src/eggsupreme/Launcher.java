@@ -143,7 +143,7 @@ public class Launcher extends Robot
             // friendOffensiveCnt += 6;
         }
 
-        if (enemyOffensiveCnt == 0)// || friendOffensiveCnt > enemyOffensiveCnt - 5)
+        if (enemyOffensiveCnt == 0 || friendOffensiveCnt > enemyOffensiveCnt - 5)
         {
             // attack
             if (weakLoc != null)
@@ -166,7 +166,7 @@ public class Launcher extends Robot
                 }
                 return best;
             }
-        } else if (enemyOffensiveCnt > friendOffensiveCnt - 500)
+        } else if (enemyOffensiveCnt > friendOffensiveCnt + 5)
         {
             // retreat
             // moveTo(tracker.getClosestHQLoc());
@@ -193,38 +193,38 @@ public class Launcher extends Robot
         } else if (weakLoc != null)
         {
             // rotate
-            int big = rc.getType().visionRadiusSquared;
-            Direction best = null;
-            int hits = 123456789;
-            for (Direction dir : directions)
-            {
-                if (!rc.canMove(dir)) continue;
-                MapLocation loc = rc.adjacentLocation(dir);
-                if (loc.distanceSquaredTo(weakLoc) > big) continue;
-                int w = countWithin(enemies, loc, big) * 66666 + loc.distanceSquaredTo(weakLoc);
-                if (w < hits)
-                {
-                    hits = w;
-                    best = dir;
-                }
-            }
-            return best;
-            // Direction dir = rc.getLocation().directionTo(weakLoc);
-            // Direction[] dirs = {
-            //     dir.rotateLeft().rotateLeft(),
-            //     dir.rotateRight().rotateRight(),
-            //     dir.rotateLeft(),
-            //     dir.rotateRight(),
-            //     dir.rotateLeft().rotateLeft().rotateLeft(),
-            //     dir.rotateRight().rotateRight().rotateRight(),
-            // };
-            // for (Direction d : dirs)
+            // int big = rc.getType().visionRadiusSquared;
+            // Direction best = null;
+            // int hits = 123456789;
+            // for (Direction dir : directions)
             // {
-            //     if (rc.canMove(d))
+            //     if (!rc.canMove(dir)) continue;
+            //     MapLocation loc = rc.adjacentLocation(dir);
+            //     if (loc.distanceSquaredTo(weakLoc) > big) continue;
+            //     int w = countWithin(enemies, loc, big) * 66666 + loc.distanceSquaredTo(weakLoc);
+            //     if (w < hits)
             //     {
-            //         return d;
+            //         hits = w;
+            //         best = dir;
             //     }
             // }
+            // return best;
+            Direction dir = rc.getLocation().directionTo(weakLoc);
+            Direction[] dirs = {
+                dir.rotateLeft().rotateLeft(),
+                dir.rotateRight().rotateRight(),
+                dir.rotateLeft(),
+                dir.rotateRight(),
+                dir.rotateLeft().rotateLeft().rotateLeft(),
+                dir.rotateRight().rotateRight().rotateRight(),
+            };
+            for (Direction d : dirs)
+            {
+                if (rc.canMove(d))
+                {
+                    return d;
+                }
+            }
         }
         
         return null;
@@ -295,7 +295,7 @@ public class Launcher extends Robot
                     }
                 }else{
                     rc.attack(ga);
-                    if (rc.senseRobotAtLocation(ga) != null)
+                    if (rc.canSenseLocation(ga) && rc.senseRobotAtLocation(ga) != null)
                     {
                         Direction best = null;
                         int dist = rc.getLocation().distanceSquaredTo(ga);
@@ -331,7 +331,7 @@ public class Launcher extends Robot
         if (ga != null)
         {
             rc.attack(ga);
-            if (rc.senseRobotAtLocation(ga) != null)
+            if (rc.canSenseLocation(ga) && rc.senseRobotAtLocation(ga) != null)
             {
                 Direction best = null;
                 int dist = rc.getLocation().distanceSquaredTo(ga);
@@ -360,13 +360,13 @@ public class Launcher extends Robot
         int lowerCount = 0;
         MapLocation oppositeLoc = new MapLocation(rc.getMapWidth()-parentLoc.x-1,rc.getMapHeight()-parentLoc.y-1);
 
-        int sl = rc.getLocation().distanceSquaredTo(parentLoc) * 6666 + rc.getID();
+        int sl = rc.getLocation().distanceSquaredTo(oppositeLoc) * 6666 + rc.getID();
         int mini=sl;
         int more = 0;
 
         for (RobotInfo friend : friends) {
             if (friend.type == RobotType.LAUNCHER) {
-                int e = ev(friend, parentLoc);
+                int e = ev(friend, oppositeLoc);
                 more++;
                 if (e < sl) lowerCount++;
                 if (e < mini) {
@@ -387,7 +387,7 @@ public class Launcher extends Robot
             else if (rc.getLocation().distanceSquaredTo(bestie) > 2)
             {
                 moveTo(bestie);
-            }else if (rc.getRoundNum() % 2 == 0 && (more >= 2 || more == 0))
+            }else if (false && rc.getRoundNum() % 2 == 0 && (more >= 2 || more == 0))
             {
                 moveTo(oppositeLoc);
             }
