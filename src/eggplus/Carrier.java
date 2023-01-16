@@ -75,11 +75,12 @@ public class Carrier extends Robot {
         return;
     }
 
-    static boolean lastDanger = false;
+    static int lastDanger = 0;
 
     public boolean hitAndRun() throws GameActionException {
-        boolean u = lastDanger;
-        lastDanger = false;
+        int u = lastDanger;
+        lastDanger--;
+        if (lastDanger < 0) lastDanger = 0;
         RobotInfo[] friends = rc.senseNearbyRobots(-1, rc.getTeam());
         RobotInfo[] enemies = rc.senseNearbyRobots(-1, rc.getTeam().opponent());
         int dist = 1_000_000;
@@ -106,8 +107,8 @@ public class Carrier extends Robot {
         }
 
         if (danger == null)
-            return u;
-        lastDanger = true;
+            return u > 0;
+        lastDanger = 2;
         int holding = rc.getResourceAmount(ResourceType.ADAMANTIUM) + rc.getResourceAmount(ResourceType.MANA)
                 + rc.getResourceAmount(ResourceType.ELIXIR);
         if (holding > 0) {
