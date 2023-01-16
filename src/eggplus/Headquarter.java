@@ -15,9 +15,9 @@ public class Headquarter extends Robot
     public Headquarter(RobotController rc) throws GameActionException {
         super(rc);
 
-        int cnt = rc.readSharedArray(63);
-        rc.writeSharedArray(63, cnt + 1);
-        writeCoords(cnt, rc.getLocation());
+        // int cnt = rc.readSharedArray(63);
+        // rc.writeSharedArray(63, cnt + 1);
+        // writeCoords(cnt, rc.getLocation());
     }
 
     public boolean tryMake(Direction bestDir) throws GameActionException
@@ -144,7 +144,7 @@ public class Headquarter extends Robot
         MapLocation well = Tracker.getClosestMine();
         boolean made = false;
 
-        if (totalAda - anchorsMade * 500 >= 800 && totalMana - anchorsMade * 200 >= 500)
+        if (totalAda - anchorsMade * 500 >= 1200 && totalMana - anchorsMade * 200 >= 900)
         {
             if (rc.canBuildAnchor(Anchor.STANDARD))
             {
@@ -161,7 +161,7 @@ public class Headquarter extends Robot
         if (ada - mana >= 150)
         {
             toMake = RobotType.CARRIER;
-        }else if ((mana >= 75 || mana - ada >= 150) && rc.getRoundNum() >= 3)
+        }else if ((mana >= 75 || mana - ada >= 150) && rc.getRoundNum() >= 5)
         {
             toMake = RobotType.LAUNCHER;
         }else{
@@ -173,7 +173,7 @@ public class Headquarter extends Robot
             toMake = RobotType.LAUNCHER;
         }
 
-        if (rc.getRoundNum() >= 51 && ada >= 40 && mana >= 40 && rc.getRoundNum() % 10 == 0) {
+        if (rc.getRoundNum() >= 1000000 && ada >= 40 && mana >= 40 && rc.getRoundNum() % 10 == 0 && rc.getMapHeight() > 22 && rc.getMapWidth() > 22) {
             toMake = RobotType.AMPLIFIER;
             System.out.println(ada + " " + mana);
         }

@@ -100,7 +100,7 @@ public class Launcher extends Robot
         Team opponent = rc.getTeam().opponent();
         RobotInfo[] friends = rc.senseNearbyRobots(-1, rc.getTeam());
         RobotInfo[] enemies = rc.senseNearbyRobots(-1, opponent);
-        int friendOffensiveCnt = rc.getHealth();
+        int friendOffensiveCnt = 6 + rc.getHealth();
         int enemyOffensiveCnt = 0;
         MapLocation weakLoc = null;
         int minHealth = -1;
@@ -139,16 +139,16 @@ public class Launcher extends Robot
         enemyOffensiveCnt = Math.max(enemyOffensiveCnt, revenge - 8);
         if (rc.isActionReady())
         {
-            friendOffensiveCnt += 6;
+            // friendOffensiveCnt += 6;
         }
 
-        if (enemyOffensiveCnt == 0 || friendOffensiveCnt > enemyOffensiveCnt + 8) {
+        if (enemyOffensiveCnt == 0) {
             // attack
             if (weakLoc != null)
             {
                 moveTo(weakLoc);
             }
-        } else if (enemyOffensiveCnt > friendOffensiveCnt - 11)
+        } else if (enemyOffensiveCnt > friendOffensiveCnt - 5)
         {
             // retreat
             // moveTo(tracker.getClosestHQLoc());
@@ -433,7 +433,7 @@ public class Launcher extends Robot
                             //moveTo(tracker.getClosestHQLoc());
                             //moveRandom();
                             MapLocation nearHQ = tracker.getClosestHQLoc();
-                            if (rc.getLocation().distanceSquaredTo(nearHQ) > 10) {
+                            if (rc.getLocation().distanceSquaredTo(nearHQ) > 10 && rc.getID() % 5 == 0) {
                                 moveTo(nearHQ);
                             }
                             else {

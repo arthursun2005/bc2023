@@ -7,7 +7,7 @@ import java.util.Comparator;
 public class Carrier extends Robot {
     static Tracker tracker;
     static int NEAR_HQ_DIST = 15;
-    static int PRETTY_NEAR_HQ_DIST = 35;
+    static int PRETTY_NEAR_HQ_DIST = 29;
 
     static MapLocation minLoc = null;
     static MapLocation parentHQ = null;
@@ -254,13 +254,16 @@ public class Carrier extends Robot {
                 if (holding == GameConstants.CARRIER_CAPACITY) {
                     mined = true;
                 }
-                if (holding >= 8 * GameConstants.CARRIER_CAPACITY / 11
-                        && rc.getLocation().distanceSquaredTo(HQLoc) <= PRETTY_NEAR_HQ_DIST) {
-                            mined = true;
-                }
-                if (holding >= GameConstants.CARRIER_CAPACITY / 3
-                        && rc.getLocation().distanceSquaredTo(HQLoc) <= NEAR_HQ_DIST) {
-                            mined = true;
+                if (rc.getRoundNum() < 15)
+                {
+                    if (rc.getResourceAmount(ResourceType.ADAMANTIUM) >= 5 * GameConstants.CARRIER_CAPACITY / 11
+                            && rc.getLocation().distanceSquaredTo(HQLoc) <= PRETTY_NEAR_HQ_DIST) {
+                                mined = true;
+                    }
+                    if (rc.getResourceAmount(ResourceType.ADAMANTIUM) >= 3 * GameConstants.CARRIER_CAPACITY / 11
+                            && rc.getLocation().distanceSquaredTo(HQLoc) <= NEAR_HQ_DIST) {
+                                mined = true;
+                    }
                 }
             }
             if (mined) {
