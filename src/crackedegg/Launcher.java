@@ -1,6 +1,8 @@
-package hatchedegg;
+package crackedegg;
 
 import battlecode.common.*;
+
+import java.util.*;
 
 public class Launcher extends Robot
 {
@@ -378,7 +380,26 @@ public class Launcher extends Robot
 
         MapLocation bestie = null;
         int lowerCount = 0;
+
+        Collections.sort(Tracker.HQLocations, new Comparator<MapLocation>() {
+            public int compare(MapLocation a, MapLocation b) {
+                int ax = a.x-rc.getMapWidth()/2, ay = a.y-rc.getMapWidth()/2;
+                int bx = a.x-rc.getMapWidth()/2, by = a.y-rc.getMapWidth()/2;
+                return ay*bx - by*ax; //idk how this works
+            }
+        });
+
         MapLocation oppositeLoc = new MapLocation(rc.getMapWidth()-parentLoc.x-1,rc.getMapHeight()-parentLoc.y-1);
+
+        if (true) {
+            for (int i = 0; i < Tracker.HQLocations.size(); i++) {
+                if (Tracker.HQLocations.get(i).equals(parentLoc)) {
+                    MapLocation betterPar = Tracker.HQLocations.get(Tracker.HQLocations.size() - 1 - i);
+                    oppositeLoc = new MapLocation(rc.getMapWidth()-betterPar.x-1,rc.getMapHeight()-betterPar.y-1);
+                    rc.setIndicatorString(parentLoc+" "+oppositeLoc);
+                }
+            }
+        }
 
         // int sl = rc.getLocation().distanceSquaredTo(oppositeLoc) * 6666 + rc.getID();
         int sl = rc.getID();
