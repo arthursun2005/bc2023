@@ -72,7 +72,6 @@ public class Launcher extends Robot
             }
 
             if (possi[1]+possi[2]+possi[3]==1) {
-                rc.setIndicatorString("SYMMETRY FOUND" + (possi[1] == 1 ? 1 : (possi[2] == 1 ? 2 : 3)));
                 symmetry = (possi[1] == 1 ? 1 : (possi[2] == 1 ? 2 : 3));
                 foundSymmetry = true;
             }
@@ -399,6 +398,8 @@ public class Launcher extends Robot
         if (turnCount >= 1) tryFindSymmetry();
         turnCount++;
 
+        rc.setIndicatorString("SYMMETRY: " + symmetry);
+
         MapLocation ga = getAttackLoc();
         Direction bd = getChaseOrRetreatDir();
 
@@ -492,6 +493,17 @@ public class Launcher extends Robot
 
         MapLocation oppositeLoc = new MapLocation(rc.getMapWidth()-parentLoc.x-1,rc.getMapHeight()-parentLoc.y-1);
 
+        switch (symmetry) {
+            case 1: {
+                oppositeLoc = new MapLocation(oppositeLoc.x,parentLoc.y);
+                break;
+            }
+            case 2: {
+                oppositeLoc = new MapLocation(parentLoc.x,oppositeLoc.y);
+                break;
+            }
+        }
+
         /*if (true) {
             for (int i = 0; i < Tracker.HQLocations.size(); i++) {
                 if (Tracker.HQLocations.get(i).equals(parentLoc)) {
@@ -538,7 +550,7 @@ public class Launcher extends Robot
         int dy = oppositeLoc.y - rc.getLocation().y;
         int dist = (Math.abs(dx) + Math.abs(dy))/2;
         boolean shouldMove = (dist%3 != 2-(rc.getRoundNum()/5)%3);
-        rc.setIndicatorString("hmmm "+shouldMove);
+        //rc.setIndicatorString("hmmm "+shouldMove);
 
         if (mini < sl && lowerCount < 9) {
             if (isStuck(bestie)) {
