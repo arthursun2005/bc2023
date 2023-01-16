@@ -68,12 +68,10 @@ public class Carrier {
             }
 
             if (!rc.isMovementReady()) return;
-            System.out.println(minLoc + " " + " loc! " + rc.getRoundNum());
 
             if (minLoc != null) {
                 Direction dir = Movement.tryMove(rc, minLoc, prevDirection);
                 if (dir == null) {
-                    System.out.println("null somehow");
                     minLoc = null;
                 } else {
                     rc.move(dir);
@@ -105,7 +103,6 @@ public class Carrier {
                 }
             }
             else {
-                System.out.println(rc.getRoundNum() + " " + " reached!");
                 if (!rc.isMovementReady()) return;
                 if (moveCount==0 || !rc.canMove(curDir)) {
                     moveCount=4;

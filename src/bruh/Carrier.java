@@ -93,12 +93,10 @@ public class Carrier {
             }
 
             if (!rc.isMovementReady()) return;
-            System.out.println(minLoc + " " + " loc! " + rc.getRoundNum());
 
             if (minLoc != null) {
                 Direction dir = Movement.tryMove(rc, minLoc, prevDirection);
                 if (dir == null) {
-                    System.out.println("null somehow");
                     minLoc = null;
                 } else if (rc.canMove(dir)){
                     rc.move(dir);
@@ -130,7 +128,6 @@ public class Carrier {
                 }
             }
             else {
-                System.out.println(rc.getRoundNum() + " " + " reached!");
                 if (!rc.isMovementReady()) return;
                 if (moveCount==0 || !rc.canMove(curDir)) {
                     moveCount=4;
@@ -162,7 +159,6 @@ public class Carrier {
                 }
             }
         } else {
-            System.out.println("HHHHHHHHHHHHHIIIIIIIIIIIIIIIIIIIII");
             // I guess I'll try to find a well?
             // Shared array locations 30 onwards will be well locations
             updateWells(rc);
@@ -180,7 +176,6 @@ public class Carrier {
                 exploreturns = 0;
             }
             if (target == null) {
-                System.out.println("EXPLORINGGgGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG\n");
                 // Explore, find a new well
                 exploreturns++;
                 Direction newDirects[] = {
@@ -210,11 +205,9 @@ public class Carrier {
             }
 
 
-            System.out.println("asjdflkasjklfjasdklfjaklsdfjklasjdklfjaskldfjklasjdflkajslkdfj\n");
             int holding = rc.getResourceAmount(ResourceType.ADAMANTIUM) + rc.getResourceAmount(ResourceType.MANA) + rc.getResourceAmount(ResourceType.ELIXIR);
             if (!mined && !rc.getLocation().isWithinDistanceSquared(target, 1)) {
                 rc.setIndicatorString("Going to well " + target.toString() + " " + choice + " " + wells.size() + " " + rc.getLocation().isWithinDistanceSquared(target, 1));
-                System.out.println(rc.getRoundNum());
                 while (!rc.getLocation().isWithinDistanceSquared(target, 1)) {
                     Direction dir = Movement.tryMove(rc, target, prevDirection);
                     if (dir != null && rc.canMove(dir)) {
@@ -228,7 +221,6 @@ public class Carrier {
             rc.setIndicatorString("nothing to do " + target.toString() + " " + mined + " " + rc.getLocation().isWithinDistanceSquared(target, 1) + " " + rc.canCollectResource(target, 1) + " " + rc.getActionCooldownTurns() + " " + (rc.getResourceAmount(ResourceType.ADAMANTIUM) + rc.getResourceAmount(ResourceType.MANA) + rc.getResourceAmount(ResourceType.ELIXIR)));
 
             while (!mined && rc.getLocation().isWithinDistanceSquared(target, 1) && rc.canCollectResource(target, 1)) {
-                System.out.println("MINININININININININING");
                 rc.setIndicatorString("Mining");
                 rc.collectResource(target, -1);
                 holding = rc.getResourceAmount(ResourceType.ADAMANTIUM) + rc.getResourceAmount(ResourceType.MANA) + rc.getResourceAmount(ResourceType.ELIXIR);

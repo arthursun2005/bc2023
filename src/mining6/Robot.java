@@ -81,7 +81,6 @@ public abstract class Robot {
             if (!isWell[newWellPos.x][newWellPos.y] && curWellSharedArray < 64) {
                 isWell[newWellPos.x][newWellPos.y] = true;
                 rc.writeSharedArray(curWellSharedArray, (newWellPos.x*69+newWellPos.y)*3+newWellTypeCode+1);
-//                System.out.println(rc.getType() + " WROTE TO THE ARRAY! YAY");
                 curWellSharedArray++;
             }
         }

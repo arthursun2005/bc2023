@@ -35,10 +35,8 @@ public strictfp class RobotPlayer {
                     robot.run();
                 }
             } catch (GameActionException e) {
-                System.out.println(rc.getType() + " Exception");
                 e.printStackTrace();
             } catch (Exception e) {
-                System.out.println(rc.getType() + " Exception");
                 e.printStackTrace();
             } finally {
                 Clock.yield();

@@ -105,7 +105,6 @@ public class Launcher extends Robot {
     }
     public void runUnit() throws GameActionException {
 
-        System.out.println("bruh");
         if (parentLoc == null) {
             RobotInfo[] friends = rc.senseNearbyRobots(42069,rc.getTeam());
             int mini=42069;

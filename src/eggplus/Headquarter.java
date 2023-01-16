@@ -86,7 +86,6 @@ public class Headquarter extends Robot
                 if (dx * dx + dy * dy > 10) continue;
                 MapLocation temp = new MapLocation(rc.getLocation().x + dx, rc.getLocation().y + dy);
                 if (rc.onTheMap(temp) && rc.canBuildRobot(RobotType.CARRIER, temp) && temp.distanceSquaredTo(ideal) < closest) {
-                    System.out.println(closest + " " + temp + " " + ideal);
                     closest = temp.distanceSquaredTo(ideal);
                     closestLoc = temp;
                 }
@@ -108,7 +107,6 @@ public class Headquarter extends Robot
                 if (dx * dx + dy * dy > 10) continue;
                 MapLocation temp = new MapLocation(rc.getLocation().x + dx, rc.getLocation().y + dy);
                 if (rc.onTheMap(temp) && rc.canBuildRobot(RobotType.LAUNCHER, temp) && temp.distanceSquaredTo(ideal) < closest) {
-                    System.out.println(closest + " " + temp + " " + ideal);
                     closest = temp.distanceSquaredTo(ideal);
                     closestLoc = temp;
                 }
@@ -129,7 +127,6 @@ public class Headquarter extends Robot
                 if (dx * dx + dy * dy > 10) continue;
                 MapLocation temp = new MapLocation(rc.getLocation().x + dx, rc.getLocation().y + dy);
                 if (rc.onTheMap(temp) && rc.canBuildRobot(RobotType.AMPLIFIER, temp) && temp.distanceSquaredTo(ideal) < closest) {
-//                    System.out.println(closest + " " + temp + " " + ideal);
                     closest = temp.distanceSquaredTo(ideal);
                     closestLoc = temp;
                 }
@@ -149,7 +146,6 @@ public class Headquarter extends Robot
             if (rc.canBuildAnchor(Anchor.STANDARD))
             {
                 rc.buildAnchor(Anchor.STANDARD);
-                System.out.println("I have built some anchor UwU poggers!!!!!");
                 anchorsMade += 1;
             }
             return;
@@ -175,7 +171,6 @@ public class Headquarter extends Robot
 
         if (rc.getRoundNum() >= 1000000 && ada >= 40 && mana >= 40 && rc.getRoundNum() % 10 == 0 && rc.getMapHeight() > 22 && rc.getMapWidth() > 22) {
             toMake = RobotType.AMPLIFIER;
-            System.out.println(ada + " " + mana);
         }
 
         if (toMake.equals(RobotType.CARRIER))

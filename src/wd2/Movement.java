@@ -291,7 +291,6 @@ public class Movement {
 //
 //        if (lastLoc == 0) {
 //            // cannot find path (probs shoudl do something later)
-//            System.out.println("FKFKFKFKFKF BFS DIED FKFKF");
 //            return Direction.CENTER;
 //        } else {
 //            return (new MapLocation(4, 4).directionTo(new MapLocation(lastLoc / 10, lastLoc % 10)));

@@ -69,7 +69,6 @@ public class Launcher extends Robot
             {
                 rc.attack(cheese);
                 attackLoc = cheese;
-                System.out.println("cheesed");
                 return true;
             }
         }

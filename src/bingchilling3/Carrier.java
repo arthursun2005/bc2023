@@ -25,7 +25,6 @@ public class Carrier extends Robot
     {
         if (rc.canTakeAnchor(HQLoc, Anchor.STANDARD))
         {
-            System.out.println("Taking standard Anchor UwU");
             rc.takeAnchor(HQLoc, Anchor.STANDARD);
         }
     }
@@ -33,7 +32,6 @@ public class Carrier extends Robot
     public void IWantToPlaceMyAnchor() throws GameActionException
     {
         if ((rc.senseIsland(rc.getLocation()) != -1) && rc.senseTeamOccupyingIsland(rc.senseIsland(rc.getLocation())) != rc.getTeam() && rc.canPlaceAnchor()) {
-            System.out.println("Lessgo I placed my favourite anchor!!!");
             rc.placeAnchor();
             return;
         }

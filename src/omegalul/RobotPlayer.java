@@ -66,7 +66,6 @@ public strictfp class RobotPlayer {
 
         // Hello world! Standard output is very useful for debugging.
         // Everything you say here will be directly viewable in your terminal when you run a match!
-        // System.out.println("I'm a " + rc.getType() + " and I just got created! I have health " + rc.getHealth());
 
         // You can also use indicators to save debug notes in replays.
         // rc.setIndicatorString("Hello world!");
@@ -97,13 +96,11 @@ public strictfp class RobotPlayer {
                 // Oh no! It looks like we did something illegal in the Battlecode world. You should
                 // handle GameActionExceptions judiciously, in case unexpected events occur in the game
                 // world. Remember, uncaught exceptions cause your robot to explode!
-                System.out.println(rc.getType() + " Exception");
                 e.printStackTrace();
 
             } catch (Exception e) {
                 // Oh no! It looks like our code tried to do something bad. This isn't a
                 // GameActionException, so it's more likely to be a bug in our code.
-                System.out.println(rc.getType() + " Exception");
                 e.printStackTrace();
 
             } finally {

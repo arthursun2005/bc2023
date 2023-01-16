@@ -76,7 +76,6 @@ public class WellUtility {
             if (!isWell[newWellPos.x][newWellPos.y] && curWellSharedArray < 64) {
                 isWell[newWellPos.x][newWellPos.y] = true;
                 rc.writeSharedArray(curWellSharedArray, (newWellPos.x*69+newWellPos.y)*3+newWellTypeCode+1);
-//                System.out.println(rc.getType() + " WROTE TO THE ARRAY! YAY");
                 curWellSharedArray++;
             }
         }
@@ -86,7 +85,6 @@ public class WellUtility {
     static void senseWells() throws GameActionException {
         if (rc.getType() != RobotType.AMPLIFIER) {
             WellInfo[] nearbyWells = rc.senseNearbyWells();
-            System.out.println(nearbyWells.length + " " + rc.getID());
             for (int j=0; j<nearbyWells.length; j++) {;
                 WellInfo testing = nearbyWells[j];
                 seenWells.add(testing);

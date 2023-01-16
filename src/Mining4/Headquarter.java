@@ -26,7 +26,6 @@ public class Headquarter extends Robot {
         // IS THIS A BUG ?????
 
 //        if (wells.length == 0) {
-//            System.out.println(rc.getType() + " AINT NOOOW AYYYY");
 //        }
 
         int closestDist = 1_000_000, closestIdx = -1;

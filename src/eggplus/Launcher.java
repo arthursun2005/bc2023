@@ -86,7 +86,6 @@ public class Launcher extends Robot
             {
                 rc.attack(cheese);
                 attackLoc = cheese;
-                System.out.println("cheesed");
                 return true;
             }
         }
@@ -263,7 +262,6 @@ public class Launcher extends Robot
                 val = rc.getLocation().distanceSquaredTo(loc);
 
                 if (val < 9 || val/2 == 8) continue;
-                //System.out.println(val);
 
                 if (!rc.canSenseLocation(loc)) continue; // 5
 
@@ -296,7 +294,6 @@ public class Launcher extends Robot
             }
 
             if (possi[1]+possi[2]+possi[3]==1) {
-                System.out.println("SYMMETRY FOUND" + (possi[1] == 1 ? 1 : (possi[2] == 1 ? 2 : 3)));
                 rc.setIndicatorString("SYMMETRY FOUND" + (possi[1] == 1 ? 1 : (possi[2] == 1 ? 2 : 3)));
                 symmetry = (possi[1] == 1 ? 1 : (possi[2] == 1 ? 2 : 3));
                 foundSymmetry = true;
@@ -446,7 +443,6 @@ public class Launcher extends Robot
                 }
 
 
-//                    System.out.println("I AM DEFENDING");
 //                    if (toGuard == null) {
 //                        toGuard = tracker.getOptimalWell();
 //                    }
