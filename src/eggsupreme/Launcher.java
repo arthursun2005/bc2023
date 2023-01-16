@@ -114,6 +114,7 @@ public class Launcher extends Robot
 
         // IDK MAN sob sob sob sob sob
         // enemyOffensiveCnt += rc.senseNearbyCloudLocations().length * 123456789;
+        enemyOffensiveCnt += (rc.senseNearbyCloudLocations(rc.getType().actionRadiusSquared).length - rc.senseNearbyCloudLocations(8).length) * 3;
         // enemyOffensiveCnt = Math.max(enemyOffensiveCnt, revenge - 8);
 
         if (enemyOffensiveCnt != 0)
