@@ -1,6 +1,8 @@
-package stealthegg2;
+package hmmm;
 
 import battlecode.common.*;
+
+import java.util.*;
 
 public class Launcher extends Robot
 {
@@ -242,7 +244,24 @@ public class Launcher extends Robot
             }
         }
 
+        Collections.sort(Tracker.HQLocations, new Comparator<MapLocation>() {
+            public int compare(MapLocation a, MapLocation b) {
+                return a.compareTo(b);
+            }
+        });
+
         MapLocation oppositeLoc = new MapLocation(rc.getMapWidth()-parentLoc.x-1,rc.getMapHeight()-parentLoc.y-1);
+
+        if (rc.getID()%3==0) {
+            for (int i = 0; i < Tracker.HQLocations.size(); i++) {
+                if (Tracker.HQLocations.get(i).equals(parentLoc)) {
+                    MapLocation betterPar = Tracker.HQLocations.get(Tracker.HQLocations.size() - 1 - i);
+                    oppositeLoc = new MapLocation(rc.getMapWidth()-betterPar.x-1,rc.getMapHeight()-betterPar.y-1);
+                }
+            }
+        }
+
+        rc.setIndicatorString("hmmm " + parentLoc + " " + oppositeLoc);
 
         RobotInfo[] friends = rc.senseNearbyRobots(42069,rc.getTeam());
         int mini=rc.getID();

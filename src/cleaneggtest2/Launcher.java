@@ -1,4 +1,4 @@
-package stealthegg2;
+package cleaneggtest2;
 
 import battlecode.common.*;
 
@@ -231,18 +231,21 @@ public class Launcher extends Robot
             Direction dir = rc.getLocation().directionTo(attackLoc);
             if (shouldRun) dir = dir.opposite();
             Direction dirs[] = {
-                dir,
-                dir.rotateLeft(),
-                dir.rotateRight(),
-                dir.rotateLeft().rotateLeft(),
-                dir.rotateRight().rotateRight(),
+                    dir,
+                    dir.rotateLeft(),
+                    dir.rotateRight(),
+                    dir.rotateLeft().rotateLeft(),
+                    dir.rotateRight().rotateRight(),
             };
             for (Direction tryDir : dirs) {
                 if (tryMove(tryDir)) return;
             }
         }
-
-        MapLocation oppositeLoc = new MapLocation(rc.getMapWidth()-parentLoc.x-1,rc.getMapHeight()-parentLoc.y-1);
+        if (tryChaseOrRetreat())
+        {
+            tryAttack();
+            return;
+        }
 
         RobotInfo[] friends = rc.senseNearbyRobots(42069,rc.getTeam());
         int mini=rc.getID();
@@ -259,18 +262,12 @@ public class Launcher extends Robot
             }
         }
 
+        MapLocation oppositeLoc = new MapLocation(rc.getMapWidth()-parentLoc.x-1,rc.getMapHeight()-parentLoc.y-1);
         if (rc.getLocation().distanceSquaredTo(oppositeLoc)*2<=rc.getLocation().distanceSquaredTo(parentLoc)) {
             crossed = true;
         }
 
         if (mini < rc.getID() && lowerCount < 9) {
-            if (mini%3 != 0) {
-                if (tryChaseOrRetreat())
-                {
-                    tryAttack();
-                    return;
-                }
-            }
             if (isStuck(bestie)) {
                 spreadOut(true);
             }
@@ -284,40 +281,20 @@ public class Launcher extends Robot
             }
         }
         else {
-            if (rc.getID()%3 == 0) {
-                Team opponent = rc.getTeam().opponent();
-                RobotInfo[] enemies = rc.senseNearbyRobots(20, opponent);
-                for (RobotInfo enemy : enemies) {
-                    if (enemy.type.equals(RobotType.LAUNCHER)) {
-                        Direction dir = rc.getLocation().directionTo(enemy.location).opposite();
-                        Direction dirs[] = {
-                            dir,
-                            dir.rotateLeft(),
-                            dir.rotateRight(),
-                            dir.rotateLeft().rotateLeft(),
-                            dir.rotateRight().rotateRight(),
-                        };
-                        for (Direction tryDir : dirs) {
-                            if (tryMove(tryDir)) return;
-                        }
-                    }
-                }
-                moveTo(oppositeLoc);
-                tryAttack();
-                return;
-            }
-            if (tryChaseOrRetreat())
-            {
-                tryAttack();
-                return;
-            }
-            if (!crossed) {
+            if (true) {
+//                System.out.println("reached");
+//                if (rc.senseNearbyRobots(rc.getLocation(), 2, rc.getTeam()).length < 2) {
+//                    return;
+//                }
+//                System.out.println("reached2");
+
                 if (rc.getRoundNum() % 2 == 0)
                 {
                     moveTo(oppositeLoc);
                 }
             }else{
-                moveRandom();
+                return;
+//                moveRandom();
             }
         }
         // tryProtect();
