@@ -36,6 +36,21 @@ public class Launcher extends Robot
     public MapLocation getAttackLoc() throws GameActionException
     {
         if (!rc.isActionReady()) return null;
+        // int width = rc.getMapWidth();
+        // int height = rc.getMapHeight();
+        // for (int x = 0; x < width; x++) 
+        // {
+        //     for (int y = 0; y < height; y++)
+        //     {
+        //         MapLocation loc = new MapLocation(x, y);
+        //         if (rc.canAttack(loc))
+        //         {
+        //             return loc;
+        //         }
+        //     }
+        // }
+        // return null;
+        
         int radius = rc.getType().actionRadiusSquared;
         Team opponent = rc.getTeam().opponent();
         RobotInfo[] friends = rc.senseNearbyRobots(-1, rc.getTeam());
@@ -69,6 +84,7 @@ public class Launcher extends Robot
             }
         }
         return attackLoc;
+        
     }
 
     static int revenge = 0;
