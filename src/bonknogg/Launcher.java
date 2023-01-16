@@ -34,14 +34,12 @@ public class Launcher extends Robot
         if (!foundSymmetry) {
             int radius = 2;
 
-            MapLocation toCheck[] = rc.getAllLocationsWithinRadiusSquared(rc.getLocation(),radius);
+            MapLocation toCheck[] = rc.getAllLocationsWithinRadiusSquared(rc.getLocation(),18);
             int x, y, oppx, oppy;
             MapLocation loc = null;
             // 1 for passable, 2 for impassable
-            for (int i = 0; i < toCheck.length; i++) {
-                loc = toCheck[i];
-
-                if (!rc.canSenseLocation(loc)) continue; // 5
+            for (int i = 0; i < 5; i++) {
+                loc = toCheck[rng.nextInt(toCheck.length)];
 
                 x = loc.x; y = loc.y;
                 oppx = rc.getMapWidth()-x-1; oppy = rc.getMapHeight()-y-1;
