@@ -66,7 +66,6 @@ public abstract class Robot
     public void prepare() throws GameActionException
     {
         //
-        System.out.println("Left " + Clock.getBytecodesLeft());
 
         if (parentLoc == null && !rc.getType().equals(RobotType.HEADQUARTERS))
         {
@@ -94,9 +93,7 @@ public abstract class Robot
         }
 
         if (!tracker.calcHQ) {
-            System.out.println("REeeeeeeeeeeeeee " + Clock.getBytecodesLeft());
             tracker.readHQLoc();
-            System.out.println(tracker.HQLocations.size());
             tracker.calcHQ = true;
         }
 

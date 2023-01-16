@@ -107,7 +107,6 @@ public class WellUtility {
     static void senseWells() throws GameActionException {
         if (rc.getType() != RobotType.AMPLIFIER) {
             WellInfo[] nearbyWells = rc.senseNearbyWells();
-            System.out.println(nearbyWells.length + " " + rc.getID());
             for (int j=0; j<nearbyWells.length; j++) {;
                 WellInfo testing = nearbyWells[j];
                 seenWells.add(testing);

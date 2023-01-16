@@ -140,7 +140,6 @@ public class Tracker
     static void senseWells() throws GameActionException {
         if (rc.getType() != RobotType.AMPLIFIER) {
             WellInfo[] nearbyWells = rc.senseNearbyWells();
-            System.out.println(nearbyWells.length + " " + rc.getID());
             for (int j=0; j<nearbyWells.length; j++) {;
                 WellInfo testing = nearbyWells[j];
                 seenWells.add(testing);
@@ -214,7 +213,6 @@ public class Tracker
                 }
             }
         }
-        System.out.println("I'm trying to reach " + target + " which I think is an island");
         return target;
     }
 

@@ -170,7 +170,6 @@ public class Movement {
     static MapLocation prevLocation = null;
 
     static Direction tryMove(RobotController rc, MapLocation currentTarget, Direction previous) throws GameActionException {
-        System.out.println("CALLED");
         if (previous != null && lastDirection == Direction.CENTER) lastDirection = previous;
         else {
             if (prevLocation == null) {

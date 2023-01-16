@@ -90,7 +90,6 @@ public class Carrier extends Robot {
             }
 
             if (!rc.isMovementReady()) return;
-            System.out.println(minLoc + " " + " loc! " + rc.getRoundNum());
 
             if (minLoc != null) {
                 moveToLocation(minLoc);
@@ -115,14 +114,11 @@ public class Carrier extends Robot {
 
             }
             else {
-                System.out.println("Current direction " + curDir);
-                System.out.println(rc.getRoundNum() + " " + " reached!");
 
                 moveRandom();
             }
             return;
         } else {
-            System.out.println("HHHHHHHHHHHHHIIIIIIIIIIIIIIIIIIIII");
             // I guess I'll try to find a well?
             // Shared array locations 30 onwards will be well locations
             updateWells(rc);
@@ -140,7 +136,6 @@ public class Carrier extends Robot {
                 exploreturns = 0;
             }
             if (target == null) {
-                System.out.println("EXPLORINGGgGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG\n");
                 // Explore, find a new well
                 exploreturns++;
                 /*Direction newDirects[] = {
@@ -178,11 +173,9 @@ public class Carrier extends Robot {
             }
 
 
-            System.out.println("asjdflkasjklfjasdklfjaklsdfjklasjdklfjaskldfjklasjdflkajslkdfj\n");
             int holding = rc.getResourceAmount(ResourceType.ADAMANTIUM) + rc.getResourceAmount(ResourceType.MANA) + rc.getResourceAmount(ResourceType.ELIXIR);
             if (!mined && !rc.getLocation().isWithinDistanceSquared(target, 1)) {
                 rc.setIndicatorString("Going to well " + target.toString() + " " + choice + " " + wells.size() + " " + rc.getLocation().isWithinDistanceSquared(target, 1));
-                System.out.println(rc.getRoundNum());
                 if (!rc.getLocation().isWithinDistanceSquared(target, 1)) {
                     moveToLocation(target);
                 }
@@ -191,7 +184,6 @@ public class Carrier extends Robot {
             rc.setIndicatorString("nothing to do " + target.toString() + " " + mined + " " + rc.getLocation().isWithinDistanceSquared(target, 1) + " " + rc.canCollectResource(target, 1) + " " + rc.getActionCooldownTurns() + " " + (rc.getResourceAmount(ResourceType.ADAMANTIUM) + rc.getResourceAmount(ResourceType.MANA) + rc.getResourceAmount(ResourceType.ELIXIR)));
 
             if (!mined && rc.getLocation().isWithinDistanceSquared(target, 1) && rc.canCollectResource(target, 1)) {
-                System.out.println("MINININININININININING");
                 rc.setIndicatorString("Mining");
                 rc.collectResource(target, -1);
                 holding = rc.getResourceAmount(ResourceType.ADAMANTIUM) + rc.getResourceAmount(ResourceType.MANA) + rc.getResourceAmount(ResourceType.ELIXIR);

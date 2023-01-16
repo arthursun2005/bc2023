@@ -43,7 +43,6 @@ public class Carrier extends Robot
         }
 
         if (!rc.isMovementReady()) return;
-        System.out.println(minLoc + " " + " loc! " + rc.getRoundNum());
 
         if (minLoc != null) {
             // fix later
@@ -68,8 +67,6 @@ public class Carrier extends Robot
             moveTo(minLoc);
         }
         else {
-            System.out.println("Current direction " + curDir);
-            System.out.println(rc.getRoundNum() + " " + " reached!");
 
             moveRandom();
         }

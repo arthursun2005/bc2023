@@ -48,7 +48,6 @@ public class Launcher extends Robot
         for (MapLocation cheese : cheeses) {
             try {
                 rc.attack(cheese);
-                System.out.println("cheesed "+rc.getLocation());
                 cheesed = true;
                 return true;
             } catch (Exception e) {

@@ -75,12 +75,10 @@ public class Carrier extends Robot {
             }
 
             if (!rc.isMovementReady()) return;
-            System.out.println(minLoc + " " + " loc! " + rc.getRoundNum());
 
             if (minLoc != null) {
                 Direction dir = Movement.tryMove(rc, minLoc, prevDirection);
                 if (dir == null) {
-                    System.out.println("null somehow");
                     minLoc = null;
                 } else {
                     if (rc.canMove(dir)) rc.move(dir);
@@ -112,8 +110,6 @@ public class Carrier extends Robot {
                 }
             }
             else {
-                System.out.println("Current direction " + curDir);
-                System.out.println(rc.getRoundNum() + " " + " reached!");
                 if (!rc.isMovementReady()) return;
                 if (moveCount==0 || !canMove(curDir)) {
                     moveCount=4;

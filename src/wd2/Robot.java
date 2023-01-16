@@ -28,9 +28,7 @@ public abstract class Robot
     {
         Robot.rc = rc;
         rng = new Random(rc.getID());
-        System.out.println(Clock.getBytecodesLeft());
         tracker = new Tracker(rc);
-        System.out.println(Clock.getBytecodesLeft());
     }
 
     public Direction[] getGreedyDirections(Direction bestDir) throws GameActionException

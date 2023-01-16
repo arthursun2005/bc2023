@@ -212,7 +212,6 @@ public class Tracker
                 }
             }
         }
-        System.out.println("I'm trying to reach " + target + " which I think is an island");
         return target;
     }
 

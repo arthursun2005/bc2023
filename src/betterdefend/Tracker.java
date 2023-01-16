@@ -216,7 +216,6 @@ public class Tracker
 //                }
 //            }
 //        }
-//        System.out.println("I'm trying to reach " + target + " which I think is an island");
 //        return target;
 //    }
 
@@ -387,7 +386,6 @@ public class Tracker
                 int coord = (rc.readSharedArray(i) - 1) % 5000;
                 int coordX = coord / 69;
                 int coordY = coord % 69;
-                System.out.println("Removed "+coordX+" "+coordY+" "+rc.readSharedArray(i)+" at "+i);
                 rc.writeSharedArray(i, 0);
             }
         }

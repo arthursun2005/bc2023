@@ -87,7 +87,6 @@ public class Headquarter extends Robot
                 if (dx * dx + dy * dy > 10) continue;
                 MapLocation temp = new MapLocation(rc.getLocation().x + dx, rc.getLocation().y + dy);
                 if (rc.onTheMap(temp) && rc.canBuildRobot(RobotType.CARRIER, temp) && temp.distanceSquaredTo(ideal) < closest) {
-                    System.out.println(closest + " " + temp + " " + ideal);
                     closest = temp.distanceSquaredTo(ideal);
                     closestLoc = temp;
                 }
@@ -109,7 +108,6 @@ public class Headquarter extends Robot
                 if (dx * dx + dy * dy > 10) continue;
                 MapLocation temp = new MapLocation(rc.getLocation().x + dx, rc.getLocation().y + dy);
                 if (rc.onTheMap(temp) && rc.canBuildRobot(robot, temp) && temp.distanceSquaredTo(ideal) < closest) {
-                    System.out.println(closest + " " + temp + " " + ideal);
                     closest = temp.distanceSquaredTo(ideal);
                     closestLoc = temp;
                 }
@@ -129,7 +127,6 @@ public class Headquarter extends Robot
             if (rc.canBuildAnchor(Anchor.STANDARD))
             {
                 rc.buildAnchor(Anchor.STANDARD);
-                System.out.println("I have built some anchor UwU poggers!!!!!");
                 anchorsMade += 1;
             }
             return;

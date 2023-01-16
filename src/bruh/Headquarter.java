@@ -43,7 +43,6 @@ public class Headquarter {
                 newLoc = rc.getLocation().add(dir);
             } while (!rc.canBuildRobot(RobotType.CARRIER, newLoc));
             rc.setIndicatorString("Trying to build a carrier");
-            System.out.println("Making carrier\n");
             rc.buildRobot(RobotType.CARRIER, newLoc);
             globalDir = dir;
         }

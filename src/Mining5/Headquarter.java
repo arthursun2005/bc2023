@@ -30,7 +30,6 @@ public class Headquarter extends Robot {
         // IS THIS A BUG ?????
 
 //        if (wells.length == 0) {
-//            System.out.println(rc.getType() + " AINT NOOOW AYYYY");
 //        }
 
         int closestDist = 1_000_000, closestIdx = -1;
@@ -65,7 +64,6 @@ public class Headquarter extends Robot {
         int launcherCount = communication.readLauncherCount();
         int carrierCount = communication.readCarrierCount();
 
-        System.out.println(launcherCount + " count  " + carrierCount);
 
         if (rc.getRoundNum() == 1000) {
             rc.resign();
@@ -117,7 +115,6 @@ public class Headquarter extends Robot {
                     if (dx * dx + dy * dy > 9) continue;
                     MapLocation temp = new MapLocation(ideal.x + dx, ideal.y + dy);
                     if (rc.onTheMap(temp) && rc.canBuildRobot(RobotType.CARRIER, temp) && temp.distanceSquaredTo(ideal) < closest) {
-                        System.out.println(closest + " " + temp + " " + ideal);
                         closest = temp.distanceSquaredTo(ideal);
                         closestLoc = temp;
                         found = true;
@@ -169,7 +166,6 @@ public class Headquarter extends Robot {
 //                        if (dx * dx + dy * dy > 9) continue;
 //                        MapLocation temp = new MapLocation(ideal.x + dx, ideal.y + dy);
 //                        if (rc.onTheMap(temp) && rc.canBuildRobot(RobotType.CARRIER, temp) && temp.distanceSquaredTo(ideal) < closest) {
-//                            System.out.println(closest + " " + temp + " " + ideal);
 //                            closest = temp.distanceSquaredTo(ideal);
 //                            closestLoc = temp;
 //                            found = true;

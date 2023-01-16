@@ -65,7 +65,6 @@ public class Headquarter extends Robot
             if (rc.canBuildAnchor(Anchor.STANDARD))
             {
                 rc.buildAnchor(Anchor.STANDARD);
-                System.out.println("I have built some anchor UwU poggers!!!!!");
                 anchorsMade += 1;
             }
             return;
