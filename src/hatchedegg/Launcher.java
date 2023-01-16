@@ -102,6 +102,8 @@ public class Launcher extends Robot
         Team opponent = rc.getTeam().opponent();
         RobotInfo[] friends = rc.senseNearbyRobots(-1, rc.getTeam());
         RobotInfo[] enemies = rc.senseNearbyRobots(-1, opponent);
+        // RobotInfo[] enemies = rc.senseNearbyRobots(rc.getType().actionRadiusSquared, opponent);
+
         int friendOffensiveCnt = 6 + rc.getHealth();
         int enemyOffensiveCnt = 0;
         int delta = rc.getHealth() - lastHealth;
@@ -164,7 +166,7 @@ public class Launcher extends Robot
             // friendOffensiveCnt += 6;
         }
 
-        if (delta >= 0 && friendOffensiveCnt > 102)
+        if (delta >= 0 && friendOffensiveCnt > 103)
         {
             // attack
             if (weakLoc != null)
@@ -317,7 +319,7 @@ public class Launcher extends Robot
                     }
                 }else{
                     rc.attack(ga);
-                    if (false && rc.canSenseLocation(ga) && rc.senseRobotAtLocation(ga) != null)
+                    if (true && rc.canSenseLocation(ga) && rc.senseRobotAtLocation(ga) != null)
                     {
                         Direction best = null;
                         int dist = rc.getLocation().distanceSquaredTo(ga);
@@ -350,7 +352,7 @@ public class Launcher extends Robot
             return;
         }
 
-        if (false && ga != null)
+        if (true && ga != null)
         {
             rc.attack(ga);
             if (rc.canSenseLocation(ga) && rc.senseRobotAtLocation(ga) != null)
