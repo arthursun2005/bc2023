@@ -28,12 +28,16 @@ public class Launcher extends Robot
         return cnt;
     }
 
+    static int U = 0;
+
     public long getEnemyWeaknessMetric(RobotInfo enemy, RobotInfo[] friends) throws GameActionException {
-        int U = countWithin(friends, enemy.location, rc.getType().visionRadiusSquared);
+        U = countWithin(friends, enemy.location, rc.getType().visionRadiusSquared);
         long adjustedHealth = (enemy.health - U * 6l) * 66666666l + rc.getLocation().distanceSquaredTo(enemy.location) * 66666l + rc.getID();
         if (enemy.type.equals(RobotType.LAUNCHER)) adjustedHealth -= 66666666666l;
         return adjustedHealth;
     }
+
+    static int O = 0;
 
     public MapLocation getAttackLoc() throws GameActionException
     {
@@ -52,7 +56,7 @@ public class Launcher extends Robot
         //     }
         // }
         // return null;
-
+        O = 0;
         int radius = rc.getType().actionRadiusSquared;
         Team opponent = rc.getTeam().opponent();
         RobotInfo[] friends = rc.senseNearbyRobots(-1, rc.getTeam());
@@ -67,6 +71,7 @@ public class Launcher extends Robot
                 {
                     minHealth = adjustedHealth;
                     attackLoc = toAttack;
+                    O = U;
                 }
             }
         }
@@ -74,14 +79,19 @@ public class Launcher extends Robot
         {
             return attackLoc;
         }
+        MapLocation me = rc.getLocation();
         // If everyone else is doing it then we should :/
-        MapLocation[] cheeses = rc.senseNearbyCloudLocations();
-        for (MapLocation cheese : cheeses) {
-            if (rc.canAttack(cheese))
+        for (int dx = -4; dx <= 4; dx++)
+        {
+            for (int dy = -4; dy <= 4; dy++)
             {
-                if (attackLoc == null || rc.getLocation().distanceSquaredTo(cheese) < rc.getLocation().distanceSquaredTo(attackLoc))
+                MapLocation cheese = new MapLocation(me.x + dx, me.y + dy);
+                if (rc.canAttack(cheese))
                 {
-                    attackLoc = cheese;
+                    if (attackLoc == null || rc.getLocation().distanceSquaredTo(cheese) < rc.getLocation().distanceSquaredTo(attackLoc))
+                    {
+                        attackLoc = cheese;
+                    }
                 }
             }
         }
@@ -100,6 +110,7 @@ public class Launcher extends Robot
             lastHealth = rc.getHealth();
             return null;
         }
+        
         shouldHalt = false;
         Team opponent = rc.getTeam().opponent();
         RobotInfo[] friends = rc.senseNearbyRobots(-1, rc.getTeam());
@@ -136,20 +147,20 @@ public class Launcher extends Robot
                 weakLoc = enemy.location;
             }
         }
-        MapLocation[] clouds = rc.senseNearbyCloudLocations(rc.getType().actionRadiusSquared);
-        for (MapLocation cloud : clouds)
-        {
-            if (rc.getLocation().distanceSquaredTo(cloud) <= 8) continue;
-            // if (enemyOffensiveCnt > 0)
-            enemyOffensiveCnt += 3;
-            long adjustedHealth = 1234567891011l + rc.getLocation().distanceSquaredTo(cloud);
-            if (weakLoc == null || adjustedHealth < minHealth)
-            {
-                weakLoc = new MapLocation(rc.getMapWidth()-parentLoc.x-1,rc.getMapHeight()-parentLoc.y-1);
-                // minHealth = adjustedHealth;
-                // weakLoc = cloud;
-            }
-        }
+        // MapLocation[] clouds = rc.senseNearbyCloudLocations(rc.getType().actionRadiusSquared);
+        // for (MapLocation cloud : clouds)
+        // {
+        //     if (rc.getLocation().distanceSquaredTo(cloud) <= 8) continue;
+        //     // if (enemyOffensiveCnt > 0)
+        //     enemyOffensiveCnt += 2;
+        //     long adjustedHealth = 1234567891011l + rc.getLocation().distanceSquaredTo(cloud);
+        //     if (weakLoc == null || adjustedHealth < minHealth)
+        //     {
+        //         weakLoc = new MapLocation(rc.getMapWidth()-parentLoc.x-1,rc.getMapHeight()-parentLoc.y-1);
+        //         // minHealth = adjustedHealth;
+        //         // weakLoc = cloud;
+        //     }
+        // }
 
         // IDK MAN sob sob sob sob sob
         // enemyOffensiveCnt += rc.senseNearbyCloudLocations().length * 123456789;
@@ -168,7 +179,7 @@ public class Launcher extends Robot
             // friendOffensiveCnt += 6;
         }
 
-        if (delta >= 0 && friendOffensiveCnt > 103)
+        if (delta >= 0 && friendOffensiveCnt > 0)
         {
             // attack
             if (weakLoc != null)
@@ -317,7 +328,8 @@ public class Launcher extends Robot
                     }
                 }else{
                     rc.attack(ga);
-                    if (true && rc.canSenseLocation(ga) && rc.senseRobotAtLocation(ga) != null)
+                    // if (true && rc.canSenseLocation(ga) && rc.senseRobotAtLocation(ga) != null)
+                    if (O <= 1)
                     {
                         Direction best = null;
                         int dist = rc.getLocation().distanceSquaredTo(ga);
@@ -353,7 +365,8 @@ public class Launcher extends Robot
         if (true && ga != null)
         {
             rc.attack(ga);
-            if (rc.canSenseLocation(ga) && rc.senseRobotAtLocation(ga) != null)
+            // if (rc.canSenseLocation(ga) && rc.senseRobotAtLocation(ga) != null)
+            if (O <= 1)
             {
                 Direction best = null;
                 int dist = rc.getLocation().distanceSquaredTo(ga);
@@ -422,6 +435,16 @@ public class Launcher extends Robot
         if (rc.getLocation().distanceSquaredTo(oppositeLoc)*16<=rc.getLocation().distanceSquaredTo(parentLoc)) {
             crossed = true;
         }
+
+        // if (!crossed)
+        // {
+        //     if (rc.getRoundNum() % 2 == 0)
+        //     {
+        //         moveTo(oppositeLoc);
+        //     }
+        // }else{
+        //     spreadOut(false);
+        // }
 
         if (mini < sl && lowerCount < 9) {
             if (isStuck(bestie)) {

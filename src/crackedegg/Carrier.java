@@ -112,6 +112,13 @@ public class Carrier extends Robot
             if (rc.canAttack(danger)) {
                 rc.attack(danger);
             }
+            if (holding == 40)
+            {
+                moveTo(danger);
+            }
+            if (rc.canAttack(danger)) {
+                rc.attack(danger);
+            }
             needInstruction = true;
             target = null;
             mined = false;
