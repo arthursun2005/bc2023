@@ -228,7 +228,11 @@ public class Tracker
         for (CustomWell well : wells) {
             MapLocation loc = well.getMapLocation();
             int w = rc.getLocation().distanceSquaredTo(loc);
-            if (rc.senseNearbyRobots(loc, 2, rc.getTeam()).length >= 8)
+            if (rc.senseNearbyRobots(loc, 8, rc.getTeam()).length >= 12)
+            {
+                continue;
+            }
+            if (rc.getRoundNum() <= 6 && well.getResourceType() == ResourceType.MANA && rc.getID() % 5 != 0)
             {
                 continue;
             }

@@ -143,7 +143,8 @@ public class Launcher extends Robot
             // friendOffensiveCnt += 6;
         }
 
-        if (enemyOffensiveCnt == 0 || friendOffensiveCnt > enemyOffensiveCnt + 3) {
+        if (enemyOffensiveCnt == 0)// || friendOffensiveCnt > enemyOffensiveCnt - 5)
+        {
             // attack
             if (weakLoc != null)
             {
@@ -165,7 +166,7 @@ public class Launcher extends Robot
                 }
                 return best;
             }
-        } else if (enemyOffensiveCnt > friendOffensiveCnt + 5)
+        } else if (enemyOffensiveCnt > friendOffensiveCnt - 500)
         {
             // retreat
             // moveTo(tracker.getClosestHQLoc());
@@ -192,38 +193,38 @@ public class Launcher extends Robot
         } else if (weakLoc != null)
         {
             // rotate
-            // int big = rc.getType().visionRadiusSquared;
-            // Direction best = null;
-            // int hits = 123456789;
-            // for (Direction dir : directions)
-            // {
-            //     if (!rc.canMove(dir)) continue;
-            //     MapLocation loc = rc.adjacentLocation(dir);
-            //     if (loc.distanceSquaredTo(weakLoc) > big) continue;
-            //     int w = countWithin(enemies, loc, big) * 66666 + loc.distanceSquaredTo(weakLoc);
-            //     if (w < hits)
-            //     {
-            //         hits = w;
-            //         best = dir;
-            //     }
-            // }
-            // return best;
-            Direction dir = rc.getLocation().directionTo(weakLoc);
-            Direction[] dirs = {
-                dir.rotateLeft().rotateLeft(),
-                dir.rotateRight().rotateRight(),
-                dir.rotateLeft(),
-                dir.rotateRight(),
-                dir.rotateLeft().rotateLeft().rotateLeft(),
-                dir.rotateRight().rotateRight().rotateRight(),
-            };
-            for (Direction d : dirs)
+            int big = rc.getType().visionRadiusSquared;
+            Direction best = null;
+            int hits = 123456789;
+            for (Direction dir : directions)
             {
-                if (rc.canMove(d))
+                if (!rc.canMove(dir)) continue;
+                MapLocation loc = rc.adjacentLocation(dir);
+                if (loc.distanceSquaredTo(weakLoc) > big) continue;
+                int w = countWithin(enemies, loc, big) * 66666 + loc.distanceSquaredTo(weakLoc);
+                if (w < hits)
                 {
-                    return d;
+                    hits = w;
+                    best = dir;
                 }
             }
+            return best;
+            // Direction dir = rc.getLocation().directionTo(weakLoc);
+            // Direction[] dirs = {
+            //     dir.rotateLeft().rotateLeft(),
+            //     dir.rotateRight().rotateRight(),
+            //     dir.rotateLeft(),
+            //     dir.rotateRight(),
+            //     dir.rotateLeft().rotateLeft().rotateLeft(),
+            //     dir.rotateRight().rotateRight().rotateRight(),
+            // };
+            // for (Direction d : dirs)
+            // {
+            //     if (rc.canMove(d))
+            //     {
+            //         return d;
+            //     }
+            // }
         }
         
         return null;
@@ -269,6 +270,11 @@ public class Launcher extends Robot
 
     static boolean crossed = false;
 
+    public int ev(RobotInfo ri, MapLocation o) throws GameActionException
+    {
+        return ri.location.distanceSquaredTo(o) * 6666 + ri.getID();
+    }
+
     public void run() throws GameActionException
     {
         turnCount++;
@@ -289,6 +295,22 @@ public class Launcher extends Robot
                     }
                 }else{
                     rc.attack(ga);
+                    if (rc.senseRobotAtLocation(ga) != null)
+                    {
+                        Direction best = null;
+                        int dist = rc.getLocation().distanceSquaredTo(ga);
+                        for (Direction dir : directions)
+                        {
+                            if (!rc.canMove(dir)) continue;
+                            int w = rc.adjacentLocation(dir).distanceSquaredTo(ga);
+                            if (w > dist)
+                            {
+                                dist = w;
+                                best = dir;
+                            }
+                        }
+                        tryMove(best);
+                    }
                     bd = getChaseOrRetreatDir();
                     if (bd != null)
                     {
@@ -309,6 +331,22 @@ public class Launcher extends Robot
         if (ga != null)
         {
             rc.attack(ga);
+            if (rc.senseRobotAtLocation(ga) != null)
+            {
+                Direction best = null;
+                int dist = rc.getLocation().distanceSquaredTo(ga);
+                for (Direction dir : directions)
+                {
+                    if (!rc.canMove(dir)) continue;
+                    int w = rc.adjacentLocation(dir).distanceSquaredTo(ga);
+                    if (w > dist)
+                    {
+                        dist = w;
+                        best = dir;
+                    }
+                }
+                tryMove(best);
+            }
         }
         
         if (shouldHalt)
@@ -316,38 +354,47 @@ public class Launcher extends Robot
             return;
         }
 
-        RobotInfo[] friends = rc.senseNearbyRobots(42069,rc.getTeam());
-        int mini=rc.getID();
+        RobotInfo[] friends = rc.senseNearbyRobots(8,rc.getTeam());
+        
         MapLocation bestie = null;
         int lowerCount = 0;
+        MapLocation oppositeLoc = new MapLocation(rc.getMapWidth()-parentLoc.x-1,rc.getMapHeight()-parentLoc.y-1);
+
+        int sl = rc.getLocation().distanceSquaredTo(parentLoc) * 6666 + rc.getID();
+        int mini=sl;
+        int more = 0;
 
         for (RobotInfo friend : friends) {
             if (friend.type == RobotType.LAUNCHER) {
-                if (friend.getID() < rc.getID()) lowerCount++;
-                if (friend.getID() < mini) {
-                    mini=friend.getID();
+                int e = ev(friend, parentLoc);
+                more++;
+                if (e < sl) lowerCount++;
+                if (e < mini) {
+                    mini=e;
                     bestie=friend.getLocation();
                 }
             }
         }
 
-        MapLocation oppositeLoc = new MapLocation(rc.getMapWidth()-parentLoc.x-1,rc.getMapHeight()-parentLoc.y-1);
         if (rc.getLocation().distanceSquaredTo(oppositeLoc)*2<=rc.getLocation().distanceSquaredTo(parentLoc)) {
             crossed = true;
         }
 
-        if (mini < rc.getID() && lowerCount < 9) {
+        if (mini < sl && lowerCount < 2) {
             if (isStuck(bestie)) {
                 spreadOut(true);
             }
             else if (rc.getLocation().distanceSquaredTo(bestie) > 2)
             {
                 moveTo(bestie);
+            }else if (rc.getRoundNum() % 2 == 0 && (more >= 2 || more == 0))
+            {
+                moveTo(oppositeLoc);
             }
         }
         else {
             if (!crossed) {
-                if (true || rc.getRoundNum() % 5 == 0 || rc.getRoundNum() > 30)
+                if (rc.getRoundNum() % 2 == 0 && more >= 2)
                 {
                     moveTo(oppositeLoc);
                 }
