@@ -65,7 +65,7 @@ func main() {
         }
         wg.Wait()
         for i, w := range wins {
-            fmt.Printf("%16s: %3d wins", bots[i], w)
+            fmt.Printf("%16s: %3d win\n", bots[i], w)
         }
         return
     }
