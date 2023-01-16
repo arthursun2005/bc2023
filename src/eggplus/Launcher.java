@@ -182,7 +182,7 @@ public class Launcher extends Robot
                 if (!rc.canMove(dir)) continue;
                 MapLocation loc = rc.adjacentLocation(dir);
                 if (loc.distanceSquaredTo(weakLoc) > big) continue;
-                int w = countWithin(enemies, loc, big) * 66666 - loc.distanceSquaredTo(weakLoc);
+                int w = countWithin(enemies, loc, big) * 66666 + loc.distanceSquaredTo(weakLoc);
                 if (w < hits)
                 {
                     hits = w;
