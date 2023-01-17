@@ -7,8 +7,8 @@ import (
 	"sort"
 )
 
-const RESET_PROB = 0.01
-const MUT_RESET_PROB = 0.02
+const RESET_PROB = 0.00001
+const MUT_RESET_PROB = 0.01
 const MUT_PARETO_A = 5.0
 const BORN_OFFSET = -10
 const AGE_GROUP = 600
@@ -22,6 +22,16 @@ type Ring struct {
 	Score float64
 	Age   int
 	Data  []float64
+}
+
+func NewRing(n int) Ring {
+	var u Ring
+	u.Data = make([]float64, n)
+	u.Age = AGE_GROUP + BORN_OFFSET
+	for i := 0; i < n; i++ {
+		u.Data[i] = rand.NormFloat64()
+	}
+	return u
 }
 
 func (r Ring) Mutate() {
@@ -71,8 +81,7 @@ func NewField(n int, m int) Field {
 	var f Field
 	f.Rings = make([]Ring, n)
 	for i := 0; i < n; i++ {
-		f.Rings[i].Data = make([]float64, m)
-		f.Rings[i].Age = AGE_GROUP + BORN_OFFSET
+		f.Rings[i] = NewRing(m)
 	}
 	f.Best.Score = math.Inf(-1)
 	return f
@@ -90,8 +99,9 @@ func (f *Field) Step() {
 		f.Pool = f.Pool[:POOL_LIMIT/2]
 		heap.Init(&f.Pool)
 	}
+	m := len(f.Rings[0].Data)
 	for i := range f.Rings {
-		f.Rings[i].Data = make([]float64, len(f.Rings[i].Data))
+		f.Rings[i].Data = make([]float64, m)
 
 		parent := heap.Pop(&f.Pool).(Ring)
 		copy(f.Rings[i].Data, parent.Data)
@@ -100,10 +110,10 @@ func (f *Field) Step() {
 		if f.Rings[i].Age > AGE_GROUP {
 			f.Rings[i].Age = AGE_GROUP
 		}
-		if rand.Float64() < RESET_PROB {
-			f.Rings[i].Age = AGE_GROUP + BORN_OFFSET
-		}
 		heap.Push(&f.Pool, parent)
 		f.Rings[i].Mutate()
+		if rand.Float64() < RESET_PROB {
+			f.Rings[i] = NewRing(m)
+		}
 	}
 }
