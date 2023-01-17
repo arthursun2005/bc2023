@@ -50,7 +50,10 @@ var completer = readline.NewPrefixCompleter(
 	readline.PcItem("help"),
 	readline.PcItem("score"),
 	readline.PcItem("save"),
-	readline.PcItem("rate",
+	readline.PcItem("load"),
+	readline.PcItem("exit"),
+	readline.PcItem("watch",
+		readline.PcItem("enable"),
 		readline.PcItem("disable"),
 		readline.PcItem("[newrate]"),
 	),
@@ -128,6 +131,7 @@ func main() {
 	w := rl.Stderr()
 	log.SetOutput(w)
 
+main:
 	for {
 		line, err := rl.Readline()
 		if err == readline.ErrInterrupt {
@@ -150,15 +154,21 @@ func main() {
 		case line == "save":
 			fmt.Printf("lol\n")
 
-		case line == "rate":
+		case line == "load":
+			fmt.Printf("lol\n")
+
+		case line == "exit":
+			break main
+
+		case line == "watch":
 			if watching {
 				fmt.Printf("current watch rate: %s\n", rate)
 			} else {
 				fmt.Printf("watching disabled\n")
 			}
 
-		case strings.HasPrefix(line, "rate"):
-			line = strings.TrimSpace(line[4:])
+		case strings.HasPrefix(line, "watch"):
+			line = strings.TrimSpace(line[5:])
 			if line == "disable" {
 				watching = false
 				fmt.Printf("watching disabled\n")
@@ -177,6 +187,7 @@ func main() {
 				}
 				rate = time.Duration(u) * time.Second
 				ticker.Reset(rate)
+				fmt.Printf("watch rate set to: %s\n", rate)
 			}
 
 		default:
