@@ -8,7 +8,8 @@ public strictfp class RobotPlayer {
     @SuppressWarnings("unused")
     public static void run(RobotController rc) throws GameActionException {
         Robot robot = null;
-        switch (rc.getType()) {
+        switch (rc.getType()) 
+        {
             case HEADQUARTERS:
                 robot = new Headquarter(rc);
                 break;
@@ -22,6 +23,7 @@ public strictfp class RobotPlayer {
                 robot = new Booster(rc);
                 break;
             case DESTABILIZER:
+                robot = new Destabilizer(rc);
                 break;
             case AMPLIFIER:
                 robot = new Amplifier(rc);
@@ -29,16 +31,21 @@ public strictfp class RobotPlayer {
         }
 
         while (true) {
-            try {
-                if (robot != null) {
+            try 
+            {
+                if (robot != null) 
+                {
                     robot.prepare();
                     robot.run();
                 }
-            } catch (GameActionException e) {
+            } catch (GameActionException e) 
+            {
                 e.printStackTrace();
-            } catch (Exception e) {
+            } catch (Exception e) 
+            {
                 e.printStackTrace();
-            } finally {
+            } finally 
+            {
                 Clock.yield();
             }
         }

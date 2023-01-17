@@ -1,9 +1,6 @@
 package kamikaze;
 
-import battlecode.common.GameActionException;
-import battlecode.common.RobotController;
-
-// HUGELY TODO
+import battlecode.common.*;
 
 public class Amplifier extends Robot
 {

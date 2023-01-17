@@ -2,9 +2,8 @@ package kamikaze;
 
 import battlecode.common.*;
 
-public class Launcher extends Robot
-{
-    public Launcher(RobotController rc) throws GameActionException {
+public class Destabilizer extends Robot {
+    public Destabilizer(RobotController rc) throws GameActionException {
         super(rc);
     }
 
