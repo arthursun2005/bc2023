@@ -1,4 +1,4 @@
-package eggnog;
+package kamikaze;
 
 import battlecode.common.*;
 

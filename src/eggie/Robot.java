@@ -1,4 +1,4 @@
-package eggnog;
+package eggie;
 
 import battlecode.common.*;
 
@@ -28,7 +28,7 @@ public abstract class Robot
     public Robot(RobotController rc)
     {
         Robot.rc = rc;
-        rng = new Random(rc.getID() + 69);
+        rng = new Random(rc.getID());
         tracker = new Tracker(rc);
         creationRound = rc.getRoundNum();
     }

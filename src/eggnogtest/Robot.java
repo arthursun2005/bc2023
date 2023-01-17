@@ -1,9 +1,10 @@
-package eggnog;
+package eggnogtest;
 
 import battlecode.common.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Random;
 
 public abstract class Robot
@@ -27,9 +28,11 @@ public abstract class Robot
     static Tracker tracker;
     public Robot(RobotController rc)
     {
+        System.out.println("1 :" + Clock.getBytecodesLeft());
         Robot.rc = rc;
-        rng = new Random(rc.getID() + 69);
+        rng = new Random(rc.getID());
         tracker = new Tracker(rc);
+        System.out.println("2 :" + Clock.getBytecodesLeft());
         creationRound = rc.getRoundNum();
     }
 
@@ -87,18 +90,18 @@ public abstract class Robot
 
     public void prepare() throws GameActionException
     {
-        if (parentLoc == null && !rc.getType().equals(RobotType.HEADQUARTERS))
-        {
-            RobotInfo[] friends = rc.senseNearbyRobots(42069, rc.getTeam());
-            for (RobotInfo ri : friends)
-            {
-                if (ri.type.equals(RobotType.HEADQUARTERS))
-                {
-                    parentLoc = ri.getLocation();
-                    break;
-                }
-            }
-        }
+//        if (parentLoc == null && !rc.getType().equals(RobotType.HEADQUARTERS))
+//        {
+//            RobotInfo[] friends = rc.senseNearbyRobots(42069, rc.getTeam());
+//            for (RobotInfo ri : friends)
+//            {
+//                if (ri.type.equals(RobotType.HEADQUARTERS))
+//                {
+//                    parentLoc = ri.getLocation();
+//                    break;
+//                }
+//            }
+//        }
         if (prevLocation == null) {
             prevLocation = rc.getLocation();
         } else if (!rc.getLocation().equals(prevLocation)) {
@@ -115,7 +118,19 @@ public abstract class Robot
             Tracker.writeHQLoc();
         }
 
-        if (!rc.getType().equals(RobotType.LAUNCHER) || turnCount > 5)
+        if (parentLoc == null && !rc.getType().equals(RobotType.HEADQUARTERS)) {
+            Collections.sort(Tracker.HQLocations, new Comparator<MapLocation>() {
+                public int compare(MapLocation a, MapLocation b) {
+                    return rc.getLocation().distanceSquaredTo(a) - rc.getLocation().distanceSquaredTo(b);
+                }
+            });
+
+            parentLoc = Tracker.HQLocations.get(0);
+        }
+
+
+
+        if (!rc.getType().equals(RobotType.LAUNCHER) || turnCount > 50)
         {
             tracker.senseWells();
         }
