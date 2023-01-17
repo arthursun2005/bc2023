@@ -115,7 +115,7 @@ public abstract class Robot
             Tracker.writeHQLoc();
         }
 
-        if (!rc.getType().equals(RobotType.LAUNCHER) || turnCount > 5)
+        if (!rc.getType().equals(RobotType.LAUNCHER) || turnCount > 0)
         {
             tracker.senseWells();
         }
@@ -126,13 +126,20 @@ public abstract class Robot
 
     public boolean tryMove(Direction dir) throws GameActionException
     {
-        if (dir == null) return false;
+        /*if (dir == null) return false;
         if (rc.canMove(dir))
         {
             rc.move(dir);
             return true;
         }
-        return false;
+        return false;*/
+        try {
+            rc.move(dir);
+            return true;
+        }
+        catch(Exception e) {
+            return false;
+        }
     }
 
     public boolean moveTo(MapLocation loc) throws GameActionException
@@ -188,37 +195,46 @@ public abstract class Robot
         }
     }
 
-    static void moveRandom() throws GameActionException {
+    void moveRandom() throws GameActionException {
 //        if (curDir == Direction.CENTER) curDir = Direction.values()[rng.nextInt(8)+1];
         if (curDir == Direction.CENTER) curDir = rc.getLocation().directionTo(new MapLocation(rc.getMapWidth() / 2, rc.getMapHeight() / 2));
 
         if (rc.isMovementReady()) {
             if (moveCount==0 || !rc.canMove(curDir)) {
                 moveCount=4;
-                Direction newDirects[] = {
-                        curDir,
-                        curDir.rotateRight(),
-                        curDir.rotateLeft(),
-                        curDir.rotateRight().rotateRight(),
-                        curDir.rotateLeft().rotateLeft(),
-                };
-                for (int i=0; i<20; i++) {
-                    curDir = newDirects[rng.nextInt(newDirects.length)];
-                    if (rc.canMove(curDir)) {
-                        rc.move(curDir);
+
+                ArrayList<Direction> dirs = new ArrayList<Direction>();
+                dirs.add(curDir);
+                dirs.add(curDir.rotateRight());
+                dirs.add(curDir.rotateLeft());
+                dirs.add(curDir.rotateRight().rotateRight());
+                dirs.add(curDir.rotateLeft().rotateLeft());
+                Collections.shuffle(dirs);
+                for (Direction dir : dirs)
+                {
+                    if (tryMove(dir))
+                    {
+                        curDir = dir;
                         return;
                     }
                 }
-                while (true) {
-                    curDir = directions[rng.nextInt(directions.length)];
-                    if (rc.canMove(curDir)) {
-                        rc.move(curDir);
+
+                dirs = new ArrayList<Direction>();
+                dirs.add(curDir.opposite());
+                dirs.add(curDir.opposite().rotateLeft());
+                dirs.add(curDir.opposite().rotateRight());
+                Collections.shuffle(dirs);
+                for (Direction dir : dirs)
+                {
+                    if (tryMove(dir))
+                    {
+                        curDir = dir;
                         return;
                     }
                 }
             }
             moveCount--;
-            rc.move(curDir);
+            tryMove(curDir);
         }
     }
 }

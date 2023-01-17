@@ -101,9 +101,6 @@ public class Tracker
         for (WellInfo newWell : seenWells) {
             MapLocation newWellPos = newWell.getMapLocation();
             ResourceType newWellType = newWell.getResourceType();
-            int newWellTypeCode = 0;
-            if (newWellType == ResourceType.MANA) newWellTypeCode = 1;
-            if (newWellType == ResourceType.ELIXIR) newWellTypeCode = 2;
             if (!isWell[newWellPos.x][newWellPos.y] && curWellSharedArray < 64) {
                 isWell[newWellPos.x][newWellPos.y] = true;
                 wells.add(new CustomWell(newWell.getMapLocation(), newWell.getResourceType()));
@@ -140,9 +137,11 @@ public class Tracker
 
         return wells.get(rng.nextInt(Math.min(wells.size(), 2))).getMapLocation();
     }
+
+    static WellInfo[] nearbyWells;
     static void senseWells() throws GameActionException {
         if (rc.getType() != RobotType.AMPLIFIER) {
-            WellInfo[] nearbyWells = rc.senseNearbyWells();
+            nearbyWells = rc.senseNearbyWells();
             for (int j=0; j<nearbyWells.length; j++) {;
                 WellInfo testing = nearbyWells[j];
                 seenWells.add(testing);

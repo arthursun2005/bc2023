@@ -6,6 +6,9 @@ import java.util.*;
 
 public class Launcher extends Robot
 {
+    static RobotInfo[] friends;
+    static RobotInfo[] enemies;
+
     static long arr[] = new long[195]; // 2^63 - 1
     // 3 per location, 21 locations in one long, need 180
 
@@ -38,7 +41,8 @@ public class Launcher extends Robot
             int x, y, oppx, oppy;
             MapLocation loc = null;
             // 1 for passable, 2 for impassable
-            for (int i = 0; i < 5; i++) {
+            while (Clock.getBytecodesLeft() >= 300) {
+                //:skull:
                 loc = toCheck[rng.nextInt(toCheck.length)];
 
                 x = loc.x; y = loc.y;
@@ -100,7 +104,7 @@ public class Launcher extends Robot
 
     static int U = 0;
 
-    public long getEnemyWeaknessMetric(RobotInfo enemy, RobotInfo[] friends) throws GameActionException {
+    public long getEnemyWeaknessMetric(RobotInfo enemy) throws GameActionException {
         U = countWithin(friends, enemy.location, rc.getType().visionRadiusSquared);
         long adjustedHealth = (enemy.health - U * 6l) * 66666666l + rc.getLocation().distanceSquaredTo(enemy.location) * 66666l + rc.getID();
         if (enemy.type.equals(RobotType.LAUNCHER)) adjustedHealth -= 66666666666l;
@@ -127,16 +131,12 @@ public class Launcher extends Robot
         // }
         // return null;
         O = 0;
-        int radius = rc.getType().actionRadiusSquared;
-        Team opponent = rc.getTeam().opponent();
-        RobotInfo[] friends = rc.senseNearbyRobots(-1, rc.getTeam());
-        RobotInfo[] enemies = rc.senseNearbyRobots(radius, opponent);
         attackLoc = null;
         long minHealth = 0;
         for (RobotInfo enemy : enemies) {
             MapLocation toAttack = enemy.location;
             if (rc.canAttack(toAttack)) {
-                long adjustedHealth = getEnemyWeaknessMetric(enemy, friends);
+                long adjustedHealth = getEnemyWeaknessMetric(enemy);
                 if (attackLoc == null || adjustedHealth < minHealth)
                 {
                     minHealth = adjustedHealth;
@@ -182,10 +182,6 @@ public class Launcher extends Robot
         }
 
         shouldHalt = false;
-        Team opponent = rc.getTeam().opponent();
-        RobotInfo[] friends = rc.senseNearbyRobots(-1, rc.getTeam());
-        RobotInfo[] enemies = rc.senseNearbyRobots(-1, opponent);
-        // RobotInfo[] enemies = rc.senseNearbyRobots(rc.getType().actionRadiusSquared, opponent);
 
         int friendOffensiveCnt = 6 + rc.getHealth();
         int enemyOffensiveCnt = 0;
@@ -219,7 +215,7 @@ public class Launcher extends Robot
                 enemyOffensiveCnt += 6 + enemy.health;
             }
 
-            long adjustedHealth = getEnemyWeaknessMetric(enemy, friends);
+            long adjustedHealth = getEnemyWeaknessMetric(enemy);
             if (weakLoc == null || adjustedHealth < minHealth)
             {
                 minHealth = adjustedHealth;
@@ -346,7 +342,6 @@ public class Launcher extends Robot
     }
     public void tryProtect() throws GameActionException
     {
-        RobotInfo[] friends = rc.senseNearbyRobots(-1, rc.getTeam());
         MapLocation HQLoc = tracker.getClosestHQLoc();
         int dist = rc.getLocation().distanceSquaredTo(HQLoc);
         MapLocation weakLoc = null;
@@ -393,8 +388,10 @@ public class Launcher extends Robot
 
     public void run() throws GameActionException
     {
-        if (turnCount >= 1) tryFindSymmetry();
         turnCount++;
+
+        friends = rc.senseNearbyRobots(-1, rc.getTeam());
+        enemies = rc.senseNearbyRobots(-1, rc.getTeam().opponent());
 
         rc.setIndicatorString("SYMMETRY: " + symmetry);
 
@@ -475,8 +472,6 @@ public class Launcher extends Robot
         {
             return;
         }
-
-        RobotInfo[] friends = rc.senseNearbyRobots(-1,rc.getTeam());
 
         MapLocation bestie = null;
         int lowerCount = 0;
@@ -583,11 +578,13 @@ public class Launcher extends Robot
         moveTo(center);
 
         spreadOut(true);*/
-
-        ga = getAttackLoc();
-        if (ga != null)
-        {
-            rc.attack(ga);
+        if (turnCount > 1) {
+            ga = getAttackLoc();
+            if (ga != null)
+            {
+                rc.attack(ga);
+            }
         }
+        tryFindSymmetry();
     }
 }
