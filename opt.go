@@ -2,17 +2,20 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"os/exec"
+	"strconv"
 	"strings"
 	"sync"
 	"sync/atomic"
 	"time"
+
+	"github.com/chzyer/readline"
 )
 
-// const MAPS = "maptestsmall,AllElements,DefaultMap,Horizontal,SmallElements,Vertical,New"
-const MAPS = "maptestsmall,AllElements,DefaultMap,Woh"
+const MAPS = "maptestsmall,AllElements,DefaultMap,Horizontal,SmallElements,Vertical,Woh"
 
 func countWins(out string) (int, int) {
 	A := 0
@@ -43,6 +46,16 @@ func play(a, b string) (int, int) {
 	return countWins(string(out))
 }
 
+var completer = readline.NewPrefixCompleter(
+	readline.PcItem("help"),
+	readline.PcItem("score"),
+	readline.PcItem("save"),
+	readline.PcItem("rate",
+		readline.PcItem("disable"),
+		readline.PcItem("[newrate]"),
+	),
+)
+
 func main() {
 	if len(os.Args) > 1 {
 		bots := os.Args[1:]
@@ -72,17 +85,102 @@ func main() {
 		}
 		return
 	}
+
+	rl, err := readline.NewEx(&readline.Config{
+		Prompt:            "\033[35;1m>\033[0m ",
+		InterruptPrompt:   "^C",
+		AutoComplete:      completer,
+		EOFPrompt:         "exit",
+		HistorySearchFold: true,
+	})
+	if err != nil {
+		log.Panic(err)
+	}
+	defer rl.Close()
+
 	field := NewField(10, 10)
-	iter := 0
-	for {
-		iter += 1
-		for i := range field.Rings {
-			field.Rings[i].Score = 0.0
-			for j := 0; j < 10; j++ {
-				field.Rings[i].Score += field.Rings[i].Data[j]
+	go func() {
+		iter := 0
+		for {
+			iter += 1
+			for i := range field.Rings {
+				field.Rings[i].Score = 0.0
+				for j := 0; j < 10; j++ {
+					field.Rings[i].Score += field.Rings[i].Data[j]
+				}
+			}
+			field.Step()
+		}
+	}()
+
+	rate := time.Duration(5) * time.Second
+	ticker := time.NewTicker(rate)
+	watching := true
+
+	go func() {
+		for range ticker.C {
+			if watching {
+				log.Printf("best score = %.3f", field.Best.Score)
 			}
 		}
-		field.Step()
-		log.Println(iter, field.Best.Score)
+	}()
+
+	w := rl.Stderr()
+	log.SetOutput(w)
+
+	for {
+		line, err := rl.Readline()
+		if err == readline.ErrInterrupt {
+			continue
+		} else if err == io.EOF {
+			break
+		}
+		line = strings.TrimSpace(line)
+		if len(line) == 0 {
+			continue
+		}
+		switch {
+		case line == "help":
+			io.WriteString(w, "commands:\n")
+			io.WriteString(w, completer.Tree("    "))
+
+		case line == "score":
+			fmt.Printf("best score = %.3f\n", field.Best.Score)
+
+		case line == "save":
+			fmt.Printf("lol\n")
+
+		case line == "rate":
+			if watching {
+				fmt.Printf("current watch rate: %s\n", rate)
+			} else {
+				fmt.Printf("watching disabled\n")
+			}
+
+		case strings.HasPrefix(line, "rate"):
+			line = strings.TrimSpace(line[4:])
+			if line == "disable" {
+				watching = false
+				fmt.Printf("watching disabled\n")
+			} else if line == "enable" {
+				watching = true
+				fmt.Printf("watching enabled\n")
+			} else {
+				u, err := strconv.ParseInt(line, 10, 64)
+				if err != nil {
+					fmt.Printf("%s\n", err)
+					break
+				}
+				if u <= 0 {
+					fmt.Printf("duration <= 0\n")
+					break
+				}
+				rate = time.Duration(u) * time.Second
+				ticker.Reset(rate)
+			}
+
+		default:
+			fmt.Printf("???: %s\n", line)
+		}
 	}
 }
