@@ -10,25 +10,78 @@ public abstract class Robot
 
     Attack attack;
     Tracker tracker;
+    Movement movement;
 
     int creationRound;
     int turnCount;
 
-    public Robot(RobotController rc) throws GameActionException
-    {
+    Direction[] directions = Direction.values();
+
+    public Robot(RobotController rc) throws GameActionException {
         this.rc = rc;
         Util.rc = rc;
         attack = new Attack(rc);
         tracker = new Tracker(rc);
+        movement = new Movement(rc);
         rng = new Random(rc.getID() + 369);
         creationRound = rc.getRoundNum();
         turnCount = 0;
+
+        tracker.readHQLocs();
     }
 
-    public void prepare() throws GameActionException
-    {
+    public void prepare() throws GameActionException {
+        tracker.update();
         turnCount++;
     }
 
+    public void moveTo(MapLocation loc) throws GameActionException {
+        movement.moveTo(loc);
+    }
+
     abstract void run() throws GameActionException;
+
+    public void spreadOut(boolean all) throws GameActionException
+    {
+        if (!rc.isMovementReady()) return;
+        int cnt[] = new int[9];
+        Direction[] good = new Direction[9];
+        RobotInfo[] robots = rc.senseNearbyRobots(-1, rc.getTeam());
+        for (RobotInfo ri : robots)
+        {
+            if (all || ri.type.equals(rc.getType()))
+            {
+                Direction dir = rc.getLocation().directionTo(ri.getLocation());
+                cnt[dir.ordinal()]++;
+            }
+        }
+        int least = 696969;
+        for (int i = 0; i < 8; i++) {
+            least = Math.min(least, cnt[i]);
+        }
+
+        int gc = 0;
+        for (int i = 0; i < 8; i++)
+        {
+            if (cnt[i] == least)
+            {
+                good[gc] = directions[i];
+                gc++;
+            }
+        }
+        for (int i = 1; i < gc; i++) {
+            int j = rng.nextInt(i + 1);
+            if (i != j) {
+                Direction a = good[i];
+                good[i] = good[j];
+                good[j] = a;
+            }
+        }
+        for (int i = 0; i < gc; i++) {
+            if (rc.canMove(good[i])) {
+                rc.move(good[i]);
+                break;
+            }
+        }
+    }
 }
