@@ -1,23 +1,25 @@
 package kamikaze;
 
 import battlecode.common.*;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Random;
+import java.util.*;
 
 public abstract class Robot
 {
     RobotController rc;
     Random rng;
 
+    Attack attack;
+    Tracker tracker;
+
     int creationRound;
     int turnCount;
 
-    public Robot(RobotController rc)
+    public Robot(RobotController rc) throws GameActionException
     {
         this.rc = rc;
         Util.rc = rc;
+        attack = new Attack(rc);
+        tracker = new Tracker(rc);
         rng = new Random(rc.getID() + 369);
         creationRound = rc.getRoundNum();
         turnCount = 0;
