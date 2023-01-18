@@ -41,6 +41,12 @@ public class Carrier extends Robot {
         } else {
             explore();
         }
+
+        if ((rc.senseIsland(rc.getLocation()) != -1)
+                && rc.senseTeamOccupyingIsland(rc.senseIsland(rc.getLocation())) != rc.getTeam()
+                && rc.canPlaceAnchor()) {
+            rc.placeAnchor();
+        }
     }
 
     public void checkDanger() throws GameActionException {
