@@ -161,8 +161,8 @@ public class Movement {
     }
 
     Direction normal(Direction togo) throws GameActionException {
-        Direction left = togo.rotateLeft();
-        Direction right = togo.rotateRight();
+        // Direction left = togo.rotateLeft();
+        // Direction right = togo.rotateRight();
 
         if (rc.onTheMap(currentLocation.add(togo)) && rc.canSenseRobotAtLocation(currentLocation.add(togo)))  {
 //            hardReset();
@@ -385,7 +385,8 @@ public class Movement {
 
     void moveTo(MapLocation loc) throws GameActionException {
         if (!rc.isMovementReady()) return;
-        if (rc.getLocation().distanceSquaredTo(loc) <= 2) return;
+        if (rc.getLocation().distanceSquaredTo(loc) == 0) return;
+        if (rc.getLocation().distanceSquaredTo(loc) <= 2 && (rc.senseRobotAtLocation(loc) != null || !rc.sensePassability(loc))) return;
         Direction dir = tryMove(loc, null);
         if (dir != null && rc.canMove(dir)) rc.move(dir);
     }

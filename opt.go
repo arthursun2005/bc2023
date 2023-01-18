@@ -15,7 +15,7 @@ import (
 	"github.com/chzyer/readline"
 )
 
-const N = 100
+const N = 64
 const M = 10
 const MAPS = "maptestsmall,AllElements,DefaultMap,Horizontal,SmallElements,Vertical,Woh"
 
@@ -71,10 +71,13 @@ func main() {
 		bots := os.Args[1:]
 		wins := make([]int64, len(bots))
 		var wg sync.WaitGroup
-		guard := make(chan struct{}, 5)
+		guard := make(chan struct{}, 6)
 		for i, a := range bots {
 			for j, b := range bots {
 				if i == j {
+					continue
+				}
+				if i != 0 && j != 0 {
 					continue
 				}
 				guard <- struct{}{}
@@ -91,7 +94,7 @@ func main() {
 		}
 		wg.Wait()
 		for i, w := range wins {
-			fmt.Printf("%16s: %3d win\n", bots[i], w)
+			fmt.Printf("%16s: %3d wins\n", bots[i], w)
 		}
 		return
 	}

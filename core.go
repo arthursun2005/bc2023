@@ -103,14 +103,14 @@ func (f *Field) Step() {
 	for i := range f.Rings {
 		f.Rings[i].Data = make([]float64, m)
 
-		parent := heap.Pop(&f.Pool).(Ring)
+		parent := &f.Pool[0]
 		copy(f.Rings[i].Data, parent.Data)
 		parent.Age++
 		f.Rings[i].Age = parent.Age
 		if f.Rings[i].Age > AGE_GROUP {
 			f.Rings[i].Age = AGE_GROUP
 		}
-		heap.Push(&f.Pool, parent)
+		heap.Fix(&f.Pool, 0)
 		f.Rings[i].Mutate()
 		if rand.Float64() < RESET_PROB {
 			f.Rings[i] = NewRing(m)

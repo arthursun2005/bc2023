@@ -3,8 +3,7 @@ package kamikaze;
 import battlecode.common.*;
 import java.util.*;
 
-public abstract class Robot
-{
+public abstract class Robot {
     RobotController rc;
     Random rng;
 
@@ -20,7 +19,7 @@ public abstract class Robot
     public Robot(RobotController rc) throws GameActionException {
         this.rc = rc;
         Util.rc = rc;
-        attack = new Attack(rc);
+        attack = new Attack(rc, this);
         tracker = new Tracker(rc);
         movement = new Movement(rc);
         rng = new Random(rc.getID() + 369);
@@ -32,6 +31,7 @@ public abstract class Robot
 
     public void prepare() throws GameActionException {
         tracker.update();
+        attack.update();
         turnCount++;
     }
 
@@ -39,18 +39,49 @@ public abstract class Robot
         movement.moveTo(loc);
     }
 
+    public void greedilyMove(MapLocation loc, int mul) throws GameActionException {
+        Direction best = null;
+        MapLocation HQLoc = tracker.getClosestHQLoc();
+        MapLocation me = rc.getLocation();
+        if (loc == null)
+            loc = me;
+        int dist = me.distanceSquaredTo(loc) * mul * 50 + me.distanceSquaredTo(HQLoc);
+        for (Direction dir : directions) {
+            if (!rc.canMove(dir))
+                continue;
+            int w = rc.adjacentLocation(dir).distanceSquaredTo(loc) * mul * 50
+                    + rc.adjacentLocation(dir).distanceSquaredTo(HQLoc);
+            if (w < dist) {
+                dist = w;
+                best = dir;
+            }
+        }
+        if (best != null) {
+            rc.move(best);
+        }
+    }
+
     abstract void run() throws GameActionException;
 
-    public void spreadOut(boolean all) throws GameActionException
-    {
-        if (!rc.isMovementReady()) return;
+    MapLocation exploreTarget = null;
+
+    public void explore() throws GameActionException {
+        if (exploreTarget == null || rc.getLocation().distanceSquaredTo(exploreTarget) <= 18) {
+            int width = rc.getMapWidth();
+            int height = rc.getMapHeight();
+            exploreTarget = new MapLocation(4 + rng.nextInt(width - 8), 4 + rng.nextInt(height - 8));
+        }
+        moveTo(exploreTarget);
+    }
+
+    public void spreadOut(boolean all) throws GameActionException {
+        if (!rc.isMovementReady())
+            return;
         int cnt[] = new int[9];
         Direction[] good = new Direction[9];
         RobotInfo[] robots = rc.senseNearbyRobots(-1, rc.getTeam());
-        for (RobotInfo ri : robots)
-        {
-            if (all || ri.type.equals(rc.getType()))
-            {
+        for (RobotInfo ri : robots) {
+            if (all || ri.type.equals(rc.getType())) {
                 Direction dir = rc.getLocation().directionTo(ri.getLocation());
                 cnt[dir.ordinal()]++;
             }
@@ -61,10 +92,8 @@ public abstract class Robot
         }
 
         int gc = 0;
-        for (int i = 0; i < 8; i++)
-        {
-            if (cnt[i] == least)
-            {
+        for (int i = 0; i < 8; i++) {
+            if (cnt[i] == least) {
                 good[gc] = directions[i];
                 gc++;
             }
