@@ -26,7 +26,7 @@ public class Tracker {
     // WELL FINDING
     ArrayList<WellInfo> seenWells = new ArrayList<>();
     ArrayList<WellInfo> toAdd = new ArrayList<>();
-    int curWellSharedArray = 50;
+    int curWellSharedArray = Constants.START_WELL_IDX;
     long[] isWell = new long[64];
     ArrayList<CustomWell> wells = new ArrayList<>();
     ArrayList<MapLocation> adaWells = new ArrayList<>();
@@ -174,9 +174,6 @@ public class Tracker {
         return target;
     }
 
-    final int CARRIER = 31;
-    final int LAUNCHER = 32;
-
     int hqCount = 0;
     ArrayList<MapLocation> HQLocations = new ArrayList<>();
 
@@ -216,36 +213,36 @@ public class Tracker {
         if (!rc.canWriteSharedArray(0, 0))
             return;
 
-        int temp = rc.readSharedArray(CARRIER);
-        rc.writeSharedArray(CARRIER, temp + 1);
+        int temp = rc.readSharedArray(Constants.BUILD_CARRIER_IDX);
+        rc.writeSharedArray(Constants.BUILD_CARRIER_IDX, temp + 1);
     }
 
     void increaseLauncherCount() throws GameActionException {
         if (!rc.canWriteSharedArray(0, 0))
             return;
 
-        int temp = rc.readSharedArray(LAUNCHER);
-        rc.writeSharedArray(LAUNCHER, temp + 1);
+        int temp = rc.readSharedArray(Constants.BUILD_LAUNCHER_IDX);
+        rc.writeSharedArray(Constants.BUILD_LAUNCHER_IDX, temp + 1);
     }
 
     int readCarrierCount() throws GameActionException {
-        return rc.readSharedArray(CARRIER);
+        return rc.readSharedArray(Constants.BUILD_CARRIER_IDX);
     }
 
     int readLauncherCount() throws GameActionException {
-        return rc.readSharedArray(LAUNCHER);
+        return rc.readSharedArray(Constants.BUILD_LAUNCHER_IDX);
     }
 
     void updateCount(int resource, int delta) throws GameActionException {
         // 0 = ada, 1 = mana, 2 = elixir
-        int cur = rc.readSharedArray(33 + resource) + delta;
-        if (rc.canWriteSharedArray(33 + resource, cur)) {
-            rc.writeSharedArray(33 + resource, cur);
+        int cur = rc.readSharedArray(Constants.RESOURCE_IDX + resource) + delta;
+        if (rc.canWriteSharedArray(Constants.RESOURCE_IDX + resource, cur)) {
+            rc.writeSharedArray(Constants.RESOURCE_IDX + resource, cur);
         }
     }
 
     int getCount(int resource) throws GameActionException {
-        return rc.readSharedArray(33 + resource);
+        return rc.readSharedArray(Constants.RESOURCE_IDX + resource);
     }
 
     void readHQLocs() throws GameActionException {

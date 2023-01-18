@@ -30,7 +30,8 @@ public abstract class Robot {
     }
 
     public void prepare() throws GameActionException {
-        tracker.update();
+        if (turnCount > 3 || !rc.getType().equals(RobotType.LAUNCHER))
+            tracker.update();
         attack.update();
         turnCount++;
     }
