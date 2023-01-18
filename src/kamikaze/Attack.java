@@ -169,7 +169,7 @@ public class Attack {
             W += 3;
         }
         if (W != 0) {
-            if (delta >= 0 && (ahead || W == 1)) {
+            if ((delta >= 0 && (ahead || W == 1)) || rc.getHealth() <= 2) {
                 return 1;
             } else {
                 return 2;

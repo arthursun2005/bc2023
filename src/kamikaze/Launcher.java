@@ -4,7 +4,7 @@ import battlecode.common.*;
 
 public class Launcher extends Robot {
     boolean reached = false;
-    MapLocation firstTarget, parentLoc;
+    MapLocation target, parentLoc;
 
     public Launcher(RobotController rc) throws GameActionException {
         super(rc);
@@ -16,13 +16,16 @@ public class Launcher extends Robot {
         parentLoc = tracker.getClosestHQLoc();
         MapLocation oppositeLoc = new MapLocation(width - parentLoc.x - 1 + rng.nextInt(M) - M / 2,
                 height - parentLoc.y - 1 + rng.nextInt(M) - M / 2);
-        firstTarget = oppositeLoc;
+                target = oppositeLoc;
     }
 
     public void run() throws GameActionException {
         MapLocation weakLoc = attack.getWeakLoc();
         int status = attack.getStatus(weakLoc);
-        rc.setIndicatorString(status + " " + weakLoc + " " + firstTarget);
+        rc.setIndicatorString(status + " " + weakLoc + " " + target);
+        if (weakLoc != null) {
+            rc.setIndicatorDot(weakLoc, 255, 255, 100);
+        }
         if (status == 1) {
             if (weakLoc != null)
                 greedilyMove(weakLoc, 1);
@@ -34,7 +37,7 @@ public class Launcher extends Robot {
             greedilyMove(attack.getThreat(), -1);
             attack.tryAttack();
         } else if (status == 0) {
-            if (rc.getLocation().distanceSquaredTo(firstTarget) <= 8)
+            if (rc.getLocation().distanceSquaredTo(target) <= 8)
                 reached = true;
 
             int mini = rc.getID();
@@ -57,7 +60,7 @@ public class Launcher extends Robot {
                 moveTo(bestie);
             }
             if (!reached) {
-                moveTo(firstTarget);
+                moveTo(target);
             } else {
                 int M = 10;
                 int width = rc.getMapWidth();
@@ -70,7 +73,7 @@ public class Launcher extends Robot {
                     oppositeLoc = new MapLocation(width - parentLoc.x - 1 + rng.nextInt(M) - M / 2,
                     parentLoc.y + rng.nextInt(M) - M / 2);
                 }
-                firstTarget = oppositeLoc;
+                target = oppositeLoc;
                 reached = false;
             }
             attack.tryAttack();

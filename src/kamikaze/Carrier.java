@@ -31,6 +31,9 @@ public class Carrier extends Robot {
             return;
 
         MapLocation island = tracker.getBestIsland();
+        if (island != null) {
+            rc.setIndicatorLine(island, rc.getLocation(), 255, 100, 0);
+        }
         rc.setIndicatorString("island: " + island);
 
         if (island != null) {
@@ -43,7 +46,7 @@ public class Carrier extends Robot {
     public void checkDanger() throws GameActionException {
         MapLocation weakLoc = attack.getWeakLocCarrier();
         if (weakLoc != null) {
-            if (rc.getWeight() >= 20) {
+            if (rc.getWeight() >= 5) {
                 if (rc.canAttack(weakLoc)) {
                     rc.attack(weakLoc);
                     greedilyMove(weakLoc, -1);
@@ -63,6 +66,7 @@ public class Carrier extends Robot {
 
     public void run() throws GameActionException {
         MapLocation HQLoc = tracker.getClosestHQLoc();
+        rc.setIndicatorLine(HQLoc, rc.getLocation(), 100, 100, 255);
         checkDanger();
         tryTakeAnchor(HQLoc);
         if (rc.getAnchor() != null) {
@@ -75,6 +79,9 @@ public class Carrier extends Robot {
 
         MapLocation well = tracker.getBestWell();
         rc.setIndicatorString("well: " + well);
+        if (well != null) {
+            rc.setIndicatorLine(well, rc.getLocation(), 255, 255, 200);
+        }
 
         if (shouldReturnToHQ) {
             moveTo(HQLoc);
