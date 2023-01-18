@@ -14,11 +14,18 @@ class possiLoc {
 }
 
 public class Launcher extends Robot {
+    MapLocation parentLoc;
     public Launcher(RobotController rc) throws GameActionException {
         super(rc);
+
+        parentLoc = tracker.getClosestHQLoc();
     }
 
     ArrayList<possiLoc> enemyLocs = new ArrayList<>();
+
+    int realDist(MapLocation tmpLoc) {
+        return Math.max(Math.abs(tmpLoc.x-rc.getLocation().x),Math.abs(tmpLoc.y-rc.getLocation().y));
+    }
 
     public void run() throws GameActionException {
         MapLocation weakLoc = attack.getWeakLoc();
@@ -61,21 +68,21 @@ public class Launcher extends Robot {
             if (enemyLocs.size()==0) {
                 for (MapLocation hqLoc : tracker.HQLocations) {
                     MapLocation oppositeLoc = new MapLocation(rc.getMapWidth() - hqLoc.x - 1, rc.getMapHeight() - hqLoc.y - 1);
-                    if (tracker.possi[1]==1) enemyLocs.add(new possiLoc(new MapLocation(oppositeLoc.x,hqLoc.y),1));
-                    if (tracker.possi[2]==1) enemyLocs.add(new possiLoc(new MapLocation(hqLoc.x,oppositeLoc.y),2));
-                    if (tracker.possi[3]==1) enemyLocs.add(new possiLoc(oppositeLoc,3));
+                    if (tracker.possi[1]==1) enemyLocs.add(new possiLoc(new MapLocation(oppositeLoc.x,hqLoc.y),0));
+                    if (tracker.possi[2]==1) enemyLocs.add(new possiLoc(new MapLocation(hqLoc.x,oppositeLoc.y),1));
+                    if (tracker.possi[3]==1) enemyLocs.add(new possiLoc(oppositeLoc,(hqLoc==parentLoc?15:0)+2));//change to 18 maybe
                 }
             }
 
             Collections.sort(enemyLocs, new Comparator<possiLoc>() {
                 public int compare(possiLoc a, possiLoc b) {
-                    return (rc.getLocation().distanceSquaredTo(b.loc)-(b.val==3?300:0)) - (rc.getLocation().distanceSquaredTo(a.loc)-(a.val==3?300:0));
+                    return (realDist(b.loc)-b.val) - (realDist(a.loc)-a.val);
                 }
             });
 
             while (enemyLocs.size()>0) {
                 possiLoc target = enemyLocs.get(enemyLocs.size()-1);
-                if (tracker.possi[target.val]==0) {
+                if (tracker.possi[target.val%3+1]==0) {
                     enemyLocs.remove(enemyLocs.size()-1);
                     continue;
                 }

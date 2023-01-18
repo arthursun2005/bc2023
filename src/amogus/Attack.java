@@ -46,7 +46,7 @@ public class Attack {
     }
 
     boolean shouldTargetHQ() {
-        return robot.creationRound <= -1 || rc.getID() % 5 == 0;
+        return robot.creationRound <= 80 || rc.getID() % 5 == 0;
     }
 
     public MapLocation getWeakLocCarrier() throws GameActionException {
