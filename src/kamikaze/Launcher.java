@@ -26,6 +26,10 @@ public class Launcher extends Robot {
         if (weakLoc != null) {
             rc.setIndicatorDot(weakLoc, 255, 255, 100);
         }
+        if (target != null)
+        {
+            rc.setIndicatorLine(target, rc.getLocation(), 225, 235, 255);
+        }
         if (status == 1) {
             if (weakLoc != null)
                 greedilyMove(weakLoc, 1);
