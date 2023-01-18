@@ -1,4 +1,4 @@
-package kamikaze;
+package berlin;
 
 import battlecode.common.*;
 
@@ -9,14 +9,14 @@ public class Launcher extends Robot {
     public Launcher(RobotController rc) throws GameActionException {
         super(rc);
 
-        int M = 10;
+        int M = 1;
         int width = rc.getMapWidth();
         int height = rc.getMapHeight();
 
         parentLoc = tracker.getClosestHQLoc();
         MapLocation oppositeLoc = new MapLocation(width - parentLoc.x - 1 + rng.nextInt(M) - M / 2,
                 height - parentLoc.y - 1 + rng.nextInt(M) - M / 2);
-                target = oppositeLoc;
+        target = oppositeLoc;
     }
 
     public void run() throws GameActionException {
@@ -26,8 +26,7 @@ public class Launcher extends Robot {
         if (weakLoc != null) {
             rc.setIndicatorDot(weakLoc, 255, 255, 100);
         }
-        if (target != null)
-        {
+        if (target != null) {
             rc.setIndicatorLine(target, rc.getLocation(), 225, 235, 255);
         }
         if (status == 1) {
@@ -44,29 +43,22 @@ public class Launcher extends Robot {
             if (rc.getLocation().distanceSquaredTo(target) <= 8)
                 reached = true;
 
-            int mini = rc.getID();
-            int lowerCount = 0;
-            MapLocation bestie = null;
+            int lowest = Util.rDist(rc.getLocation(), target);
             RobotInfo[] friends = rc.senseNearbyRobots(-1, rc.getTeam());
 
             for (RobotInfo friend : friends) {
                 if (friend.type == RobotType.LAUNCHER) {
-                    if (friend.ID < rc.getID())
-                        lowerCount++;
-                    if (friend.ID < mini) {
-                        mini = friend.ID;
-                        bestie = friend.getLocation();
-                    }
+                    int w = Util.rDist(friend.location, target);
+                    if (w < lowest)
+                        lowest = w;
                 }
             }
 
-            if (mini < rc.getID() && lowerCount < 9) {
-                moveTo(bestie);
-            }
             if (!reached) {
-                moveTo(target);
+                if (Util.rDist(rc.getLocation(), target) > lowest || friends.length >= 15)
+                    moveTo(target);
             } else {
-                int M = 10;
+                int M = 1;
                 int width = rc.getMapWidth();
                 int height = rc.getMapHeight();
                 MapLocation oppositeLoc;
@@ -75,7 +67,7 @@ public class Launcher extends Robot {
                             height - parentLoc.y - 1 + rng.nextInt(M) - M / 2);
                 } else {
                     oppositeLoc = new MapLocation(width - parentLoc.x - 1 + rng.nextInt(M) - M / 2,
-                    parentLoc.y + rng.nextInt(M) - M / 2);
+                            parentLoc.y + rng.nextInt(M) - M / 2);
                 }
                 target = oppositeLoc;
                 reached = false;
