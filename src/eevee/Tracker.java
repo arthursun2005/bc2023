@@ -1,4 +1,4 @@
-package amogus;
+package eevee;
 
 import battlecode.common.*;
 
@@ -14,11 +14,6 @@ import java.util.*;
 // if there are a really good well (for example, no friends has reached yet + far away from enemy)
 // then: signal the position in the shared array
 
-enum WellState {
-    ADA,
-    MANA,
-}
-
 public class Tracker {
     Random rng;
     RobotController rc;
@@ -33,6 +28,7 @@ public class Tracker {
     ArrayList<MapLocation> manaWells = new ArrayList<>();
     ArrayList<MapLocation> elixirWells = new ArrayList<>();
 
+    // END WELL FINDING
     // ISLAND FINDING
     long[] islands = new long[64];
 
@@ -76,7 +72,7 @@ public class Tracker {
         while (curWellSharedArray < 64) {
             int wellEncode = rc.readSharedArray(curWellSharedArray) - 1;
             if (wellEncode < 0)
-                break;
+            break;
             int wellPos = wellEncode / 3;
             int wellType = wellEncode % 3;
             int wellX = wellPos / 69;
@@ -110,14 +106,14 @@ public class Tracker {
         }
         for (WellInfo newWell : toAdd) {
             if (curWellSharedArray >= 64)
-                return;
+            return;
             MapLocation newWellPos = newWell.getMapLocation();
             ResourceType newWellType = newWell.getResourceType();
             int newWellTypeCode = 0;
             if (newWellType == ResourceType.MANA)
-                newWellTypeCode = 1;
+            newWellTypeCode = 1;
             if (newWellType == ResourceType.ELIXIR)
-                newWellTypeCode = 2;
+            newWellTypeCode = 2;
             rc.writeSharedArray(curWellSharedArray, (newWellPos.x * 69 + newWellPos.y) * 3 + newWellTypeCode + 1);
             curWellSharedArray++;
         }
@@ -151,17 +147,17 @@ public class Tracker {
             // continue;
             // }
             if (rc.getType().equals(RobotType.CARRIER)) {
-                if (rc.getRoundNum() <= 20 && width <= 25 && height <= 25
-                        && well.getResourceType() == ResourceType.ADAMANTIUM
-                        && rc.getID() % 3 != 0) {
+                if (rc.getRoundNum() <= 25 && width <= 25 && height <= 25
+                && well.getResourceType() == ResourceType.ADAMANTIUM
+                && rc.getID() % 3 != 0) {
                     continue;
                 }
-                if (rc.getRoundNum() <= 20 && width > 25 && height > 25
-                        && well.getResourceType() == ResourceType.MANA) {
+                if (rc.getRoundNum() <= 25 && width > 25 && height > 25
+                && well.getResourceType() == ResourceType.MANA) {
                     continue;
                 }
-                if (rc.getRoundNum() > 20 && rc.getID() % 3 != 0
-                        && well.getResourceType() == ResourceType.ADAMANTIUM) {
+                if (rc.getRoundNum() > 95 && rc.getID() % 3 != 0
+                && well.getResourceType() == ResourceType.ADAMANTIUM) {
                     continue;
                 }
             }
@@ -183,7 +179,7 @@ public class Tracker {
         for (CustomWell well : wells) {
             MapLocation loc = well.getMapLocation();
             int w = rc.getLocation().distanceSquaredTo(loc);
-            if (rc.getRoundNum() <= 20 && well.getResourceType() == ResourceType.MANA) {
+            if (rc.getRoundNum() <= 35 && well.getResourceType() == ResourceType.MANA) {
                 continue;
             }
             if (w < dist) {
@@ -210,7 +206,7 @@ public class Tracker {
 
     void increaseCarrierCount() throws GameActionException {
         if (!rc.canWriteSharedArray(0, 0))
-            return;
+        return;
 
         int temp = rc.readSharedArray(Constants.BUILD_CARRIER_IDX);
         rc.writeSharedArray(Constants.BUILD_CARRIER_IDX, temp + 1);
@@ -218,7 +214,7 @@ public class Tracker {
 
     void increaseLauncherCount() throws GameActionException {
         if (!rc.canWriteSharedArray(0, 0))
-            return;
+        return;
 
         int temp = rc.readSharedArray(Constants.BUILD_LAUNCHER_IDX);
         rc.writeSharedArray(Constants.BUILD_LAUNCHER_IDX, temp + 1);
@@ -278,7 +274,7 @@ public class Tracker {
                 int y = Util.log2(r);
                 MapLocation loc = new MapLocation(x, y);
                 if (best == null || me.distanceSquaredTo(loc) < me.distanceSquaredTo(best))
-                    best = loc;
+                best = loc;
                 w = k;
             }
         }
@@ -295,16 +291,16 @@ public class Tracker {
         return HQLocations.get(0);
     }
 
+
     //SYMMETRY
-    final int POSSI = 20;
 
     void writepossi(int[] x) throws GameActionException {
         if (!rc.canWriteSharedArray(0, 0)) return;
-        rc.writeSharedArray(POSSI, (1-x[1]) + 2*(1-x[2]) + 4*(1-x[3]));
+        rc.writeSharedArray(Constants.POSSI, (1-x[1]) + 2*(1-x[2]) + 4*(1-x[3]));
     }
 
     int[] readpossi() throws GameActionException {
-        int val=rc.readSharedArray(POSSI);
+        int val=rc.readSharedArray(Constants.POSSI);
         int vals[]={0,1-val%2,1-(val/2)%2,1-val/4};
         return vals;
     }
@@ -335,7 +331,7 @@ public class Tracker {
 
     boolean doneHQs = false;
 
-    public void tryFindSymmetry() throws GameActionException {
+    public void checkHQs() throws GameActionException {
         if (!doneHQs) {
             int x, y, oppx, oppy, val;
             for (MapLocation loc: HQLocations) {
@@ -357,6 +353,10 @@ public class Tracker {
             }
             doneHQs = true;
         }
+    }
+
+    public void tryFindSymmetry() throws GameActionException {
+        checkHQs();
         if (!foundSymmetry) {
             readpossi();
 
@@ -381,7 +381,7 @@ public class Tracker {
                     mapInfo = rc.senseMapInfo(loc); // 10
 
                     if (possibleHQ != null && possibleHQ.getType().equals(RobotType.HEADQUARTERS)) {
-                        put(encode(x, y), (possibleHQ.getTeam()==rc.getTeam()?5:6));
+                        put(encode(x, y), 6);
                     } else if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) {
                         put(encode(x, y), 1);
                     } else if (mapInfo.hasCloud()) {
@@ -397,10 +397,10 @@ public class Tracker {
                     no=read(encode(x, oppy));
                     oo=read(encode(oppx, oppy));
 
-                    if (nn >= 5) {
-                        if (on != 0 && on+nn != 11) possi[1] = 0;
-                        if (no != 0 && no+nn != 11) possi[2] = 0;
-                        if (oo != 0 && oo+nn != 11) possi[3] = 0;
+                    if (nn == 6) {
+                        if (on != 5) possi[1] = 0;
+                        if (no != 5) possi[2] = 0;
+                        if (oo != 5) possi[3] = 0;
                     }
                     else {
                         if (on != 0 && on != nn) possi[1] = 0;
@@ -423,7 +423,7 @@ public class Tracker {
                 mapInfo = rc.senseMapInfo(loc); // 10
 
                 if (possibleHQ != null && possibleHQ.getType().equals(RobotType.HEADQUARTERS)) {
-                    put(encode(x, y), (possibleHQ.getTeam()==rc.getTeam()?5:6));
+                    put(encode(x, y), 6);
                 } else if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) {
                     put(encode(x, y), 1);
                 } else if (mapInfo.hasCloud()) {
@@ -439,10 +439,10 @@ public class Tracker {
                 no=read(encode(x, oppy));
                 oo=read(encode(oppx, oppy));
 
-                if (nn >= 5) {
-                    if (on != 0 && on+nn != 11) possi[1] = 0;
-                    if (no != 0 && no+nn != 11) possi[2] = 0;
-                    if (oo != 0 && oo+nn != 11) possi[3] = 0;
+                if (nn == 6) {
+                    if (on != 5) possi[1] = 0;
+                    if (no != 5) possi[2] = 0;
+                    if (oo != 5) possi[3] = 0;
                 }
                 else {
                     if (on != 0 && on != nn) possi[1] = 0;
