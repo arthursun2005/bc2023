@@ -240,7 +240,7 @@ main:
 			}
 
 		default:
-			fmt.Printf("???: %s\n", line)
+			fmt.Printf("%s: ???\n", line)
 		}
 	}
 }
