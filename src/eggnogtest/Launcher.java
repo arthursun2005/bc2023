@@ -462,7 +462,7 @@ public class Launcher extends Robot
         int dx = oppositeLoc.x - rc.getLocation().x;
         int dy = oppositeLoc.y - rc.getLocation().y;
         int dist = (Math.abs(dx) + Math.abs(dy))/2;
-        boolean shouldMove = (rc.getRoundNum() % 2 == 0 && more >= -2);
+        boolean shouldMove = (dist%3 != 2-(rc.getRoundNum()/5)%3);
         rc.setIndicatorString("hmmm "+shouldMove);
 
         if (mini < sl && lowerCount < 9) {
