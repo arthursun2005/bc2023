@@ -76,73 +76,55 @@ public class Carrier extends Robot {
 
         System.out.println(Clock.getBytecodesLeft());
 
-        heap = new Heap();
-
-        heap.insert(3);
-        heap.insert(5);
-        heap.insert(6);
-        heap.insert(1);
-        heap.insert(4);
-        heap.insert(10);
-        heap.insert(12);
-        heap.insert(20);
-        heap.insert(21);
-        heap.insert(2);
-
-        heap.insert(3);
-        heap.insert(5);
-        heap.insert(6);
-        heap.insert(1);
-        heap.insert(4);
-        heap.insert(10);
-        heap.insert(12);
-        heap.insert(20);
-        heap.insert(21);
-        heap.insert(2);
-
+        Direction dir = bfs.tryBFS(new MapLocation(6, 22));
+        if (dir == null) return;
+        rc.setIndicatorLine(rc.getLocation(), rc.getLocation().add(dir), 255, 0, 0);
+        if (rc.canMove(dir)) rc.move(dir);
         System.out.println(Clock.getBytecodesLeft());
 
-        MapLocation HQLoc = tracker.getClosestHQLoc();
-        rc.setIndicatorLine(HQLoc, rc.getLocation(), 100, 100, 255);
-        checkDanger();
-        tryTakeAnchor(HQLoc);
-        if (rc.getAnchor() != null) {
-            tryPlaceAnchor();
-            return;
-        }
-        boolean shouldReturnToHQ = false;
-        if (rc.getWeight() == GameConstants.CARRIER_CAPACITY)
-            shouldReturnToHQ = true;
 
-        MapLocation well = tracker.getBestWell();
-        rc.setIndicatorString("well: " + well);
-        if (well != null) {
-            rc.setIndicatorLine(well, rc.getLocation(), 255, 255, 200);
-        }
-
-        if (shouldReturnToHQ) {
-            moveTo(HQLoc);
-            int ada = rc.getResourceAmount(ResourceType.ADAMANTIUM), mana = rc.getResourceAmount(ResourceType.MANA),
-                    elixir = rc.getResourceAmount(ResourceType.ELIXIR);
-            if (ada > 0 && rc.canTransferResource(HQLoc, ResourceType.ADAMANTIUM, ada))
-                rc.transferResource(HQLoc, ResourceType.ADAMANTIUM, ada);
-            if (mana > 0 && rc.canTransferResource(HQLoc, ResourceType.MANA, mana))
-                rc.transferResource(HQLoc, ResourceType.MANA, mana);
-            if (elixir > 0 && rc.canTransferResource(HQLoc, ResourceType.ELIXIR, elixir))
-                rc.transferResource(HQLoc, ResourceType.ELIXIR, elixir);
-            return;
-        }
-
-        if (well != null) {
-            moveTo(well);
-            checkDanger();
-            moveTo(well);
-            tryMine(well);
-            tryMine(well);
-            return;
-        }
-        explore();
-        checkDanger();
-        explore();
+//
+//        MapLocation HQLoc = tracker.getClosestHQLoc();
+//        rc.setIndicatorLine(HQLoc, rc.getLocation(), 100, 100, 255);
+//        checkDanger();
+//        tryTakeAnchor(HQLoc);
+//        if (rc.getAnchor() != null) {
+//            tryPlaceAnchor();
+//            return;
+//        }
+//        boolean shouldReturnToHQ = false;
+//        if (rc.getWeight() == GameConstants.CARRIER_CAPACITY)
+//            shouldReturnToHQ = true;
+//
+//        MapLocation well = tracker.getBestWell();
+//        rc.setIndicatorString("well: " + well);
+//        if (well != null) {
+//            rc.setIndicatorLine(well, rc.getLocation(), 255, 255, 200);
+//        }
+//
+//        if (shouldReturnToHQ) {
+//            moveTo(HQLoc);
+//            int ada = rc.getResourceAmount(ResourceType.ADAMANTIUM), mana = rc.getResourceAmount(ResourceType.MANA),
+//                    elixir = rc.getResourceAmount(ResourceType.ELIXIR);
+//            if (ada > 0 && rc.canTransferResource(HQLoc, ResourceType.ADAMANTIUM, ada))
+//                rc.transferResource(HQLoc, ResourceType.ADAMANTIUM, ada);
+//            if (mana > 0 && rc.canTransferResource(HQLoc, ResourceType.MANA, mana))
+//                rc.transferResource(HQLoc, ResourceType.MANA, mana);
+//            if (elixir > 0 && rc.canTransferResource(HQLoc, ResourceType.ELIXIR, elixir))
+//                rc.transferResource(HQLoc, ResourceType.ELIXIR, elixir);
+//            return;
+//        }
+//
+//        if (well != null) {
+//            moveTo(well);
+//            checkDanger();
+//            moveTo(well);
+//            tryMine(well);
+//            tryMine(well);
+//            return;
+//        }
+//        explore();
+//        checkDanger();
+//        explore();
     }
 }

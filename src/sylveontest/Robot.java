@@ -17,6 +17,7 @@ public abstract class Robot {
 
     Heap heap;
 
+    BFS bfs;
     Direction[] directions = Direction.values();
 
     public Robot(RobotController rc) throws GameActionException {
@@ -28,7 +29,7 @@ public abstract class Robot {
         rng = new Random(rc.getID() + 369);
         creationRound = rc.getRoundNum();
         turnCount = 0;
-
+        bfs = new BFS(rc);
         tracker.readHQLocs();
     }
 
