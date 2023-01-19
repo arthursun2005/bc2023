@@ -1,4 +1,4 @@
-package amogus;
+package eevee;
 
 import battlecode.common.*;
 
@@ -15,7 +15,8 @@ class possiLoc {
 }
 
 public class Launcher extends Robot {
-    MapLocation parentLoc;
+    MapLocation parentLoc, actualTarget = null;
+
     public Launcher(RobotController rc) throws GameActionException {
         super(rc);
 
@@ -58,6 +59,7 @@ public class Launcher extends Robot {
             greedilyMove(attack.getThreat(), -1);
             attack.tryAttack();
         } else if (status == 0) {
+
             int mini = rc.getID();
             int lowerCount = 0;
             MapLocation bestie = null;
@@ -74,6 +76,8 @@ public class Launcher extends Robot {
                 }
             }
 
+            attack.tryAttack();
+
             if (mini < rc.getID() && lowerCount < 9) {
                 moveTo(bestie);
             }
@@ -81,17 +85,19 @@ public class Launcher extends Robot {
             if (enemyLocs.size()==0) {
                 for (MapLocation hqLoc : tracker.HQLocations) {
                     MapLocation oppositeLoc = new MapLocation(rc.getMapWidth() - hqLoc.x - 1, rc.getMapHeight() - hqLoc.y - 1);
-                    if (tracker.possi[1]==1) enemyLocs.add(new possiLoc(new MapLocation(oppositeLoc.x,hqLoc.y),1,6900));
-                    if (tracker.possi[2]==1) enemyLocs.add(new possiLoc(new MapLocation(hqLoc.x,oppositeLoc.y),2,6900));
-                    if (tracker.possi[3]==1) enemyLocs.add(new possiLoc(oppositeLoc,3,(hqLoc==parentLoc?69:6900)));
+                    if (tracker.possi[1]==1) enemyLocs.add(new possiLoc(new MapLocation(oppositeLoc.x,hqLoc.y),1,0));
+                    if (tracker.possi[2]==1) enemyLocs.add(new possiLoc(new MapLocation(hqLoc.x,oppositeLoc.y),2,0));
+                    if (tracker.possi[3]==1) enemyLocs.add(new possiLoc(oppositeLoc,3,(hqLoc==parentLoc?0:0)));
                 }
             }
 
             Collections.sort(enemyLocs, new Comparator<possiLoc>() {
                 public int compare(possiLoc a, possiLoc b) {
-                    return (Math.min(rc.getLocation().distanceSquaredTo(b.loc),b.offset) - Math.min(rc.getLocation().distanceSquaredTo(a.loc),a.offset));
+                    return (realDist(b.loc)-b.offset) - (realDist(a.loc)-a.offset);
                 }
             });
+
+            tracker.checkHQs();
 
             while (enemyLocs.size()>0) {
                 possiLoc target = enemyLocs.get(enemyLocs.size()-1);
@@ -107,7 +113,7 @@ public class Launcher extends Robot {
                         MapInfo mapInfo = rc.senseMapInfo(loc); // 10
 
                         if (possibleHQ != null && possibleHQ.getType().equals(RobotType.HEADQUARTERS)) {
-                            put(encode(x, y), (possibleHQ.getTeam()==rc.getTeam()?5:6));
+                            put(encode(x, y), 6);
                         } else if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) {
                             put(encode(x, y), 1);
                         } else if (mapInfo.hasCloud()) {
@@ -123,10 +129,10 @@ public class Launcher extends Robot {
                         int no=read(encode(x, oppy));
                         int oo=read(encode(oppx, oppy));
 
-                        if (nn >= 5) {
-                            if (on != 0 && on+nn != 11) tracker.possi[1] = 0;
-                            if (no != 0 && no+nn != 11) tracker.possi[2] = 0;
-                            if (oo != 0 && oo+nn != 11) tracker.possi[3] = 0;
+                        if (nn == 6) {
+                            if (on != 5) tracker.possi[1] = 0;
+                            if (no != 5) tracker.possi[2] = 0;
+                            if (oo != 5) tracker.possi[3] = 0;
                         }
                         else {
                             if (on != 0 && on != nn) tracker.possi[1] = 0;
@@ -135,19 +141,50 @@ public class Launcher extends Robot {
                         }
                     }
                 }
+                if (actualTarget == null) {
+                    int M = 5;
+                    do {
+                        actualTarget = new MapLocation(target.loc.x + rng.nextInt(M) - M / 2, target.loc.y + rng.nextInt(M) - M / 2);
+                    } while (!rc.onTheMap(actualTarget));
+                }
                 if (tracker.possi[target.val]==0) {
                     enemyLocs.remove(enemyLocs.size()-1);
+                    actualTarget = null;
                     continue;
                 }
-                if (rc.getLocation().distanceSquaredTo(target.loc)<=5) {
+                if (rc.getLocation().distanceSquaredTo(actualTarget)<=2) {
                     enemyLocs.remove(enemyLocs.size()-1);
+                    actualTarget = null;
                     continue;
                 }
-                rc.setIndicatorString("Ree "+target.loc);
-                moveTo(target.loc);
+                //rc.setIndicatorString("Reeeeee "+actualTarget);
+                rc.setIndicatorLine(actualTarget, rc.getLocation(), 225, 235, 255);
+                //rc.setIndicatorLine(target.loc, rc.getLocation(), 69, 69, 69);
+
+                moveTo(actualTarget);
                 break;
             }
 
+            attack.tryAttack();
+        } else {
+            attack.tryAttack();
+            int big = rc.getType().visionRadiusSquared;
+            Direction best = null;
+            int hits = -1_000_000_000;
+            for (Direction dir : directions) {
+                if (!rc.canMove(dir))
+                    continue;
+                MapLocation loc = rc.adjacentLocation(dir);
+                if (loc.distanceSquaredTo(weakLoc) > big)
+                    continue;
+                int w = loc.distanceSquaredTo(weakLoc);
+                if (w > hits) {
+                    hits = w;
+                    best = dir;
+                }
+            }
+            if (best != null)
+                rc.move(best);
             attack.tryAttack();
         }
         tracker.tryFindSymmetry();
