@@ -6,10 +6,11 @@ import java.util.*;
 
 class possiLoc {
     MapLocation loc;
-    int val;
-    possiLoc(MapLocation loc, int val) {
+    int val, offset;
+    possiLoc(MapLocation loc, int val, int offset) {
         this.loc = loc;
         this.val = val;
+        this.offset = offset;
     }
 }
 
@@ -68,21 +69,21 @@ public class Launcher extends Robot {
             if (enemyLocs.size()==0) {
                 for (MapLocation hqLoc : tracker.HQLocations) {
                     MapLocation oppositeLoc = new MapLocation(rc.getMapWidth() - hqLoc.x - 1, rc.getMapHeight() - hqLoc.y - 1);
-                    if (tracker.possi[1]==1) enemyLocs.add(new possiLoc(new MapLocation(oppositeLoc.x,hqLoc.y),0));
-                    if (tracker.possi[2]==1) enemyLocs.add(new possiLoc(new MapLocation(hqLoc.x,oppositeLoc.y),1));
-                    if (tracker.possi[3]==1) enemyLocs.add(new possiLoc(oppositeLoc,(hqLoc==parentLoc?15:0)+2));//change to 18 maybe
+                    if (tracker.possi[1]==1) enemyLocs.add(new possiLoc(new MapLocation(oppositeLoc.x,hqLoc.y),1,0));
+                    if (tracker.possi[2]==1) enemyLocs.add(new possiLoc(new MapLocation(hqLoc.x,oppositeLoc.y),2,0));
+                    if (tracker.possi[3]==1) enemyLocs.add(new possiLoc(oppositeLoc,3,(hqLoc==parentLoc?17:0)));
                 }
             }
 
             Collections.sort(enemyLocs, new Comparator<possiLoc>() {
                 public int compare(possiLoc a, possiLoc b) {
-                    return (realDist(b.loc)-b.val) - (realDist(a.loc)-a.val);
+                    return (realDist(b.loc)-b.offset) - (realDist(a.loc)-a.offset);
                 }
             });
 
             while (enemyLocs.size()>0) {
                 possiLoc target = enemyLocs.get(enemyLocs.size()-1);
-                if (tracker.possi[target.val%3+1]==0) {
+                if (tracker.possi[target.val]==0) {
                     enemyLocs.remove(enemyLocs.size()-1);
                     continue;
                 }
