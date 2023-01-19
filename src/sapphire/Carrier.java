@@ -70,34 +70,60 @@ public class Carrier extends Robot {
         rc.setIndicatorLine(HQLoc, rc.getLocation(), 100, 100, 255);
         checkDanger();
         tryTakeAnchor(HQLoc);
+
         if (rc.getAnchor() != null) {
             tryPlaceAnchor();
             return;
         }
-        boolean shouldReturnToHQ = false;
+
+        boolean shouldReturn = false;
         if (rc.getWeight() == GameConstants.CARRIER_CAPACITY)
-            shouldReturnToHQ = true;
+            shouldReturn = true;
 
         MapLocation well = tracker.getBestWell();
-        rc.setIndicatorString("well: " + well);
+
         if (well != null) {
             rc.setIndicatorLine(well, rc.getLocation(), 255, 255, 200);
         }
 
-        if (shouldReturnToHQ) {
-            moveTo(HQLoc);
-            int ada = rc.getResourceAmount(ResourceType.ADAMANTIUM), mana = rc.getResourceAmount(ResourceType.MANA),
-                    elixir = rc.getResourceAmount(ResourceType.ELIXIR);
-            if (ada > 0 && rc.canTransferResource(HQLoc, ResourceType.ADAMANTIUM, ada))
-                rc.transferResource(HQLoc, ResourceType.ADAMANTIUM, ada);
-            if (mana > 0 && rc.canTransferResource(HQLoc, ResourceType.MANA, mana))
-                rc.transferResource(HQLoc, ResourceType.MANA, mana);
-            if (elixir > 0 && rc.canTransferResource(HQLoc, ResourceType.ELIXIR, elixir))
-                rc.transferResource(HQLoc, ResourceType.ELIXIR, elixir);
+        boolean makeElixir = rc.readSharedArray(Constants.MAKE_ELIXIR) == 1;
+        boolean wantToDump = makeElixir && rc.getID() % 3 == 0;
+
+        rc.setIndicatorString("well: " + well + " " + makeElixir + " " + wantToDump);
+
+        if (shouldReturn) {
+            MapLocation adaWell = tracker.getBestAdaWell();
+            if (adaWell == null)
+                wantToDump = false;
+            if (wantToDump) {
+                well = adaWell;
+                moveTo(well);
+                int ada = rc.getResourceAmount(ResourceType.ADAMANTIUM), mana = rc.getResourceAmount(ResourceType.MANA),
+                        elixir = rc.getResourceAmount(ResourceType.ELIXIR);
+                // if (ada > 0 && rc.canTransferResource(HQLoc, ResourceType.ADAMANTIUM, ada))
+                // rc.transferResource(HQLoc, ResourceType.ADAMANTIUM, ada);
+                if (mana > 0 && rc.canTransferResource(well, ResourceType.MANA, mana))
+                    rc.transferResource(well, ResourceType.MANA, mana);
+                // if (elixir > 0 && rc.canTransferResource(HQLoc, ResourceType.ELIXIR, elixir))
+                // rc.transferResource(HQLoc, ResourceType.ELIXIR, elixir);
+            } else {
+                moveTo(HQLoc);
+                int ada = rc.getResourceAmount(ResourceType.ADAMANTIUM), mana = rc.getResourceAmount(ResourceType.MANA),
+                        elixir = rc.getResourceAmount(ResourceType.ELIXIR);
+                if (ada > 0 && rc.canTransferResource(HQLoc, ResourceType.ADAMANTIUM, ada))
+                    rc.transferResource(HQLoc, ResourceType.ADAMANTIUM, ada);
+                if (mana > 0 && rc.canTransferResource(HQLoc, ResourceType.MANA, mana))
+                    rc.transferResource(HQLoc, ResourceType.MANA, mana);
+                if (elixir > 0 && rc.canTransferResource(HQLoc, ResourceType.ELIXIR, elixir))
+                    rc.transferResource(HQLoc, ResourceType.ELIXIR, elixir);
+            }
             return;
         }
 
         if (well != null) {
+            if (wantToDump) {
+                well = tracker.getBestManaWell();
+            }
             moveTo(well);
             checkDanger();
             moveTo(well);
