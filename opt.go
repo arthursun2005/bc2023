@@ -17,7 +17,10 @@ import (
 
 const N = 64
 const M = 10
-const MAPS = "maptestsmall,AllElements,DefaultMap,Horizontal,SmallElements,Vertical,Woh"
+
+// const MAPS = "maptestsmall,AllElements,DefaultMap,Horizontal,SmallElements,Vertical,Woh"
+const SPRINT1 = "ArtistRendition,BatSignal,BowAndArrow,Cat,Clown,Diagonal,Eyelands,Frog,Grievance,Hah,Jail,KingdomRush,Minefield,Movepls,Orbit,Pathfind,Pit,Pizza,Quiet,Rectangle,Scatter,Sun,Tacocat"
+const MAPS = "Cat,Pit,Tacocat"
 
 func countWins(out string) (int, int) {
 	A := 0
@@ -39,7 +42,8 @@ func countWins(out string) (int, int) {
 
 func play(a, b string) (int, int) {
 	start := time.Now()
-	out, err := exec.Command("./gradlew", "run", "--offline", fmt.Sprintf("-Pmaps=%s", MAPS), fmt.Sprintf("-PteamA=%s", a), fmt.Sprintf("-PteamB=%s", b)).Output()
+	cmd := fmt.Sprintf("./gradlew run --offline -Pmaps=%s -PteamA=%s -PteamB=%s | grep wins", MAPS, a, b)
+	out, err := exec.Command("bash", "-c", cmd).Output()
 	if err != nil {
 		log.Print(err)
 		return 0, 0
@@ -71,13 +75,10 @@ func main() {
 		bots := os.Args[1:]
 		wins := make([]int64, len(bots))
 		var wg sync.WaitGroup
-		guard := make(chan struct{}, 6)
+		guard := make(chan struct{}, 3)
 		for i, a := range bots {
 			for j, b := range bots {
 				if i == j {
-					continue
-				}
-				if i != 0 && j != 0 {
 					continue
 				}
 				guard <- struct{}{}
