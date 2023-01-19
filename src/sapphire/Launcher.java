@@ -107,5 +107,6 @@ public class Launcher extends Robot {
                 rc.move(allGood[rng.nextInt(gc)]);
             attack.tryAttack();
         }
+        attack.snipe();
     }
 }

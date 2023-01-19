@@ -13,9 +13,8 @@ public class Headquarter extends Robot {
 
     int lastSuicideNote = 0;
 
-    int totalAda = 0;
-    int totalMana = 0;
     int anchorsMade = 0;
+    int jerrysMade = 0;
 
     public void suicide() throws GameActionException {
         RobotInfo[] friends = rc.senseNearbyRobots(-1, rc.getTeam());
@@ -35,6 +34,18 @@ public class Headquarter extends Robot {
         rc.writeSharedArray(Constants.SUICIDE_NOTE, note);
     }
 
+    int getTotalAda() throws GameActionException {
+        return rc.readSharedArray(Constants.TOTAL_ADA);
+    }
+
+    int getTotalMana() throws GameActionException {
+        return rc.readSharedArray(Constants.TOTAL_MANA);
+    }
+
+    int getTotalElixir() throws GameActionException {
+        return rc.readSharedArray(Constants.TOTAL_ELIXIR);
+    }
+
     public void trySpawn(RobotType type, MapLocation loc) throws GameActionException {
         if (loc == null) {
             int width = rc.getMapWidth();
@@ -52,9 +63,11 @@ public class Headquarter extends Robot {
         if (best != null) {
             rc.buildRobot(type, best);
             if (type.equals(RobotType.CARRIER)) {
-                totalAda += 50;
+                rc.writeSharedArray(Constants.TOTAL_ADA, getTotalAda() + 50);
             } else if (type.equals(RobotType.LAUNCHER)) {
-                totalMana += 60;
+                rc.writeSharedArray(Constants.TOTAL_MANA, getTotalMana() + 60);
+            } else if (type.equals(RobotType.DESTABILIZER)) {
+                rc.writeSharedArray(Constants.TOTAL_ELIXIR, getTotalElixir() + 200);
             }
         }
     }
@@ -69,9 +82,31 @@ public class Headquarter extends Robot {
         return false;
     }
 
+    int countCarriersNearby() throws GameActionException {
+        return 0;
+        // int cnt = 0;
+        // RobotInfo[] friends = rc.senseNearbyRobots(-1, rc.getTeam());
+        // for (RobotInfo ri : friends) {
+        // if (ri.type.equals(RobotType.CARRIER)) {
+        // cnt++;
+        // }
+        // }
+        // return cnt;
+    }
+
     public void run() throws GameActionException {
+        if (getTotalAda() >= 3500 && getTotalMana() >= 5500) {
+            rc.writeSharedArray(Constants.MAKE_ELIXIR, 1);
+        }
+        MapLocation well = tracker.getRandomWell();
         for (int k = 0; k < 5; k++) {
-            if (totalAda - anchorsMade * 200 >= 1500 && totalMana - anchorsMade * 300 >= 1250 && rc.senseNearbyRobots(-1, rc.getTeam().opponent()).length <= 1) {
+            int ada = rc.getResourceAmount(ResourceType.ADAMANTIUM);
+            int mana = rc.getResourceAmount(ResourceType.MANA);
+            int elixir = rc.getResourceAmount(ResourceType.ELIXIR);
+
+            if (getTotalAda() - anchorsMade * 600 >= 3000 && getTotalMana() - anchorsMade * 1000 >= 5000
+                    && rc.senseNearbyRobots(-1, rc.getTeam().opponent()).length <= 1 && elixir < 200) {
+                rc.setIndicatorString("trying to build anchor ...");
                 if (rc.canBuildAnchor(Anchor.STANDARD)) {
                     rc.buildAnchor(Anchor.STANDARD);
                     anchorsMade += 1;
@@ -79,15 +114,11 @@ public class Headquarter extends Robot {
                 break;
             }
 
-            int ada = rc.getResourceAmount(ResourceType.ADAMANTIUM);
-            int mana = rc.getResourceAmount(ResourceType.MANA);
             RobotType toMake = null;
 
-            if (ada - mana >= 150) {
-                toMake = RobotType.CARRIER;
-            } else if (mana >= 60 && rc.getRoundNum() >= 2) {
+            if (mana >= 60 && rc.getRoundNum() >= 2) {
                 toMake = RobotType.LAUNCHER;
-            } else {
+            } else if (countCarriersNearby() < 1_000_000) {
                 toMake = RobotType.CARRIER;
             }
 
@@ -95,11 +126,19 @@ public class Headquarter extends Robot {
                 toMake = RobotType.LAUNCHER;
             }
 
-            if (toMake.equals(RobotType.CARRIER))
-                trySpawn(toMake, tracker.getRandomWell());
+            if (elixir >= 200) {
+                toMake = RobotType.DESTABILIZER;
+            }
 
-            if (toMake.equals(RobotType.LAUNCHER))
-                trySpawn(toMake, null);
+            rc.setIndicatorString("trying to make " + toMake + " totals: " + getTotalAda() + " " + getTotalMana());
+
+            if (toMake == null)
+                continue;
+
+            if (toMake.equals(RobotType.CARRIER))
+                trySpawn(toMake, well);
+
+            trySpawn(toMake, null);
         }
         suicide();
     }

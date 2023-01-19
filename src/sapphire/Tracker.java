@@ -2,8 +2,6 @@ package sapphire;
 
 import battlecode.common.*;
 
-import java.util.*;
-
 // HUGELY TODO
 
 // manages positions of significant sites
@@ -52,19 +50,36 @@ public class Tracker {
         int height = rc.getMapHeight();
         long w;
         boolean ignoreAda = false, ignoreMana = false;
+        boolean elixirOnly = false;
         if (rc.getType().equals(RobotType.CARRIER)) {
             if (rc.getRoundNum() <= 25 && width <= 25 && height <= 25
                     && rc.getID() % 3 != 0) {
                 ignoreAda = true;
             }
-            if (rc.getRoundNum() <= 25 && width > 25 && height > 25) {
+            if (rc.getRoundNum() <= 35 && width > 25 && height > 25 && rc.getID() % 3 != 0) {
                 ignoreMana = true;
             }
             if (rc.getRoundNum() > 75 && rc.getID() % 3 != 0) {
                 ignoreAda = true;
             }
+            if (rc.getID() % 3 != 0)
+                elixirOnly = true;
         }
         MapLocation me = rc.getLocation();
+        for (int x = 0; x < width; x++) {
+            w = wellA[x] & wellB[x];
+            while (w > 0) {
+                long k = w & (w - 1);
+                long r = w - k;
+                int y = Util.log2(r);
+                MapLocation loc = new MapLocation(x, y);
+                if (best == null || me.distanceSquaredTo(loc) < me.distanceSquaredTo(best))
+                    best = loc;
+                w = k;
+            }
+        }
+        if (elixirOnly && best != null)
+            return best;
         for (int x = 0; x < width; x++) {
             w = wellA[x] & ~wellB[x];
             if (!ignoreAda) {
@@ -94,6 +109,46 @@ public class Tracker {
         return best;
     }
 
+    MapLocation getBestAdaWell() throws GameActionException {
+        MapLocation best = null;
+        long w;
+        int width = rc.getMapWidth();
+        MapLocation me = rc.getLocation();
+        for (int x = 0; x < width; x++) {
+            w = wellA[x] & ~wellB[x];
+            while (w > 0) {
+                long k = w & (w - 1);
+                long r = w - k;
+                int y = Util.log2(r);
+                MapLocation loc = new MapLocation(x, y);
+                if (best == null || me.distanceSquaredTo(loc) < me.distanceSquaredTo(best))
+                    best = loc;
+                w = k;
+            }
+        }
+        return best;
+    }
+
+    MapLocation getBestManaWell() throws GameActionException {
+        MapLocation best = null;
+        long w;
+        int width = rc.getMapWidth();
+        MapLocation me = rc.getLocation();
+        for (int x = 0; x < width; x++) {
+            w = wellB[x] & ~wellA[x];
+            while (w > 0) {
+                long k = w & (w - 1);
+                long r = w - k;
+                int y = Util.log2(r);
+                MapLocation loc = new MapLocation(x, y);
+                if (best == null || me.distanceSquaredTo(loc) < me.distanceSquaredTo(best))
+                    best = loc;
+                w = k;
+            }
+        }
+        return best;
+    }
+
     int HQCount = 0;
     MapLocation HQLocs[] = new MapLocation[5];
 
@@ -108,7 +163,7 @@ public class Tracker {
         }
         MapLocation me = rc.getLocation();
         for (int x = 0; x < width; x++) {
-            w = wellA[x] & ~wellB[x];
+            w = wellA[x];
             if (!ignoreAda) {
                 while (w > 0) {
                     long k = w & (w - 1);
@@ -120,7 +175,7 @@ public class Tracker {
                     w = k;
                 }
             }
-            w = wellB[x] & ~wellA[x];
+            w = wellB[x];
             if (!ignoreMana) {
                 while (w > 0) {
                     long k = w & (w - 1);
