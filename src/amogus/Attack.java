@@ -1,4 +1,4 @@
-package kamikaze;
+package amogus;
 
 import battlecode.common.*;
 
