@@ -18,6 +18,8 @@ public class Tracker {
 
     long[] wellA = new long[64];
     long[] wellB = new long[64];
+    long[] rA = new long[64];
+    long[] rB = new long[64];
     long[] islands = new long[64];
 
     public Tracker(RobotController rc, Robot robot) {
@@ -29,8 +31,9 @@ public class Tracker {
         senseWells();
         senseIslands();
         shareWells();
-        if (!rc.getType().equals(RobotType.LAUNCHER) && !rc.getType().equals(RobotType.DESTABILIZER))
-            readWells();
+        // if (!rc.getType().equals(RobotType.LAUNCHER) &&
+        // !rc.getType().equals(RobotType.DESTABILIZER))
+        readWells();
     }
 
     int wellIdx = 0;
@@ -48,13 +51,17 @@ public class Tracker {
             switch (wellType) {
                 case 1:
                     wellA[x] |= (1l << y);
+                    rA[x] &= ~(1l << y);
                     break;
                 case 2:
                     wellB[x] |= (1l << y);
+                    rB[x] &= ~(1l << y);
                     break;
                 case 3:
                     wellA[x] |= (1l << y);
                     wellB[x] |= (1l << y);
+                    rA[x] &= ~(1l << y);
+                    rB[x] &= ~(1l << y);
                     break;
             }
         }
@@ -72,9 +79,9 @@ public class Tracker {
         long w;
         for (int fx = 0; fx < width; fx++) {
             int x = (fx + offset) % width;
-            w = wellA[x] | wellB[x];
-            long A = wellA[x];
-            long B = wellB[x];
+            w = rA[x] | rB[x];
+            long A = rA[x];
+            long B = rB[x];
             while (w > 0) {
                 long k = w & (w - 1);
                 long r = w - k;
@@ -101,11 +108,14 @@ public class Tracker {
         for (WellInfo well : wells) {
             MapLocation loc = well.getMapLocation();
             ResourceType type = well.getResourceType();
-            if (type == ResourceType.ADAMANTIUM || type == ResourceType.ELIXIR) {
+            if ((type == ResourceType.ADAMANTIUM || type == ResourceType.ELIXIR)
+                    && ((wellA[loc.x] >> loc.y) & 1) == 0) {
                 wellA[loc.x] |= (1l << loc.y);
+                rA[loc.x] |= (1l << loc.y);
             }
-            if (type == ResourceType.MANA || type == ResourceType.ELIXIR) {
+            if ((type == ResourceType.MANA || type == ResourceType.ELIXIR) && ((wellB[loc.x] >> loc.y) & 1) == 0) {
                 wellB[loc.x] |= (1l << loc.y);
+                rB[loc.x] |= (1l << loc.y);
             }
         }
     }

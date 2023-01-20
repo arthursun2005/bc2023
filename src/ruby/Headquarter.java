@@ -46,17 +46,18 @@ public class Headquarter extends Robot {
         return rc.readSharedArray(Constants.TOTAL_ELIXIR);
     }
 
+    MapLocation[] locs;
+
     public void trySpawn(RobotType type, MapLocation loc, int mul) throws GameActionException {
         if (loc == null) {
             int width = rc.getMapWidth();
             int height = rc.getMapHeight();
             loc = new MapLocation(width / 2, height / 2);
         }
-        MapLocation[] locs = rc.getAllLocationsWithinRadiusSquared(rc.getLocation(), rc.getType().actionRadiusSquared);
         MapLocation best = null;
         for (MapLocation a : locs) {
             if (rc.canBuildRobot(type, a)) {
-                if (best == null || a.distanceSquaredTo(loc) * mul < best.distanceSquaredTo(loc) * mul)
+                if (best == null || a.distanceSquaredTo(loc) < best.distanceSquaredTo(loc))
                     best = a;
             }
         }
@@ -100,6 +101,7 @@ public class Headquarter extends Robot {
         }
         boolean lol = enemyHQIsDangerouslyCloseLmfao();
         MapLocation well = tracker.getRandomWell();
+        locs = rc.getAllLocationsWithinRadiusSquared(rc.getLocation(), rc.getType().actionRadiusSquared);
         for (int k = 0; k < 5; k++) {
             int ada = rc.getResourceAmount(ResourceType.ADAMANTIUM);
             int mana = rc.getResourceAmount(ResourceType.MANA);
@@ -131,7 +133,7 @@ public class Headquarter extends Robot {
                 toMake = RobotType.DESTABILIZER;
             }
 
-            rc.setIndicatorString("trying to make " + toMake + " totals: " + getTotalAda() + " " + getTotalMana());
+            rc.setIndicatorString("trying to make " + toMake + " totals: " + getTotalAda() + " " + getTotalMana() + " " + locs.length);
 
             if (toMake == null)
                 continue;

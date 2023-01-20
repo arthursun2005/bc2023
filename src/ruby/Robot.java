@@ -31,9 +31,10 @@ public abstract class Robot {
     }
 
     public void prepare() throws GameActionException {
-        if (turnCount > 3 || !rc.getType().equals(RobotType.LAUNCHER))
+        if (turnCount > 3 || (!rc.getType().equals(RobotType.LAUNCHER) && !rc.getType().equals(RobotType.DESTABILIZER)))
             tracker.update();
-        attack.update();
+        if (rc.getType().equals(RobotType.LAUNCHER) || rc.getType().equals(RobotType.DESTABILIZER))
+            attack.update();
         turnCount++;
         roundNum = rc.getRoundNum();
     }

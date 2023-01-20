@@ -52,18 +52,18 @@ public class Carrier extends Robot {
     public boolean checkDanger() throws GameActionException {
         if (rc.getWeight() >= 30)
             return true;
-        MapLocation weakLoc = attack.getWeakLocCarrier();
-        if (weakLoc != null) {
+        MapLocation threat = attack.getThreat();
+        if (threat != null) {
             if (rc.getWeight() >= 1) {
                 attack.tryAttack();
                 if (rc.isActionReady()) {
-                    greedilyMove(weakLoc, 1);
-                    greedilyMove(weakLoc, 1);
+                    greedilyMove(threat, 1);
+                    greedilyMove(threat, 1);
                     attack.tryAttack();
                 }
             }
-            greedilyMove(weakLoc, -1);
-            greedilyMove(weakLoc, -1);
+            greedilyMove(threat, -1);
+            greedilyMove(threat, -1);
         }
         return false;
     }
@@ -97,11 +97,14 @@ public class Carrier extends Robot {
         rc.setIndicatorString("well: " + well + " " + makeElixir + " " + wantToDump);
 
         if (shouldReturn) {
-            MapLocation adaWell = tracker.getBestAdaWell();
-            if (adaWell == null)
-                wantToDump = false;
             if (wantToDump) {
-                well = adaWell;
+                MapLocation adaWell = tracker.getBestAdaWell();
+                if (adaWell == null)
+                    wantToDump = false;
+                else
+                    well = adaWell;
+            }
+            if (wantToDump) {
                 moveTo(well);
                 int ada = rc.getResourceAmount(ResourceType.ADAMANTIUM), mana = rc.getResourceAmount(ResourceType.MANA),
                         elixir = rc.getResourceAmount(ResourceType.ELIXIR);
@@ -126,9 +129,10 @@ public class Carrier extends Robot {
         }
 
         if (well != null) {
-            MapLocation manaWell = tracker.getBestManaWell();
-            if (wantToDump && manaWell != null) {
-                well = manaWell;
+            if (wantToDump) {
+                MapLocation manaWell = tracker.getBestManaWell();
+                if (manaWell != null)
+                    well = manaWell;
             }
             moveTo(well);
             checkDanger();
