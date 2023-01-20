@@ -271,12 +271,12 @@ public class Attack {
                     W++;
                 continue;
             }
-            // if (enemy.type.equals(RobotType.LAUNCHER))
-            // enemyOffensiveCnt += 15 + enemy.health;
-            W += 3;
+            if (enemy.type.equals(RobotType.LAUNCHER) || enemy.type.equals(RobotType.DESTABILIZER))
+                // enemyOffensiveCnt += 15 + enemy.health;
+                W += 3;
         }
         if (W != 0) {
-            if ((delta >= -4) && (ahead || W == 1)) {
+            if ((delta >= -4) && (ahead || W <= 1)) {
                 return 1;
             } else if (delta < -4) {
                 return 2;
