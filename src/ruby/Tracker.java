@@ -28,6 +28,72 @@ public class Tracker {
     void update() throws GameActionException {
         senseWells();
         senseIslands();
+        shareWells();
+        if (!rc.getType().equals(RobotType.LAUNCHER) && !rc.getType().equals(RobotType.DESTABILIZER))
+            readWells();
+    }
+
+    int wellIdx = 0;
+
+    void readWells() throws GameActionException {
+        for (int i = 0; i < Constants.WELLS_CNT; i++) {
+            int val = rc.readSharedArray(i + Constants.WELLS_START);
+            if (val == 0)
+                break;
+            val--;
+            int wellType = val / 5000;
+            val -= wellType * 5000;
+            int x = val / 69;
+            int y = val - x * 69;
+            switch (wellType) {
+                case 1:
+                    wellA[x] |= (1l << y);
+                    break;
+                case 2:
+                    wellB[x] |= (1l << y);
+                    break;
+                case 3:
+                    wellA[x] |= (1l << y);
+                    wellB[x] |= (1l << y);
+                    break;
+            }
+        }
+    }
+
+    void shareWells() throws GameActionException {
+        while (wellIdx < Constants.WELLS_CNT && rc.readSharedArray(wellIdx + Constants.WELLS_START) != 0)
+            wellIdx++;
+
+        if (!rc.canWriteSharedArray(0, 0))
+            return;
+
+        int width = rc.getMapWidth();
+        int offset = robot.rng.nextInt(width);
+        long w;
+        for (int fx = 0; fx < width; fx++) {
+            int x = (fx + offset) % width;
+            w = wellA[x] | wellB[x];
+            long A = wellA[x];
+            long B = wellB[x];
+            while (w > 0) {
+                long k = w & (w - 1);
+                long r = w - k;
+                int y = Util.log2(r);
+                int idx = wellIdx;
+                int val = x * 69 + y;
+                if (((A >> y) & 1) != 0)
+                    val += 5000;
+                if (((B >> y) & 1) != 0)
+                    val += 10000;
+                if (idx == Constants.WELLS_CNT) {
+                    idx = robot.rng.nextInt(Constants.WELLS_CNT);
+                } else {
+                    wellIdx++;
+                }
+                rc.writeSharedArray(idx + Constants.WELLS_START, val + 1);
+                w = k;
+            }
+        }
     }
 
     void senseWells() throws GameActionException {

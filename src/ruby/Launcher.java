@@ -37,8 +37,42 @@ public class Launcher extends Robot {
             rc.setIndicatorLine(target, rc.getLocation(), 225, 235, 255);
         }
         if (status == 1) {
-            if (weakLoc != null)
-                greedilyMove(weakLoc, 1);
+            if (weakLoc != null) {
+                if (rc.canSenseLocation(weakLoc) && rc.senseRobotAtLocation(weakLoc) != null
+                        && rc.senseRobotAtLocation(weakLoc).type.equals(RobotType.HEADQUARTERS)) {
+
+                    int hits = -rc.getLocation().distanceSquaredTo(weakLoc) * 1_000_000
+                            + rc.getLocation().distanceSquaredTo(HQLoc);
+                    Direction[] allGood = new Direction[9];
+                    int gc = 0;
+
+                    int big = rc.getType().actionRadiusSquared;
+
+                    for (Direction dir : directions) {
+                        if (!rc.canMove(dir))
+                            continue;
+                        MapLocation loc = rc.adjacentLocation(dir);
+                        if (loc.distanceSquaredTo(weakLoc) > big)
+                            continue;
+                        // int w = attack.countWithin(attack.getEnemies(), weakLoc, big) * 1_000_000 -
+                        // loc.distanceSquaredTo(HQLoc);
+                        int w = -loc.distanceSquaredTo(weakLoc) * 1_000_000 + loc.distanceSquaredTo(HQLoc);
+                        if (w < hits) {
+                            hits = w;
+                            allGood[gc] = dir;
+                            gc = 1;
+                        } else if (w == hits) {
+                            allGood[gc] = dir;
+                            gc++;
+                        }
+                    }
+
+                    if (gc != 0)
+                        rc.move(allGood[rng.nextInt(gc)]);
+                } else {
+                    greedilyMove(weakLoc, 1);
+                }
+            }
             attack.tryAttack();
         } else if (status == 2) {
             attack.tryAttack();
@@ -56,7 +90,7 @@ public class Launcher extends Robot {
             for (RobotInfo friend : friends) {
                 if (friend.type == RobotType.LAUNCHER) {
                     // if (friend.ID < rc.getID())
-                    //     lowerCount++;
+                    // lowerCount++;
                     if (friend.location.distanceSquaredTo(target) < mini) {
                         mini = friend.location.distanceSquaredTo(target);
                         bestie = friend.location;
@@ -67,7 +101,7 @@ public class Launcher extends Robot {
             attack.tryAttack();
 
             // if (mini < rc.getID() && lowerCount < 9) {
-            //     moveTo(bestie);
+            // moveTo(bestie);
             // }
             if (bestie != null) {
                 // Direction dir = rc.getLocation().directionTo(bestie);
@@ -95,21 +129,24 @@ public class Launcher extends Robot {
         } else {
             attack.tryAttack();
 
-            int hits = 1_000_000_000;
+            int hits = -rc.getLocation().distanceSquaredTo(weakLoc) * 1_000_000
+                    + rc.getLocation().distanceSquaredTo(HQLoc);
             Direction[] allGood = new Direction[9];
             int gc = 0;
 
             int big = rc.getType().visionRadiusSquared;
-            
+
             for (Direction dir : directions) {
                 if (!rc.canMove(dir))
                     continue;
                 MapLocation loc = rc.adjacentLocation(dir);
                 if (loc.distanceSquaredTo(weakLoc) > big)
                     continue;
-                // int w = attack.countWithin(attack.getEnemies(), weakLoc, big) * 1_000_000 - loc.distanceSquaredTo(HQLoc);
-                int w = -loc.distanceSquaredTo(weakLoc) * 1_000_000 + loc.distanceSquaredTo(HQLoc);
-                if (w < hits) {
+                // int w = attack.countWithin(attack.getEnemies(), weakLoc, big) * 1_000_000 -
+                // loc.distanceSquaredTo(HQLoc);
+                int w = -loc.distanceSquaredTo(weakLoc) * 1_000_000 +
+                        loc.distanceSquaredTo(HQLoc);
+                if (gc == 0 || w < hits) {
                     hits = w;
                     allGood[gc] = dir;
                     gc = 1;

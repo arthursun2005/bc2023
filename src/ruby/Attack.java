@@ -19,14 +19,14 @@ public class Attack {
 
     public int countWithin(RobotInfo[] backup, MapLocation a, int tolerance) {
         int cnt = 0;
-        // for (RobotInfo ri : backup) {
-        // if (!ri.type.equals(RobotType.LAUNCHER) &&
-        // !ri.type.equals(RobotType.DESTABILIZER))
-        // continue;
-        // if (a.distanceSquaredTo(ri.location) <= tolerance) {
-        // cnt++;
-        // }
-        // }
+        for (RobotInfo ri : backup) {
+            if (!ri.type.equals(RobotType.LAUNCHER) &&
+                    !ri.type.equals(RobotType.DESTABILIZER))
+                continue;
+            if (a.distanceSquaredTo(ri.location) <= tolerance) {
+                cnt++;
+            }
+        }
         return cnt;
     }
 
@@ -35,7 +35,7 @@ public class Attack {
     public int getEnemyWeaknessMetric(RobotInfo enemy) throws GameActionException {
         if (enemy.type.equals(RobotType.HEADQUARTERS))
             return 1_000_000_000;
-        int U = countWithin(friends, enemy.location, rc.getType().actionRadiusSquared);
+        int U = 0;// countWithin(friends, enemy.location, rc.getType().actionRadiusSquared);
         int adjustedHealth = Math.max(0, enemy.health - 30 * U) * 10000 * coef
                 + rc.getLocation().distanceSquaredTo(enemy.location) * 10000
                 + rc.getID();
@@ -81,7 +81,7 @@ public class Attack {
     }
 
     boolean shouldTargetHQ() {
-        return robot.creationRound <= 20 || rc.getID() % 8 == 0;
+        return robot.creationRound <= 20 || rc.getID() % 5 == 0;
     }
 
     public MapLocation getWeakLocCarrier() throws GameActionException {
@@ -127,6 +127,8 @@ public class Attack {
         for (RobotInfo enemy : enemies) {
             MapLocation toAttack = enemy.location;
             if (!rc.canAttack(toAttack) || enemy.type == RobotType.HEADQUARTERS)
+                continue;
+            if (rc.getType().equals(RobotType.CARRIER) && enemy.type.equals(RobotType.CARRIER))
                 continue;
             int adjustedHealth = getEnemyWeaknessMetric(enemy);
             if (weakLoc == null || adjustedHealth < weakness) {
