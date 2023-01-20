@@ -57,7 +57,7 @@ public class Headquarter extends Robot {
         MapLocation best = null;
         for (MapLocation a : locs) {
             if (rc.canBuildRobot(type, a)) {
-                if (best == null || a.distanceSquaredTo(loc) < best.distanceSquaredTo(loc))
+                if (best == null || a.distanceSquaredTo(loc) * mul < best.distanceSquaredTo(loc) * mul)
                     best = a;
             }
         }
@@ -80,7 +80,12 @@ public class Headquarter extends Robot {
                 return true;
             }
         }
-        return false;
+        int width = rc.getMapWidth();
+        int height = rc.getMapHeight();
+        MapLocation center = new MapLocation(width / 2, height / 2);
+        RobotInfo[] friends = rc.senseNearbyRobots(-1, rc.getTeam());
+        return friends.length == 0
+                && Math.min(Math.abs(rc.getLocation().x - center.x), Math.abs(rc.getLocation().y - center.y)) < 8;
     }
 
     int countCarriersNearby() throws GameActionException {
@@ -95,11 +100,14 @@ public class Headquarter extends Robot {
         // return cnt;
     }
 
+    boolean lol;
+
     public void run() throws GameActionException {
         if (getTotalAda() >= 3500 && getTotalMana() >= 5500) {
             rc.writeSharedArray(Constants.MAKE_ELIXIR, 1);
         }
-        boolean lol = enemyHQIsDangerouslyCloseLmfao();
+        if (rc.getRoundNum() == 1)
+            lol = enemyHQIsDangerouslyCloseLmfao();
         MapLocation well = tracker.getRandomWell();
         locs = rc.getAllLocationsWithinRadiusSquared(rc.getLocation(), rc.getType().actionRadiusSquared);
         for (int k = 0; k < 5; k++) {
@@ -125,7 +133,7 @@ public class Headquarter extends Robot {
                 toMake = RobotType.CARRIER;
             }
 
-            if (rc.getRoundNum() < 3 && lol) {
+            if (rc.getRoundNum() == 1 && lol) {
                 toMake = RobotType.LAUNCHER;
             }
 
@@ -133,7 +141,8 @@ public class Headquarter extends Robot {
                 toMake = RobotType.DESTABILIZER;
             }
 
-            rc.setIndicatorString("trying to make " + toMake + " totals: " + getTotalAda() + " " + getTotalMana() + " " + locs.length);
+            rc.setIndicatorString("trying to make " + toMake + " totals: " + getTotalAda() + " " + getTotalMana() + " "
+                    + locs.length);
 
             if (toMake == null)
                 continue;
