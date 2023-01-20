@@ -11,5 +11,5 @@ public class Constants {
     final static int TOTAL_ELIXIR = 10;
 
     final static int WELLS_START = 11;
-    final static int WELLS_CNT = 17;
+    final static int WELLS_CNT = 20;
 }

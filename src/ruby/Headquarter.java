@@ -98,6 +98,7 @@ public class Headquarter extends Robot {
         if (getTotalAda() >= 3500 && getTotalMana() >= 5500) {
             rc.writeSharedArray(Constants.MAKE_ELIXIR, 1);
         }
+        boolean lol = enemyHQIsDangerouslyCloseLmfao();
         MapLocation well = tracker.getRandomWell();
         for (int k = 0; k < 5; k++) {
             int ada = rc.getResourceAmount(ResourceType.ADAMANTIUM);
@@ -122,7 +123,7 @@ public class Headquarter extends Robot {
                 toMake = RobotType.CARRIER;
             }
 
-            if (rc.getRoundNum() < 3 && enemyHQIsDangerouslyCloseLmfao()) {
+            if (rc.getRoundNum() < 3 && lol) {
                 toMake = RobotType.LAUNCHER;
             }
 
