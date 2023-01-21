@@ -187,7 +187,7 @@ public class Tracker {
                 long r = w & -w;
                 int y = Util.log2(r);
                 MapLocation loc = new MapLocation(x, y);
-                if (rc.senseNearbyRobots(loc, 2, rc.getTeam()).length >= 9)
+                if (rc.canSenseLocation(loc) && rc.senseNearbyRobots(loc, 2, rc.getTeam()).length >= 9)
                     continue;
                 if (best == null || me.distanceSquaredTo(loc) < me.distanceSquaredTo(best))
                     best = loc;
