@@ -12,7 +12,7 @@ public class Attack {
         this.robot = robot;
     }
 
-    int times = 3;
+    int times = 2;
     final int coef = 100;
 
     RobotInfo[][] acrossTime = new RobotInfo[times][];
@@ -56,7 +56,7 @@ public class Attack {
             if (acrossTime[i] == null)
                 continue;
             for (RobotInfo ri : acrossTime[i]) {
-                if (!IDs.contains(ri.ID)) {
+                if (!rc.canSenseLocation(ri.location) && !IDs.contains(ri.ID)) {
                     IDs.add(ri.ID);
                     using.add(ri);
                 }
@@ -610,8 +610,10 @@ public class Attack {
     }
 
     public MapLocation getThreat() throws GameActionException {
-        RobotInfo[] enemies = rc.getType().equals(RobotType.CARRIER) ? rc.senseNearbyRobots(-1, rc.getTeam().opponent())
-                : getEnemies();
+        // RobotInfo[] enemies = rc.getType().equals(RobotType.CARRIER) ? rc.senseNearbyRobots(-1, rc.getTeam().opponent())
+        //         : getEnemies();
+        // RobotInfo[] enemies = getEnemies();
+        RobotInfo[] enemies = rc.senseNearbyRobots(-1, rc.getTeam().opponent());
         MapLocation weakLoc = null;
         int weakness = 0;
         for (RobotInfo enemy : enemies) {

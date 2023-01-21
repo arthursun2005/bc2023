@@ -34,8 +34,9 @@ public abstract class Robot {
         if (turnCount > 3 || (!rc.getType().equals(RobotType.LAUNCHER) && !rc.getType().equals(RobotType.DESTABILIZER)))
             tracker.update();
         attack.updateFriends();
-        if (rc.getType().equals(RobotType.LAUNCHER) || rc.getType().equals(RobotType.DESTABILIZER))
-            attack.update();
+        // if (rc.getType().equals(RobotType.LAUNCHER) ||
+        // rc.getType().equals(RobotType.DESTABILIZER))
+        attack.update();
         turnCount++;
         roundNum = rc.getRoundNum();
     }
