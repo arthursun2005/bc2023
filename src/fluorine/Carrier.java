@@ -50,10 +50,11 @@ public class Carrier extends Robot {
     }
 
     public boolean checkDanger() throws GameActionException {
-        if (rc.getWeight() >= 30)
-            return true;
         MapLocation threat = attack.getThreat();
         if (threat != null) {
+            tracker.signalDistress(threat);
+            if (rc.getWeight() < 20)
+                return true;
             if (rc.getWeight() >= 1) {
                 attack.tryAttack();
                 if (rc.isActionReady()) {
@@ -82,13 +83,21 @@ public class Carrier extends Robot {
             return;
         }
 
+        int ada = rc.getResourceAmount(ResourceType.ADAMANTIUM), mana = rc.getResourceAmount(ResourceType.MANA),
+                elixir = rc.getResourceAmount(ResourceType.ELIXIR);
+
         if (rc.getWeight() == GameConstants.CARRIER_CAPACITY)
             shouldReturn = true;
 
-        if (rc.getWeight() >= GameConstants.CARRIER_CAPACITY / 4 && rc.getRoundNum() < 18)
+        int huhh = rc.getWeight();
+
+        if (ada >= GameConstants.CARRIER_CAPACITY / 4 && rc.getRoundNum() < 19)
             shouldReturn = true;
 
-        if (rc.getWeight() >= GameConstants.CARRIER_CAPACITY / 2 && rc.getRoundNum() < 39)
+        // if (huhh >= 2 * GameConstants.CARRIER_CAPACITY / 4 && rc.getRoundNum() < 42)
+        // shouldReturn = true;
+
+        if (huhh >= 3 * GameConstants.CARRIER_CAPACITY / 4 && rc.getRoundNum() < 89)
             shouldReturn = true;
 
         MapLocation well = tracker.getBestWell();
@@ -112,8 +121,6 @@ public class Carrier extends Robot {
             }
             if (wantToDump) {
                 moveTo(well);
-                int ada = rc.getResourceAmount(ResourceType.ADAMANTIUM), mana = rc.getResourceAmount(ResourceType.MANA),
-                        elixir = rc.getResourceAmount(ResourceType.ELIXIR);
                 // if (ada > 0 && rc.canTransferResource(HQLoc, ResourceType.ADAMANTIUM, ada))
                 // rc.transferResource(HQLoc, ResourceType.ADAMANTIUM, ada);
                 if (mana > 0 && rc.canTransferResource(well, ResourceType.MANA, mana))
@@ -122,8 +129,6 @@ public class Carrier extends Robot {
                 // rc.transferResource(HQLoc, ResourceType.ELIXIR, elixir);
             } else {
                 moveTo(HQLoc);
-                int ada = rc.getResourceAmount(ResourceType.ADAMANTIUM), mana = rc.getResourceAmount(ResourceType.MANA),
-                        elixir = rc.getResourceAmount(ResourceType.ELIXIR);
                 if (ada > 0 && rc.canTransferResource(HQLoc, ResourceType.ADAMANTIUM, ada))
                     rc.transferResource(HQLoc, ResourceType.ADAMANTIUM, ada);
                 if (mana > 0 && rc.canTransferResource(HQLoc, ResourceType.MANA, mana))
@@ -131,6 +136,7 @@ public class Carrier extends Robot {
                 if (elixir > 0 && rc.canTransferResource(HQLoc, ResourceType.ELIXIR, elixir))
                     rc.transferResource(HQLoc, ResourceType.ELIXIR, elixir);
             }
+            tracker.bestWell = null;
             return;
         }
 

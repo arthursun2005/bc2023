@@ -12,4 +12,6 @@ public class Constants {
 
     final static int WELLS_START = 11;
     final static int WELLS_CNT = 20;
+
+    final static int DISTRESS = 31;
 }

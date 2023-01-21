@@ -7,7 +7,7 @@ public class Launcher extends Robot {
     MapLocation target, parentLoc;
 
     MapLocation adjust(MapLocation a) {
-        int M = 7;
+        int M = 1;
         if (rng.nextInt(3) != 0)
             return a;
         return new MapLocation(a.x + rng.nextInt(M) - M / 2, a.y + rng.nextInt(M) - M / 2);
@@ -64,6 +64,7 @@ public class Launcher extends Robot {
         if (target != null) {
             rc.setIndicatorLine(target, rc.getLocation(), 225, 235, 255);
         }
+
         if (status == 1) {
             if (weakLoc != null) {
                 randomizedGreedy(weakLoc, -1, rc.getType().actionRadiusSquared);
@@ -95,6 +96,12 @@ public class Launcher extends Robot {
 
             attack.tryAttack();
 
+            MapLocation site = tracker.pls();
+            if (site != null) {
+                moveTo(site);
+                rc.setIndicatorLine(site, rc.getLocation(), 255, 0, 0);
+            }
+
             // if (mini < rc.getID() && lowerCount < 9) {
             // moveTo(bestie);
             // }
@@ -106,6 +113,7 @@ public class Launcher extends Robot {
                 // tryMove(dir.rotateRight());
                 moveTo(bestie);
             }
+
             if (!reached) {
                 moveTo(target);
             } else {

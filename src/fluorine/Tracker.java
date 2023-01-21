@@ -27,6 +27,40 @@ public class Tracker {
         this.robot = robot;
     }
 
+    void clearDistress() throws GameActionException {
+        if (!rc.canWriteSharedArray(0, 0))
+            return;
+        for (int i = 0; i < 4; i++) {
+            rc.writeSharedArray(Constants.DISTRESS + i, 0);
+        }
+    }
+
+    void signalDistress(MapLocation enemy) throws GameActionException {
+        if (!rc.canWriteSharedArray(0, 0))
+            return;
+        for (int i = 0; i < 4; i++) {
+            if (rc.readSharedArray(Constants.DISTRESS + i) != 0)
+                continue;
+            int val = enemy.x * 69 + enemy.y + 1;
+            rc.writeSharedArray(Constants.DISTRESS + i, val);
+            break;
+        }
+    }
+
+    MapLocation pls() throws GameActionException {
+        MapLocation best = null;
+        for (int i = 0; i < 4; i++) {
+            int val = rc.readSharedArray(Constants.DISTRESS + i);
+            if (val == 0)
+                continue;
+            val--;
+            MapLocation loc = new MapLocation(val / 69, val % 69);
+            if (best == null || loc.distanceSquaredTo(rc.getLocation()) < best.distanceSquaredTo(rc.getLocation()))
+                best = loc;
+        }
+        return best;
+    }
+
     void update() throws GameActionException {
         senseWells();
         senseIslands();
@@ -119,7 +153,13 @@ public class Tracker {
         }
     }
 
+    MapLocation bestWell = null;
+
     MapLocation getBestWell() throws GameActionException {
+        // if (bestWell != null && rc.senseNearbyRobots(bestWell, 2, rc.getTeam()).length >= 9)
+        //     bestWell = null;
+        // if (bestWell != null)
+        //     return bestWell;
         MapLocation best = null;
         int width = rc.getMapWidth();
         int height = rc.getMapHeight();
@@ -134,7 +174,7 @@ public class Tracker {
             if (rc.getRoundNum() <= 35 && width > 25 && height > 25) {
                 ignoreMana = true;
             }
-            if (rc.getRoundNum() > 100 && rc.getID() % 3 != 0) {
+            if (rc.getRoundNum() > 100 && rc.getID() % 2 != 0) {
                 ignoreAda = true;
             }
             if (rc.getID() % 3 != 0)
@@ -147,13 +187,15 @@ public class Tracker {
                 long r = w & -w;
                 int y = Util.log2(r);
                 MapLocation loc = new MapLocation(x, y);
+                if (rc.senseNearbyRobots(loc, 2, rc.getTeam()).length >= 9)
+                    continue;
                 if (best == null || me.distanceSquaredTo(loc) < me.distanceSquaredTo(best))
                     best = loc;
                 w -= r;
             }
         }
         if (elixirOnly && best != null)
-            return best;
+            return bestWell = best;
         for (int x = 0; x < width; x++) {
             w = wellA[x] & ~wellB[x];
             if (!ignoreAda) {
@@ -178,7 +220,7 @@ public class Tracker {
                 }
             }
         }
-        return best;
+        return bestWell = best;
     }
 
     MapLocation getBestAdaWell() throws GameActionException {

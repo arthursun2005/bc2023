@@ -7,6 +7,7 @@ public class Headquarter extends Robot {
         super(rc);
 
         int cnt = rc.readSharedArray(Constants.SHARED_HQ + 5);
+        pompom = cnt;
         rc.writeSharedArray(Constants.SHARED_HQ + 5, cnt + 1);
         Util.writeCoords(cnt, rc.getLocation());
     }
@@ -15,6 +16,8 @@ public class Headquarter extends Robot {
 
     int anchorsMade = 0;
     int jerrysMade = 0;
+
+    int pompom = 0;
 
     public void suicide() throws GameActionException {
         RobotInfo[] friends = rc.senseNearbyRobots(-1, rc.getTeam());
@@ -104,6 +107,21 @@ public class Headquarter extends Robot {
 
     boolean lol;
 
+    void helpMe() throws GameActionException {
+        if (pompom == 0)
+            tracker.clearDistress();
+
+        MapLocation best = null;
+        RobotInfo[] enemies = rc.senseNearbyRobots(-1, rc.getTeam().opponent());
+        MapLocation me = rc.getLocation();
+        for (RobotInfo a : enemies) {
+            if (best == null || a.location.distanceSquaredTo(me) < best.distanceSquaredTo(me))
+                best = a.location;
+        }
+        if (best != null)
+            tracker.signalDistress(best);
+    }
+
     public void run() throws GameActionException {
         if (getTotalAda() >= 3500 && getTotalMana() >= 5500) {
             rc.writeSharedArray(Constants.MAKE_ELIXIR, 1);
@@ -154,6 +172,7 @@ public class Headquarter extends Robot {
             else
                 trySpawn(toMake, null, 1);
         }
+        helpMe();
         suicide();
     }
 }
