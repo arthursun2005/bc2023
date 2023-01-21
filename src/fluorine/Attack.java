@@ -23,7 +23,7 @@ public class Attack {
         if (enemy.type.equals(RobotType.HEADQUARTERS))
             return 1_000_000_000;
         int adjustedHealth = enemy.health * 10000 * coef
-                + rc.getLocation().distanceSquaredTo(enemy.location) * 10000
+                - rc.getLocation().distanceSquaredTo(enemy.location) * 10000
                 + rc.getID();
         if (enemy.type.equals(RobotType.LAUNCHER) || enemy.type.equals(RobotType.DESTABILIZER))
             adjustedHealth -= 1_000_000_000;
@@ -642,7 +642,7 @@ public class Attack {
         int delta = rc.getHealth() - lastHealth;
         lastHealth = rc.getHealth();
         boolean ahead = false;
-        int frens = rc.getHealth();
+        int frens = 0;
         for (RobotInfo friend : friends) {
             // if (friend.type.equals(RobotType.LAUNCHER))
             // friendOffensiveCnt += 3 + friend.health;
@@ -671,7 +671,7 @@ public class Attack {
                 W += 3;
         }
         if (W != 0) {
-            if (delta >= -4 && ahead) {
+            if (delta >= -4 && (ahead || frens == 0)) {
                 return 1;
             } else if (delta < -4) {
                 return 2;
