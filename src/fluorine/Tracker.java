@@ -64,10 +64,10 @@ public class Tracker {
     void update() throws GameActionException {
         senseWells();
         senseIslands();
-        shareWells();
         if (!rc.getType().equals(RobotType.LAUNCHER) &&
                 !rc.getType().equals(RobotType.DESTABILIZER))
             readWells();
+        shareWells();
     }
 
     int wellIdx = 0;
@@ -118,6 +118,7 @@ public class Tracker {
             long B = rB[x];
             while (w > 0) {
                 long r = w & -w;
+                w -= r;
                 int y = Util.log2(r);
                 int idx = wellIdx;
                 int val = x * 69 + y;
@@ -131,7 +132,6 @@ public class Tracker {
                     wellIdx++;
                 }
                 rc.writeSharedArray(idx + Constants.WELLS_START, val + 1);
-                w -= r;
             }
         }
     }
@@ -185,13 +185,13 @@ public class Tracker {
             w = wellA[x] & wellB[x];
             while (w > 0) {
                 long r = w & -w;
+                w -= r;
                 int y = Util.log2(r);
                 MapLocation loc = new MapLocation(x, y);
                 if (rc.canSenseLocation(loc) && rc.senseNearbyRobots(loc, 2, rc.getTeam()).length >= 9)
                     continue;
                 if (best == null || me.distanceSquaredTo(loc) < me.distanceSquaredTo(best))
                     best = loc;
-                w -= r;
             }
         }
         if (elixirOnly && best != null)
@@ -201,22 +201,22 @@ public class Tracker {
             if (!ignoreAda) {
                 while (w > 0) {
                     long r = w & -w;
+                    w -= r;
                     int y = Util.log2(r);
                     MapLocation loc = new MapLocation(x, y);
                     if (best == null || me.distanceSquaredTo(loc) < me.distanceSquaredTo(best))
                         best = loc;
-                    w -= r;
                 }
             }
             w = wellB[x] & ~wellA[x];
             if (!ignoreMana) {
                 while (w > 0) {
                     long r = w & -w;
+                    w -= r;
                     int y = Util.log2(r);
                     MapLocation loc = new MapLocation(x, y);
                     if (best == null || me.distanceSquaredTo(loc) < me.distanceSquaredTo(best))
                         best = loc;
-                    w -= r;
                 }
             }
         }
@@ -232,11 +232,11 @@ public class Tracker {
             w = wellA[x] & ~wellB[x];
             while (w > 0) {
                 long r = w & -w;
+                w -= r;
                 int y = Util.log2(r);
                 MapLocation loc = new MapLocation(x, y);
                 if (best == null || me.distanceSquaredTo(loc) < me.distanceSquaredTo(best))
                     best = loc;
-                w -= r;
             }
         }
         return best;
@@ -251,11 +251,11 @@ public class Tracker {
             w = wellB[x] & ~wellA[x];
             while (w > 0) {
                 long r = w & -w;
+                w -= r;
                 int y = Util.log2(r);
                 MapLocation loc = new MapLocation(x, y);
                 if (best == null || me.distanceSquaredTo(loc) < me.distanceSquaredTo(best))
                     best = loc;
-                w -= r;
             }
         }
         return best;
@@ -278,11 +278,11 @@ public class Tracker {
             w = wellA[x];
             while (w > 0) {
                 long r = w & -w;
+                w -= r;
                 int y = Util.log2(r);
                 MapLocation loc = new MapLocation(x, y);
                 if (best == null || me.distanceSquaredTo(loc) < me.distanceSquaredTo(best))
                     best = loc;
-                w -= r;
             }
         }
         if (best != null && ignoreMana)
@@ -291,11 +291,11 @@ public class Tracker {
             w = wellB[x];
             while (w > 0) {
                 long r = w & -w;
+                w -= r;
                 int y = Util.log2(r);
                 MapLocation loc = new MapLocation(x, y);
                 if (best == null || me.distanceSquaredTo(loc) < me.distanceSquaredTo(best))
                     best = loc;
-                w -= r;
             }
         }
         return best;
@@ -332,11 +332,11 @@ public class Tracker {
             long w = islands[x];
             while (w > 0) {
                 long r = w & -w;
+                w -= r;
                 int y = Util.log2(r);
                 MapLocation loc = new MapLocation(x, y);
                 if (best == null || me.distanceSquaredTo(loc) < me.distanceSquaredTo(best))
                     best = loc;
-                w -= r;
             }
         }
         return best;
