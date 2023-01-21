@@ -37,7 +37,7 @@ public class Movement {
         }
         prevLocation = loc;
 
-        if (path[cur].equals(loc)) return false;
+        if (path[cur].distanceSquaredTo(loc)<=2) return false;
 
         for (Direction dir : Direction.values()) {
             MapLocation tmp = path[cur].add(dir);
@@ -45,8 +45,8 @@ public class Movement {
         }
 
         if (currentState == State.WALL) {
+            rc.setIndicatorString("hmmm " + lastWall + " " + loc);
             if (path[cur].distanceSquaredTo(loc) < lastWall.distanceSquaredTo(loc)) {
-                rc.setIndicatorString("LOL");
                 currentState = State.NORMAL;
             }
         }
@@ -184,10 +184,13 @@ public class Movement {
         if (!rc.isMovementReady()) return;
         if (rc.getLocation().distanceSquaredTo(loc) == 0) return;
         if (rc.getLocation().distanceSquaredTo(loc) <= 2 && (rc.senseRobotAtLocation(loc) != null || !rc.sensePassability(loc))) return;
-        while(update(loc)) rc.setIndicatorLine(path[Math.max(cur-1,0)], path[cur], 69, 235, 255); //continue;
-        for (int i = 0; i + 1 <= cur; i++) {
-            rc.setIndicatorLine(path[i], path[i+1], 225, 235, 255);
+        for (int i = 0; i < 4; i++) {
+            if (!update(loc)) break;
+            rc.setIndicatorLine(path[Math.max(cur-1,0)], path[cur], 69, 235, 255);
         }
+        /*for (int i = 0; i + 1 <= cur; i++) {
+            rc.setIndicatorLine(path[i], path[i+1], 225, 235, 255);
+        }*/
         localMove(loc);
     }
 }
