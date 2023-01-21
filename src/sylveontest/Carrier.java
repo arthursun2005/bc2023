@@ -74,14 +74,20 @@ public class Carrier extends Robot {
 
     public void run() throws GameActionException {
 
-        System.out.println(Clock.getBytecodesLeft());
+        StringBuilder stb = new StringBuilder();
+        stb.append("asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf");
+        stb.append("asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf");
+        stb.append("asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf");
 
-        Direction dir = bfs.tryBFS(new MapLocation(6, 22));
-        if (dir == null) return;
-        rc.setIndicatorLine(rc.getLocation(), rc.getLocation().add(dir), 255, 0, 0);
-        if (rc.canMove(dir)) rc.move(dir);
-        System.out.println(Clock.getBytecodesLeft());
 
+        //        System.out.println(Clock.getBytecodesLeft());
+//
+//        Direction dir = bfs.tryBFS(new MapLocation(6, 22));
+//        if (dir == null) return;
+//        rc.setIndicatorLine(rc.getLocation(), rc.getLocation().add(dir), 255, 0, 0);
+//        if (rc.canMove(dir)) rc.move(dir);
+//        System.out.println(Clock.getBytecodesLeft());
+//
 
 //
 //        MapLocation HQLoc = tracker.getClosestHQLoc();
