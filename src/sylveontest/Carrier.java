@@ -1,6 +1,10 @@
 package sylveontest;
 
 import battlecode.common.*;
+import scala.Int;
+
+import java.util.ArrayList;
+import java.util.HashSet;
 
 public class Carrier extends Robot {
     public Carrier(RobotController rc) throws GameActionException {
@@ -73,8 +77,11 @@ public class Carrier extends Robot {
     }
 
     public void run() throws GameActionException {
-        bfs.tryBFS(new MapLocation(5, 20));
 
+//        if (rc.canMove(Direction.EAST)) rc.move(Direction.EAST);
+        Direction dir = bfs.tryBFS(new MapLocation(5, 20));
+        if (dir == null) return;
+        if (rc.canMove(dir)) rc.move(dir);
         //        System.out.println(Clock.getBytecodesLeft());
 //
 //        Direction dir = bfs.tryBFS(new MapLocation(6, 22));
