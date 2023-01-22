@@ -1,4 +1,4 @@
-package symmetrymammott;
+package kirby;
 
 import battlecode.common.*;
 import java.util.*;
@@ -646,15 +646,17 @@ public class Attack {
             // if (friend.type.equals(RobotType.LAUNCHER))
             // friendOffensiveCnt += 3 + friend.health;
             if (friend.type.equals(RobotType.LAUNCHER) || friend.type.equals(RobotType.DESTABILIZER)) {
-                if (weakLoc != null) {
-                    // if (friend.type.equals(RobotType.LAUNCHER)
-
-                    if (friend.location.distanceSquaredTo(weakLoc) < rc.getLocation().distanceSquaredTo(weakLoc))
-                        // if (Util.rDist(weakLoc, friend.location) < Util.rDist(weakLoc,
-                        // rc.adjacentLocation(rc.getLocation().directionTo(weakLoc))))
-                        ahead = true;
-                }
                 frens += friend.health;
+            }
+
+            if (weakLoc != null) {
+                // if (friend.type.equals(RobotType.LAUNCHER)
+
+                if (friend.location.distanceSquaredTo(weakLoc) < rc.getLocation().distanceSquaredTo(weakLoc)) {
+                    // if (Util.rDist(weakLoc, friend.location) < Util.rDist(weakLoc,
+                    // rc.adjacentLocation(rc.getLocation().directionTo(weakLoc))))
+                    ahead = true;
+                }
             }
         }
         for (RobotInfo enemy : enemies) {

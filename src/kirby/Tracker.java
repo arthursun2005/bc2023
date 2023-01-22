@@ -1,4 +1,4 @@
-package symmetrymammott;
+package kirby;
 
 import battlecode.common.*;
 
@@ -169,15 +169,22 @@ public class Tracker {
         boolean ignoreAda = false, ignoreMana = false;
         boolean elixirOnly = false;
         if (rc.getType().equals(RobotType.CARRIER)) {
-            if (rc.getRoundNum() <= 25 && width <= 25 && height <= 25
-                    && rc.getID() % 3 != 0) {
+            // if (rc.getRoundNum() <= 25 && width <= 25 && height <= 25
+            // && rc.getID() % 3 != 0) {
+            // ignoreAda = true;
+            // }
+            // if (rc.getRoundNum() <= 35 && width > 25 && height > 25) {
+            // ignoreMana = true;
+            // }
+            // if (rc.getRoundNum() > 100 && rc.getID() % 2 != 0) {
+            // ignoreAda = true;
+            // }
+            if (rc.getRoundNum() < 35) {
                 ignoreAda = true;
-            }
-            if (rc.getRoundNum() <= 35 && width > 25 && height > 25) {
-                ignoreMana = true;
-            }
-            if (rc.getRoundNum() > 100 && rc.getID() % 2 != 0) {
-                ignoreAda = true;
+            } else {
+                if (rc.getID() % 3 != 0) {
+                    ignoreAda = true;
+                }
             }
             if (rc.getID() % 3 != 0)
                 elixirOnly = true;
@@ -290,9 +297,9 @@ public class Tracker {
         int width = rc.getMapWidth();
         int height = rc.getMapHeight();
         long w;
-        boolean ignoreMana = false;
-        if (rc.getRoundNum() <= 20) {
-            ignoreMana = true;
+        boolean ignoreAda = false;
+        if (rc.getRoundNum() <= 35) {
+            ignoreAda = true;
         }
         MapLocation me = rc.getLocation();
         long f;
@@ -301,7 +308,7 @@ public class Tracker {
             long h = f & -f;
             f -= h;
             int x = Util.log2(h);
-            w = wellA[x];
+            w = wellB[x];
             while (w > 0) {
                 long r = w & -w;
                 w -= r;
@@ -311,14 +318,14 @@ public class Tracker {
                     best = loc;
             }
         }
-        if (best != null && ignoreMana)
+        if (best != null && ignoreAda)
             return best;
         f = wellX;
         while (f > 0) {
             long h = f & -f;
             f -= h;
             int x = Util.log2(h);
-            w = wellB[x];
+            w = wellA[x];
             while (w > 0) {
                 long r = w & -w;
                 w -= r;

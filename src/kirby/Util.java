@@ -1,4 +1,4 @@
-package symmetrymammott;
+package kirby;
 
 import battlecode.common.*;
 

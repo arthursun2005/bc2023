@@ -1,4 +1,4 @@
-package symmetrymammott;
+package tornado;
 
 import battlecode.common.*;
 
@@ -42,10 +42,12 @@ public class Tracker {
     void signalDistress(MapLocation enemy) throws GameActionException {
         if (!rc.canWriteSharedArray(0, 0))
             return;
+        int val = enemy.x * 69 + enemy.y + 1;
         for (int i = 0; i < 4; i++) {
             if (rc.readSharedArray(Constants.DISTRESS + i) != 0)
                 continue;
-            int val = enemy.x * 69 + enemy.y + 1;
+            if (rc.readSharedArray(Constants.DISTRESS + i) == val)
+                break;
             rc.writeSharedArray(Constants.DISTRESS + i, val);
             break;
         }
@@ -156,28 +158,36 @@ public class Tracker {
 
     MapLocation bestWell = null;
 
-    MapLocation getBestWell() throws GameActionException {
+    MapLocation getBestWell(MapLocation threat) throws GameActionException {
         // if (bestWell != null && rc.senseNearbyRobots(bestWell, 2,
         // rc.getTeam()).length >= 9)
         // bestWell = null;
         // if (bestWell != null)
         // return bestWell;
+        int cnt = rc.getRobotCount();
         MapLocation best = null;
         int width = rc.getMapWidth();
         int height = rc.getMapHeight();
         long w;
-        boolean ignoreAda = false, ignoreMana = false;
+        boolean ignoreAda = false;
         boolean elixirOnly = false;
         if (rc.getType().equals(RobotType.CARRIER)) {
-            if (rc.getRoundNum() <= 25 && width <= 25 && height <= 25
-                    && rc.getID() % 3 != 0) {
+            // if (rc.getRoundNum() <= 25 && width <= 25 && height <= 25
+            // && rc.getID() % 3 != 0) {
+            // ignoreAda = true;
+            // }
+            // if (rc.getRoundNum() <= 35 && width > 25 && height > 25) {
+            // ignoreMana = true;
+            // }
+            // if (rc.getRoundNum() > 100 && rc.getID() % 2 != 0) {
+            // ignoreAda = true;
+            // }
+            if (rc.getRoundNum() < 35 || cnt < 18) {
                 ignoreAda = true;
-            }
-            if (rc.getRoundNum() <= 35 && width > 25 && height > 25) {
-                ignoreMana = true;
-            }
-            if (rc.getRoundNum() > 100 && rc.getID() % 2 != 0) {
-                ignoreAda = true;
+            } else {
+                if (rc.getID() % 3 != 0) {
+                    ignoreAda = true;
+                }
             }
             if (rc.getID() % 3 != 0)
                 elixirOnly = true;
@@ -197,6 +207,8 @@ public class Tracker {
                 MapLocation loc = new MapLocation(x, y);
                 if (rc.canSenseLocation(loc) && rc.senseNearbyRobots(loc, 2, rc.getTeam()).length >= 9)
                     continue;
+                if (threat != null && loc.distanceSquaredTo(threat) < 26)
+                    continue;
                 if (best == null || me.distanceSquaredTo(loc) < me.distanceSquaredTo(best))
                     best = loc;
             }
@@ -208,29 +220,43 @@ public class Tracker {
             long h = f & -f;
             f -= h;
             int x = Util.log2(h);
-            w = wellA[x] & ~wellB[x];
-            if (!ignoreAda) {
-                while (w > 0) {
-                    long r = w & -w;
-                    w -= r;
-                    int y = Util.log2(r);
-                    MapLocation loc = new MapLocation(x, y);
-                    if (best == null || me.distanceSquaredTo(loc) < me.distanceSquaredTo(best))
-                        best = loc;
-                }
-            }
             w = wellB[x] & ~wellA[x];
-            if (!ignoreMana) {
-                while (w > 0) {
-                    long r = w & -w;
-                    w -= r;
-                    int y = Util.log2(r);
-                    MapLocation loc = new MapLocation(x, y);
-                    if (best == null || me.distanceSquaredTo(loc) < me.distanceSquaredTo(best))
-                        best = loc;
-                }
+            while (w > 0) {
+                long r = w & -w;
+                w -= r;
+                int y = Util.log2(r);
+                MapLocation loc = new MapLocation(x, y);
+                if (rc.canSenseLocation(loc) && rc.senseNearbyRobots(loc, 2, rc.getTeam()).length >= 9)
+                    continue;
+                if (threat != null && loc.distanceSquaredTo(threat) < 26)
+                    continue;
+                if (best == null || me.distanceSquaredTo(loc) < me.distanceSquaredTo(best))
+                    best = loc;
             }
         }
+        if (ignoreAda && best != null)
+            return bestWell = best;
+        f = wellX;
+        while (f > 0) {
+            long h = f & -f;
+            f -= h;
+            int x = Util.log2(h);
+            w = wellA[x] & ~wellB[x];
+            while (w > 0) {
+                long r = w & -w;
+                w -= r;
+                int y = Util.log2(r);
+                MapLocation loc = new MapLocation(x, y);
+                if (rc.canSenseLocation(loc) && rc.senseNearbyRobots(loc, 2, rc.getTeam()).length >= 9)
+                    continue;
+                if (threat != null && loc.distanceSquaredTo(threat) < 26)
+                    continue;
+                if (best == null || me.distanceSquaredTo(loc) < me.distanceSquaredTo(best))
+                    best = loc;
+            }
+        }
+        if (ignoreAda && rc.getID() % 2 == 0)
+            return null;
         return bestWell = best;
     }
 
@@ -290,9 +316,9 @@ public class Tracker {
         int width = rc.getMapWidth();
         int height = rc.getMapHeight();
         long w;
-        boolean ignoreMana = false;
-        if (rc.getRoundNum() <= 20) {
-            ignoreMana = true;
+        boolean ignoreAda = false;
+        if (rc.getRoundNum() <= 35) {
+            ignoreAda = true;
         }
         MapLocation me = rc.getLocation();
         long f;
@@ -301,7 +327,7 @@ public class Tracker {
             long h = f & -f;
             f -= h;
             int x = Util.log2(h);
-            w = wellA[x];
+            w = wellB[x];
             while (w > 0) {
                 long r = w & -w;
                 w -= r;
@@ -311,14 +337,14 @@ public class Tracker {
                     best = loc;
             }
         }
-        if (best != null && ignoreMana)
+        if (best != null && ignoreAda)
             return best;
         f = wellX;
         while (f > 0) {
             long h = f & -f;
             f -= h;
             int x = Util.log2(h);
-            w = wellB[x];
+            w = wellA[x];
             while (w > 0) {
                 long r = w & -w;
                 w -= r;

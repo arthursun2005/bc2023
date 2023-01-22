@@ -1,4 +1,4 @@
-package symmetrymammott;
+package tornado;
 
 import battlecode.common.*;
 import java.util.*;
@@ -26,7 +26,9 @@ public class Attack {
                 - rc.getLocation().distanceSquaredTo(enemy.location) * 10000
                 + rc.getID();
         if (enemy.type.equals(RobotType.LAUNCHER) || enemy.type.equals(RobotType.DESTABILIZER))
-            adjustedHealth -= 1_000_000_000;
+            adjustedHealth -= 500_000_000;
+        if (rc.canSenseLocation(enemy.location))
+            adjustedHealth -= 500_000_000;
         return adjustedHealth;
     }
 
@@ -646,15 +648,17 @@ public class Attack {
             // if (friend.type.equals(RobotType.LAUNCHER))
             // friendOffensiveCnt += 3 + friend.health;
             if (friend.type.equals(RobotType.LAUNCHER) || friend.type.equals(RobotType.DESTABILIZER)) {
-                if (weakLoc != null) {
-                    // if (friend.type.equals(RobotType.LAUNCHER)
-
-                    if (friend.location.distanceSquaredTo(weakLoc) < rc.getLocation().distanceSquaredTo(weakLoc))
-                        // if (Util.rDist(weakLoc, friend.location) < Util.rDist(weakLoc,
-                        // rc.adjacentLocation(rc.getLocation().directionTo(weakLoc))))
-                        ahead = true;
-                }
                 frens += friend.health;
+            }
+
+            if (weakLoc != null) {
+                // if (friend.type.equals(RobotType.LAUNCHER)
+
+                if (friend.location.distanceSquaredTo(weakLoc) < rc.getLocation().distanceSquaredTo(weakLoc)) {
+                    // if (Util.rDist(weakLoc, friend.location) < Util.rDist(weakLoc,
+                    // rc.adjacentLocation(rc.getLocation().directionTo(weakLoc))))
+                    ahead = true;
+                }
             }
         }
         for (RobotInfo enemy : enemies) {
@@ -669,8 +673,15 @@ public class Attack {
                 // enemyOffensiveCnt += 15 + enemy.health;
                 W += 3;
         }
+        int enemyHealth = 0;
+        RobotInfo a;
+        if (weakLoc != null && rc.canSenseLocation(weakLoc)) {
+            a = rc.senseRobotAtLocation(weakLoc);
+            if (a != null)
+                enemyHealth = a.health;
+        }
         if (W != 0) {
-            if (delta >= -4 && (ahead || frens == 0 || W <= 1)) {
+            if (delta >= -4 && (ahead || frens == 0 || W <= 1 || rc.getHealth() > enemyHealth)) {
                 return 1;
             } else if (delta < -4) {
                 return 2;

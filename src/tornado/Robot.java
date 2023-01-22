@@ -1,4 +1,4 @@
-package symmetrymammott;
+package tornado;
 
 import battlecode.common.*;
 import java.util.*;
@@ -56,12 +56,14 @@ public abstract class Robot {
         MapLocation me = rc.getLocation();
         if (loc == null)
             loc = me;
-        int dist = me.distanceSquaredTo(loc) * mul * 10000 + me.distanceSquaredTo(HQLoc);
+        // int dist = me.distanceSquaredTo(loc) * mul * 10000 + me.distanceSquaredTo(HQLoc);
+        int dist = Util.rDist(rc.getLocation(), loc) * mul * 10000 + rc.getLocation().distanceSquaredTo(HQLoc);
         for (Direction dir : directions) {
             if (!rc.canMove(dir))
                 continue;
-            int w = rc.adjacentLocation(dir).distanceSquaredTo(loc) * mul * 10000
-                    + rc.adjacentLocation(dir).distanceSquaredTo(HQLoc);
+            // int w = rc.adjacentLocation(dir).distanceSquaredTo(loc) * mul * 10000
+            //         + rc.adjacentLocation(dir).distanceSquaredTo(HQLoc);
+            int w = Util.rDist(rc.adjacentLocation(dir), loc) * mul * 10000 + rc.adjacentLocation(dir).distanceSquaredTo(HQLoc);
             if (w < dist) {
                 dist = w;
                 best = dir;

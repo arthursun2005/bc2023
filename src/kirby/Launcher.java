@@ -1,4 +1,4 @@
-package symmetrymammott;
+package kirby;
 
 import battlecode.common.*;
 
@@ -106,32 +106,12 @@ public class Launcher extends Robot {
             rc.setIndicatorLine(target.loc, rc.getLocation(), 225, 235, 255);
         }
 
+        // if (status == 0 && rc.canSenseLocation(target.loc))
+        //     status = 1;
+
         if (status == 1) {
             if (weakLoc != null) {
-                if (rc.canSenseLocation(weakLoc) && rc.senseRobotAtLocation(weakLoc) != null
-                        && rc.senseRobotAtLocation(weakLoc).type == RobotType.HEADQUARTERS) {
-                    // randomizedGreedy(weakLoc, 1, rc.getType().visionRadiusSquared);
-                    Direction dir = rc.getLocation().directionTo(weakLoc);
-                    Direction[] dirs = {
-                            // dir.rotateLeft().rotateLeft().rotateLeft(),
-                            dir.rotateLeft().rotateLeft(),
-                            dir.rotateLeft(),
-                            // dir.rotateRight().rotateRight().rotateRight(),
-                            dir,
-                            dir.rotateRight(),
-                            dir.rotateRight().rotateRight(),
-                            // dir.rotateRight(),
-                    };
-                    for (Direction d : dirs) {
-                        if (rc.canMove(d) && rc.adjacentLocation(d)
-                                .distanceSquaredTo(weakLoc) <= rc.getType().visionRadiusSquared) {
-                            rc.move(d);
-                            break;
-                        }
-                    }
-                } else {
-                    randomizedGreedy(weakLoc, -1, rc.getType().actionRadiusSquared);
-                }
+                randomizedGreedy(weakLoc, -1, rc.getType().actionRadiusSquared);
             }
             attack.tryAttack();
         } else if (status == 2) {
@@ -169,7 +149,7 @@ public class Launcher extends Robot {
                 rc.setIndicatorLine(site, rc.getLocation(), 255, 0, 0);
             }
 
-            int req = (int) (rc.getRoundNum() / 100) + 1;
+            int req = 0;// (int) (rc.getRoundNum() / 100) + 1;
 
             // if (mini < rc.getID() && lowerCount < 9) {
             // moveTo(bestie);

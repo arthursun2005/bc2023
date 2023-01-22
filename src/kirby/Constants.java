@@ -1,4 +1,4 @@
-package symmetrymammott;
+package kirby;
 
 public class Constants {
     // [0, 5]

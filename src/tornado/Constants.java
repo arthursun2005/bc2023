@@ -1,4 +1,4 @@
-package symmetrymammott;
+package tornado;
 
 public class Constants {
     // [0, 5]
@@ -15,4 +15,6 @@ public class Constants {
 
     final static int DISTRESS = 36;
     final static int POSSI = 42;
+    
+    final static int AGGRO_CARRIERS = 50;
 }
