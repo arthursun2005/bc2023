@@ -22,6 +22,8 @@ public class Tracker {
     long[] rB = new long[64];
     long[] islands = new long[64];
 
+    long wellX = 0;
+
     public Tracker(RobotController rc, Robot robot) {
         this.rc = rc;
         this.robot = robot;
@@ -64,17 +66,15 @@ public class Tracker {
     void update() throws GameActionException {
         senseWells();
         senseIslands();
-        if (!rc.getType().equals(RobotType.LAUNCHER) &&
-                !rc.getType().equals(RobotType.DESTABILIZER))
-            readWells();
+        readWells();
         shareWells();
     }
 
     int wellIdx = 0;
 
     void readWells() throws GameActionException {
-        for (int i = 0; i < Constants.WELLS_CNT; i++) {
-            int val = rc.readSharedArray(i + Constants.WELLS_START);
+        for (; wellIdx < Constants.WELLS_CNT; wellIdx++) {
+            int val = rc.readSharedArray(wellIdx + Constants.WELLS_START);
             if (val == 0)
                 break;
             val--;
@@ -82,6 +82,7 @@ public class Tracker {
             val -= wellType * 5000;
             int x = val / 69;
             int y = val - x * 69;
+            wellX |= (1l << x);
             switch (wellType) {
                 case 1:
                     wellA[x] |= (1l << y);
@@ -102,9 +103,6 @@ public class Tracker {
     }
 
     void shareWells() throws GameActionException {
-        while (wellIdx < Constants.WELLS_CNT && rc.readSharedArray(wellIdx + Constants.WELLS_START) != 0)
-            wellIdx++;
-
         if (!rc.canWriteSharedArray(0, 0))
             return;
 
@@ -120,19 +118,19 @@ public class Tracker {
                 long r = w & -w;
                 w -= r;
                 int y = Util.log2(r);
+                if (wellIdx == Constants.WELLS_CNT) {
+                    wellIdx = 0;
+                }
                 int idx = wellIdx;
+                wellIdx++;
                 int val = x * 69 + y;
                 if (((A >> y) & 1) != 0)
                     val += 5000;
                 if (((B >> y) & 1) != 0)
                     val += 10000;
-                if (idx == Constants.WELLS_CNT) {
-                    idx = robot.rng.nextInt(Constants.WELLS_CNT);
-                } else {
-                    wellIdx++;
-                }
                 rc.writeSharedArray(idx + Constants.WELLS_START, val + 1);
             }
+            rA[x] = rB[x] = 0;
         }
     }
 
@@ -141,6 +139,7 @@ public class Tracker {
         for (WellInfo well : wells) {
             MapLocation loc = well.getMapLocation();
             ResourceType type = well.getResourceType();
+            wellX |= (1l << loc.x);
             if ((type == ResourceType.ADAMANTIUM || type == ResourceType.ELIXIR)
                     && ((wellA[loc.x] >> loc.y) & 1) == 0) {
                 wellA[loc.x] |= (1l << loc.y);
@@ -156,10 +155,11 @@ public class Tracker {
     MapLocation bestWell = null;
 
     MapLocation getBestWell() throws GameActionException {
-        // if (bestWell != null && rc.senseNearbyRobots(bestWell, 2, rc.getTeam()).length >= 9)
-        //     bestWell = null;
+        // if (bestWell != null && rc.senseNearbyRobots(bestWell, 2,
+        // rc.getTeam()).length >= 9)
+        // bestWell = null;
         // if (bestWell != null)
-        //     return bestWell;
+        // return bestWell;
         MapLocation best = null;
         int width = rc.getMapWidth();
         int height = rc.getMapHeight();
@@ -181,7 +181,12 @@ public class Tracker {
                 elixirOnly = true;
         }
         MapLocation me = rc.getLocation();
-        for (int x = 0; x < width; x++) {
+        long f;
+        f = wellX;
+        while (f > 0) {
+            long h = f & -f;
+            f -= h;
+            int x = Util.log2(h);
             w = wellA[x] & wellB[x];
             while (w > 0) {
                 long r = w & -w;
@@ -196,7 +201,11 @@ public class Tracker {
         }
         if (elixirOnly && best != null)
             return bestWell = best;
-        for (int x = 0; x < width; x++) {
+        f = wellX;
+        while (f > 0) {
+            long h = f & -f;
+            f -= h;
+            int x = Util.log2(h);
             w = wellA[x] & ~wellB[x];
             if (!ignoreAda) {
                 while (w > 0) {
@@ -228,7 +237,12 @@ public class Tracker {
         long w;
         int width = rc.getMapWidth();
         MapLocation me = rc.getLocation();
-        for (int x = 0; x < width; x++) {
+        long f;
+        f = wellX;
+        while (f > 0) {
+            long h = f & -f;
+            f -= h;
+            int x = Util.log2(h);
             w = wellA[x] & ~wellB[x];
             while (w > 0) {
                 long r = w & -w;
@@ -247,7 +261,12 @@ public class Tracker {
         long w;
         int width = rc.getMapWidth();
         MapLocation me = rc.getLocation();
-        for (int x = 0; x < width; x++) {
+        long f;
+        f = wellX;
+        while (f > 0) {
+            long h = f & -f;
+            f -= h;
+            int x = Util.log2(h);
             w = wellB[x] & ~wellA[x];
             while (w > 0) {
                 long r = w & -w;
@@ -274,7 +293,12 @@ public class Tracker {
             ignoreMana = true;
         }
         MapLocation me = rc.getLocation();
-        for (int x = 0; x < width; x++) {
+        long f;
+        f = wellX;
+        while (f > 0) {
+            long h = f & -f;
+            f -= h;
+            int x = Util.log2(h);
             w = wellA[x];
             while (w > 0) {
                 long r = w & -w;
@@ -287,7 +311,11 @@ public class Tracker {
         }
         if (best != null && ignoreMana)
             return best;
-        for (int x = 0; x < width; x++) {
+        f = wellX;
+        while (f > 0) {
+            long h = f & -f;
+            f -= h;
+            int x = Util.log2(h);
             w = wellB[x];
             while (w > 0) {
                 long r = w & -w;

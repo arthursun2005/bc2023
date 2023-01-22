@@ -12,7 +12,7 @@ public class Attack {
         this.robot = robot;
     }
 
-    int times = 2;
+    final int times = 3;
     final int coef = 100;
 
     RobotInfo[][] acrossTime = new RobotInfo[times][];
@@ -49,15 +49,13 @@ public class Attack {
         acrossTime[times - 1] = rc.senseNearbyRobots(-1, rc.getTeam().opponent());
 
         ArrayList<RobotInfo> using = new ArrayList<>(Arrays.asList(acrossTime[times - 1]));
-        HashSet<Integer> IDs = new HashSet<Integer>();
-        for (RobotInfo ri : using)
-            IDs.add(ri.ID);
+        StringBuilder hashset = new StringBuilder(String.format("%30000s", ""));
         for (int i = times - 2; i >= 0; i--) {
             if (acrossTime[i] == null)
                 continue;
             for (RobotInfo ri : acrossTime[i]) {
-                if (!rc.canSenseLocation(ri.location) && !IDs.contains(ri.ID)) {
-                    IDs.add(ri.ID);
+                if (!rc.canSenseLocation(ri.location) && hashset.charAt(ri.ID) == ' ') {
+                    hashset.setCharAt(ri.ID, '1');
                     using.add(ri);
                 }
             }
@@ -610,8 +608,9 @@ public class Attack {
     }
 
     public MapLocation getThreat() throws GameActionException {
-        // RobotInfo[] enemies = rc.getType().equals(RobotType.CARRIER) ? rc.senseNearbyRobots(-1, rc.getTeam().opponent())
-        //         : getEnemies();
+        // RobotInfo[] enemies = rc.getType().equals(RobotType.CARRIER) ?
+        // rc.senseNearbyRobots(-1, rc.getTeam().opponent())
+        // : getEnemies();
         // RobotInfo[] enemies = getEnemies();
         RobotInfo[] enemies = rc.senseNearbyRobots(-1, rc.getTeam().opponent());
         MapLocation weakLoc = null;
