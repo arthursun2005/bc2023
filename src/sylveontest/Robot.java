@@ -16,7 +16,6 @@ public abstract class Robot {
     int turnCount;
 
     Heap heap;
-
     BFS bfs;
     Direction[] directions = Direction.values();
 
