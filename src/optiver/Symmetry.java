@@ -46,7 +46,8 @@ public class Symmetry {
         parentLoc = tracker.getClosestHQLoc();
         MapLocation oppositeLoc = new MapLocation(width - parentLoc.x - 1,
                 height - parentLoc.y - 1);
-        uuu = 16;//robot.rng.nextInt(20) == 0 ? 16 : 6900;
+        uuu = 16;// robot.rng.nextInt(20) == 0 ? 16 : 6900;
+        uuu = robot.rng.nextInt(20) == 0 ? 16 : 6900;
         target = new possiLoc(oppositeLoc, 3, uuu);
     }
 
@@ -123,7 +124,7 @@ public class Symmetry {
             }
             if (tracker.possi[target.val] == 0) {
                 enemyLocs.remove(enemyLocs.size() - 1);
-                if (enemyLocs.size()>0) {
+                if (enemyLocs.size() > 0) {
                     Collections.sort(enemyLocs, new Comparator<possiLoc>() {
                         public int compare(possiLoc a, possiLoc b) {
                             // return (Math.min(rc.getLocation().distanceSquaredTo(b.loc), b.offset)
@@ -137,7 +138,7 @@ public class Symmetry {
             }
             if (rc.getLocation().distanceSquaredTo(target.loc) <= 5) {
                 enemyLocs.remove(enemyLocs.size() - 1);
-                if (enemyLocs.size()>0) {
+                if (enemyLocs.size() > 0) {
                     Collections.sort(enemyLocs, new Comparator<possiLoc>() {
                         public int compare(possiLoc a, possiLoc b) {
                             // return (Math.min(rc.getLocation().distanceSquaredTo(b.loc), b.offset)

@@ -25,6 +25,7 @@ public class Tracker {
     long[] islands = new long[64];
 
     long wellX = 0;
+    long sX = 0;
 
     public Tracker(RobotController rc, Robot robot) {
         this.rc = rc;
@@ -69,7 +70,8 @@ public class Tracker {
 
     void update() throws GameActionException {
         senseWells();
-        if (rc.getType() == RobotType.CARRIER) senseIslands();
+        if (rc.getType() == RobotType.CARRIER)
+            senseIslands();
         readWells();
         shareWells();
     }
@@ -110,11 +112,17 @@ public class Tracker {
         if (!rc.canWriteSharedArray(0, 0))
             return;
 
-        int width = rc.getMapWidth();
-        int offset = robot.rng.nextInt(width);
+        // int width = rc.getMapWidth();
+        // int offset = robot.rng.nextInt(width);
         long w;
-        for (int fx = 0; fx < width; fx++) {
-            int x = (fx + offset) % width;
+        // for (int fx = 0; fx < width; fx++) {
+        //     int x = (fx + offset) % width;
+        long f;
+        f = sX;
+        while (f > 0) {
+            long h = f & -f;
+            f -= h;
+            int x = Util.log2(h);
             w = rA[x] | rB[x];
             long A = rA[x];
             long B = rB[x];
@@ -136,6 +144,7 @@ public class Tracker {
             }
             rA[x] = rB[x] = 0;
         }
+        sX = 0;
     }
 
     void senseWells() throws GameActionException {
@@ -144,6 +153,7 @@ public class Tracker {
             MapLocation loc = well.getMapLocation();
             ResourceType type = well.getResourceType();
             wellX |= (1l << loc.x);
+            sX |= (1l << loc.x);
             if ((type == ResourceType.ADAMANTIUM || type == ResourceType.ELIXIR)
                     && ((wellA[loc.x] >> loc.y) & 1) == 0) {
                 wellA[loc.x] |= (1l << loc.y);
@@ -159,11 +169,12 @@ public class Tracker {
     MapLocation bestWell = null;
 
     MapLocation getBestWell(MapLocation threat) throws GameActionException {
-        if (bestWell != null && rc.canSenseLocation(bestWell) && rc.senseNearbyRobots(bestWell, 2,
-                rc.getTeam()).length >= 9)
-            bestWell = null;
-        if (bestWell != null)
-            return bestWell;
+        // if (bestWell != null && rc.canSenseLocation(bestWell) &&
+        // rc.senseNearbyRobots(bestWell, 2,
+        // rc.getTeam()).length >= 9)
+        // bestWell = null;
+        // if (bestWell != null)
+        // return bestWell;
         int cnt = rc.getRobotCount();
         MapLocation best = null;
         int width = rc.getMapWidth();
@@ -484,7 +495,7 @@ public class Tracker {
             }
             doneHQs = true;
         }
-        //if (true) return;
+        // if (true) return;
         if (!foundSymmetry) {
             readpossi();
 
@@ -493,7 +504,7 @@ public class Tracker {
             MapLocation loc = null;
             // 1 for passable, 2 for impassable
             if (Clock.getBytecodesLeft() >= 5500) {
-                //System.out.println(Clock.getBytecodesLeft());
+                // System.out.println(Clock.getBytecodesLeft());
                 for (int i = 0; i < toCheck.length; i++) {
                     loc = toCheck[i];
 
@@ -547,7 +558,7 @@ public class Tracker {
                 }
             }
             while (Clock.getBytecodesLeft() >= 500) {
-                //System.out.println(Clock.getBytecodesLeft());
+                // System.out.println(Clock.getBytecodesLeft());
                 // :skull:
                 loc = toCheck[rng.nextInt(toCheck.length)];
 
