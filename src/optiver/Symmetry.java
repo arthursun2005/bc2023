@@ -46,7 +46,7 @@ public class Symmetry {
         parentLoc = tracker.getClosestHQLoc();
         MapLocation oppositeLoc = new MapLocation(width - parentLoc.x - 1,
                 height - parentLoc.y - 1);
-        uuu = robot.rng.nextInt(20) == 0 ? 16 : 6900;
+        uuu = 16;//robot.rng.nextInt(20) == 0 ? 16 : 6900;
         target = new possiLoc(oppositeLoc, 3, uuu);
     }
 

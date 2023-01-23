@@ -178,7 +178,8 @@ public class Movement {
 
     void localMove(MapLocation loc) throws GameActionException {
         if (!rc.isMovementReady()) return;
-        if (!hasBFS && !rc.senseCloud(rc.getLocation()) && rc.getRoundNum() != robot.creationRound + 1) {
+        if (hasBFS) return;
+        if (!rc.senseCloud(rc.getLocation()) && rc.getRoundNum() != robot.creationRound + 1) {
             hasBFS = true;
             bfs.initBFS(path, cur);
             for (int i = cur; i >= Math.max(0, cur - 5); i--) {
@@ -250,7 +251,7 @@ public class Movement {
             rc.setIndicatorLine(path[i], path[i+1], 225, 235, 255);
         }*/
         localMove(loc);
-        //rc.setIndicatorLine(loc, rc.getLocation(), 69, 235, 255);
+        rc.setIndicatorLine(loc, rc.getLocation(), 69, 235, 255);
         //rc.setIndicatorLine(path[cur], rc.getLocation(), 235, 69, 255);
         //rc.setIndicatorString("value " + cur + " sus " + turningLeft + ":" + (setDir == 1));
     }
