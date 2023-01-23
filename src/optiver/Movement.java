@@ -18,7 +18,7 @@ public class Movement {
         this.bfs = rc.bfs;
     }
 
-    //Random rng = null;
+    int setDir = -1;
 
     MapLocation[] path = new MapLocation[269];
     MapLocation prevLocation = null;
@@ -71,21 +71,31 @@ public class Movement {
         if (currentState == State.NORMAL) {
             Direction dir = path[cur].directionTo(loc);
             MapLocation tmp = path[cur].add(dir);
+
+            if (rc.getType()!=RobotType.CARRIER) {
+                MapLocation ctmp = path[cur].add(rc.senseMapInfo(path[cur]).getCurrentDirection());
+                if (!ctmp.equals(path[cur])) {
+                    path[++cur] = ctmp;
+                    return true;
+                }
+            }
+
             if (canGo(tmp)) {
                 path[++cur] = tmp;
                 return true;
             }
 
-            tmp = path[cur].add(rc.senseMapInfo(path[cur]).getCurrentDirection());
-            if (!tmp.equals(path[cur])) {
-                //should hopefully cover some cases
-                path[++cur] = tmp;
-                return true;
+            if (rc.getType()==RobotType.CARRIER) {
+                MapLocation ctmp = path[cur].add(rc.senseMapInfo(path[cur]).getCurrentDirection());
+                if (!ctmp.equals(path[cur])) {
+                    path[++cur] = ctmp;
+                    return true;
+                }
             }
 
             currentState = State.WALL;
             lastWall = path[cur];
-            turningLeft = true;//(rng.nextInt(2) == 1);
+            turningLeft = (setDir == 1);
             canSwitch = true;
 
             Direction checkDir = dir;
@@ -186,7 +196,7 @@ public class Movement {
                 bestDir.rotateRight().rotateRight(),
                 bestDir.rotateRight().rotateRight().rotateRight(),
                 bestDir.rotateLeft().rotateLeft().rotateLeft(),
-                Direction.CENTER
+                bestDir.opposite(),
         };
 
         for (int i = 0; i < directions.length; i++) {
@@ -204,11 +214,16 @@ public class Movement {
     int lastUpdate = -1;
 
     void moveTo(MapLocation loc) throws GameActionException {
-        //if (rng == null) rng = new Random(rc.getID());
+        if (setDir == -1) {
+            setDir = rc.getID()%2;
+            turningLeft = (setDir == 1);
+        }
         if (!rc.isMovementReady()) return;
         if (rc.getLocation().distanceSquaredTo(loc) == 0) return;
         if (rc.getLocation().distanceSquaredTo(loc) <= 2 && (rc.senseRobotAtLocation(loc) != null || !rc.sensePassability(loc))) return;
         if (lastUpdate != rc.getRoundNum()) {
+            update(loc);
+            update(loc);
             update(loc);
             update(loc);
             update(loc);
@@ -224,7 +239,7 @@ public class Movement {
             rc.setIndicatorLine(path[i], path[i+1], 225, 235, 255);
         }*/
         //rc.setIndicatorLine(path[cur], rc.getLocation(), 235, 69, 255);
-        rc.setIndicatorLine(loc, rc.getLocation(), 69, 235, 255);
         localMove(loc);
+        rc.setIndicatorLine(loc, rc.getLocation(), 69, 235, 255);
     }
 }
