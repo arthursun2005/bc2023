@@ -71,14 +71,19 @@ public class Launcher extends Robot {
             rc.setIndicatorDot(weakLoc, 255, 255, 100);
         }
         if (symmetry.target != null) {
-            //rc.setIndicatorLine(symmetry.target.loc, rc.getLocation(), 225, 235, 255);
+            // rc.setIndicatorLine(symmetry.target.loc, rc.getLocation(), 225, 235, 255);
         }
 
         // if (status == 0 && rc.canSenseLocation(target.loc))
-        //     status = 1;
+        // status = 1;
 
         if (status == 1) {
             if (weakLoc != null) {
+                RobotInfo bot = null;
+                if (rc.canSenseLocation(weakLoc))
+                    bot = rc.senseRobotAtLocation(weakLoc);
+                if (bot != null && bot.type == RobotType.CARRIER)
+                    randomizedGreedy(weakLoc, 1, rc.getType().actionRadiusSquared);
                 randomizedGreedy(weakLoc, -1, rc.getType().actionRadiusSquared);
             }
             attack.tryAttack();
@@ -89,29 +94,32 @@ public class Launcher extends Robot {
         } else if (status == 0) {
             // int mini = rc.getLocation().distanceSquaredTo(symmetry.target.loc);
             // int lowerCount = 0;
-            /*MapLocation bestie = null;
-            RobotInfo[] friends = rc.senseNearbyRobots(-1, rc.getTeam());
-            int count = 0;
-
-            for (RobotInfo friend : friends) {
-                if (friend.type == RobotType.LAUNCHER) {
-                    // if (friend.ID < rc.getID())
-                    // lowerCount++;
-                    count++;
-                    if (friend.location.distanceSquaredTo(symmetry.target.loc) < mini) {
-                        mini = friend.location.distanceSquaredTo(symmetry.target.loc);
-                        bestie = friend.location;
-                    }
-                }
-            }*/
+            /*
+             * MapLocation bestie = null;
+             * RobotInfo[] friends = rc.senseNearbyRobots(-1, rc.getTeam());
+             * int count = 0;
+             * 
+             * for (RobotInfo friend : friends) {
+             * if (friend.type == RobotType.LAUNCHER) {
+             * // if (friend.ID < rc.getID())
+             * // lowerCount++;
+             * count++;
+             * if (friend.location.distanceSquaredTo(symmetry.target.loc) < mini) {
+             * mini = friend.location.distanceSquaredTo(symmetry.target.loc);
+             * bestie = friend.location;
+             * }
+             * }
+             * }
+             */
 
             attack.tryAttack();
 
             MapLocation site = tracker.pls();
             if (site != null
-                    && rc.getLocation().distanceSquaredTo(site) < 2 * rc.getLocation().distanceSquaredTo(symmetry.target.loc)) {
+                    && rc.getLocation().distanceSquaredTo(site) < 2
+                            * rc.getLocation().distanceSquaredTo(symmetry.target.loc)) {
                 moveTo(site);
-                //rc.setIndicatorLine(site, rc.getLocation(), 255, 0, 0);
+                // rc.setIndicatorLine(site, rc.getLocation(), 255, 0, 0);
             }
 
             int req = 0;// (int) (rc.getRoundNum() / 100) + 1;
@@ -119,14 +127,16 @@ public class Launcher extends Robot {
             // if (mini < rc.getID() && lowerCount < 9) {
             // moveTo(bestie);
             // }
-            /*if (false && bestie != null) { //sus
-                // Direction dir = rc.getLocation().directionTo(bestie);
-                // tryMove(dir.rotateLeft().rotateLeft());
-                // tryMove(dir.rotateRight().rotateRight());
-                // tryMove(dir.rotateLeft());
-                // tryMove(dir.rotateRight());
-                moveTo(bestie);
-            }*/
+            /*
+             * if (false && bestie != null) { //sus
+             * // Direction dir = rc.getLocation().directionTo(bestie);
+             * // tryMove(dir.rotateLeft().rotateLeft());
+             * // tryMove(dir.rotateRight().rotateRight());
+             * // tryMove(dir.rotateLeft());
+             * // tryMove(dir.rotateRight());
+             * moveTo(bestie);
+             * }
+             */
 
             moveTo(symmetry.update());
 

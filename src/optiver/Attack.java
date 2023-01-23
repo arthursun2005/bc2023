@@ -26,7 +26,10 @@ public class Attack {
                 - rc.getLocation().distanceSquaredTo(enemy.location) * 10000
                 + rc.getID();
         if (enemy.type.equals(RobotType.LAUNCHER) || enemy.type.equals(RobotType.DESTABILIZER))
-            adjustedHealth -= 500_000_000;
+            if (rc.getHealth() <= 59)
+                adjustedHealth += 500_000_000;
+            else
+                adjustedHealth -= 500_000_000;
         if (rc.canSenseLocation(enemy.location))
             adjustedHealth -= 500_000_000;
         return adjustedHealth;
@@ -46,24 +49,16 @@ public class Attack {
     }
 
     public void update() throws GameActionException {
-        //for (int i = 0; i < times - 1; i++)
-            //acrossTime[i] = acrossTime[i + 1];
-        acrossTime[0] = acrossTime[1];
-        acrossTime[1] = acrossTime[2];
-        acrossTime[2] = rc.senseNearbyRobots(-1, rc.getTeam().opponent());
+        for (int i = 0; i < times - 1; i++)
+            acrossTime[i] = acrossTime[i + 1];
+        acrossTime[times - 1] = rc.senseNearbyRobots(-1, rc.getTeam().opponent());
 
         ArrayList<RobotInfo> using = new ArrayList<>(Arrays.asList(acrossTime[times - 1]));
         StringBuilder hashset = new StringBuilder(String.format("%30000s", ""));
-        if (acrossTime[1] != null) {
-            for (RobotInfo ri : acrossTime[1]) {
-                if (!rc.canSenseLocation(ri.location) && hashset.charAt(ri.ID) == ' ') {
-                    hashset.setCharAt(ri.ID, '1');
-                    using.add(ri);
-                }
-            }
-        }
-        if (acrossTime[0] != null) {
-            for (RobotInfo ri : acrossTime[0]) {
+        for (int i = times - 2; i >= 0; i--) {
+            if (acrossTime[i] == null)
+                continue;
+            for (RobotInfo ri : acrossTime[i]) {
                 if (!rc.canSenseLocation(ri.location) && hashset.charAt(ri.ID) == ' ') {
                     hashset.setCharAt(ri.ID, '1');
                     using.add(ri);
@@ -77,8 +72,13 @@ public class Attack {
         return persistentEnemies;
     }
 
-    boolean shouldTargetHQ() {
-        return rc.getRoundNum() < 120 || rc.getID() % 5 == 0;
+    boolean shouldTargetHQ(MapLocation loc) throws GameActionException {
+        // return (rc.getRoundNum() < 90 && rc.getID() % 3 == 0) || rc.getID() % 5 == 0;
+        if (!rc.canSenseLocation(loc))
+            return true;
+        if (rc.senseNearbyRobots(loc, rc.getType().actionRadiusSquared, rc.getTeam()).length >= 3)
+            return false;
+        return true;
     }
 
     public MapLocation getWeakLocCarrier() throws GameActionException {
@@ -103,7 +103,7 @@ public class Attack {
         MapLocation weakLoc = null;
         int weakness = 0;
         for (RobotInfo enemy : enemies) {
-            if (enemy.type.equals(RobotType.HEADQUARTERS) && !shouldTargetHQ())
+            if (enemy.type.equals(RobotType.HEADQUARTERS) && !shouldTargetHQ(enemy.location))
                 continue;
             MapLocation toAttack = enemy.location;
             int adjustedHealth = getEnemyWeaknessMetric(enemy);
@@ -643,7 +643,7 @@ public class Attack {
     public int getStatus(MapLocation weakLoc) throws GameActionException {
 
         RobotInfo[] enemies = getEnemies();
-        //RobotInfo[] friends = rc.senseNearbyRobots(-1, rc.getTeam());
+        // RobotInfo[] friends = rc.senseNearbyRobots(-1, rc.getTeam());
 
         // int friendOffensiveCnt = 3 + rc.getHealth();
         // int enemyOffensiveCnt = 0;
@@ -673,7 +673,7 @@ public class Attack {
             if (enemy.type.equals(RobotType.HEADQUARTERS)) {
                 // if (shouldTargetHQ())
                 // enemyOffensiveCnt += 3;
-                if (shouldTargetHQ())
+                if (shouldTargetHQ(enemy.location))
                     W++;
                 continue;
             }
@@ -688,10 +688,16 @@ public class Attack {
             if (a != null)
                 enemyHealth = a.health;
         }
+        int trade = 0;
+        // if (rc.senseNearbyRobots(16, rc.getTeam().opponent()).length > 0)
+        // trade = 60;
+        // System.out.println("attack: " + delta + " " + trade + " " + W + " " +
+        // lastHealth);
         if (W != 0) {
-            if (delta >= -4 && (ahead || frens == 0 || W <= 1 || rc.getHealth() > enemyHealth)) {
+            if (delta >= -trade - 4 && (ahead || frens < 0 || W <= 1 || rc.getHealth() > enemyHealth)) {
+                // if (delta >= -trade - 4 || ahead) {
                 return 1;
-            } else if (delta < -4) {
+            } else if (delta < -trade - 4) {
                 return 2;
             } else {
                 return 3;
