@@ -159,7 +159,7 @@ public class Movement {
 
     void localMove(MapLocation loc) throws GameActionException {
         if (!rc.isMovementReady()) return;
-        bfs.initBFS();
+        bfs.initBFS(path, cur);
         boolean toReset = true;
         if (!rc.senseCloud(rc.getLocation())) {
             for (int i = cur; i >= Math.max(0, cur - 5); i--) {

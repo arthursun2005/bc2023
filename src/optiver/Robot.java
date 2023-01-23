@@ -56,7 +56,7 @@ public abstract class Robot {
                 Direction moved = prevLocation.directionTo(curLocation);
                 update(moved, curLocation);
 
-                System.out.println(bfs.validLocation);
+//                System.out.println(bfs.validLocation);
             }
             prevLocation = curLocation;
         }
