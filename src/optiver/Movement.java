@@ -179,7 +179,7 @@ public class Movement {
     void localMove(MapLocation loc) throws GameActionException {
         if (!rc.isMovementReady()) return;
         if (hasBFS) return;
-        if (!rc.senseCloud(rc.getLocation()) && rc.getRoundNum() != robot.creationRound + 1) {
+        if (!rc.senseCloud(rc.getLocation()) && rc.getRoundNum() != robot.creationRound) {
             hasBFS = true;
             bfs.initBFS(path, cur);
             for (int i = cur; i >= Math.max(0, cur - 5); i--) {

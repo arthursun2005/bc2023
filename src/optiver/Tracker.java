@@ -484,6 +484,7 @@ public class Tracker {
             }
             doneHQs = true;
         }
+        //if (true) return;
         if (!foundSymmetry) {
             readpossi();
 

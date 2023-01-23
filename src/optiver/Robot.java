@@ -48,7 +48,7 @@ public abstract class Robot {
 
         MapLocation curLocation = rc.getLocation();
 
-        if (!curLocation.equals(prevLocation) && rc.getRoundNum() != creationRound + 1) {
+        if (!curLocation.equals(prevLocation) && rc.getRoundNum() != creationRound) {
             if (prevLocation == null || !rc.canSenseLocation(prevLocation)) {
                 bfs.redoMap();
             } else if (!rc.senseCloud(curLocation) && rc.senseCloud(prevLocation)) {
