@@ -182,12 +182,11 @@ public class Movement {
         if (!rc.senseCloud(rc.getLocation()) && rc.getRoundNum() != robot.creationRound) {
             hasBFS = true;
             bfs.initBFS(path, cur);
-            for (int i = cur; i >= Math.max(0, cur - 5); i--) {
-                if (rc.getLocation().distanceSquaredTo(path[i]) > 15) continue;
-                rc.setIndicatorDot(path[i], 255, 69, 69);
-                Direction tmp = bfs.bfs(path[i]);
+            if (rc.getLocation().distanceSquaredTo(path[cur]) <= 15) {
+                rc.setIndicatorDot(path[cur], 255, 69, 69);
+                Direction tmp = bfs.bfs(path[cur]);
                 if (tmp != null && rc.canMove(tmp)) {
-                    rc.setIndicatorLine(path[i], rc.getLocation(), 255, 255, 69);
+                    rc.setIndicatorLine(path[cur], rc.getLocation(), 255, 255, 69);
                     rc.move(tmp);
                     return;
                 }
@@ -235,10 +234,8 @@ public class Movement {
         if (rc.getLocation().distanceSquaredTo(loc) <= 2 && (rc.senseRobotAtLocation(loc) != null || !rc.sensePassability(loc))) return;
         if (lastUpdate != rc.getRoundNum()) {
             if (update(loc))
-            if (update(loc))
-            if (update(loc))
-            if (update(loc))
             if (update(loc));
+            //if (update(loc));
             lastUpdate = rc.getRoundNum();
         }
         /*for (int i = 0; i < 3; i++) {

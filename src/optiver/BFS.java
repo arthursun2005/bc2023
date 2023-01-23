@@ -2235,7 +2235,7 @@ public class BFS {
             seen.setCharAt((loc.x - curLoc.x + 4) * 9 + (loc.y - curLoc.y + 4), '2');
         }
 
-        for (int i = cur; i >= Math.max(0, cur - 7); i--) {
+        for (int i = cur; i >= Math.max(0, cur - 9); i--) {
             // if dist <= 8 (robot there) conitnue
             if ((path[i].x - curLoc.x) * (path[i].x - curLoc.x) + (path[i].y - curLoc.y) * (path[i].y - curLoc.y) > 15) continue;
             if (rc.getLocation().distanceSquaredTo(path[i]) <= 8 && rc.canSenseLocation(path[i]) && rc.senseRobotAtLocation(path[i]) != null) continue;

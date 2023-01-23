@@ -174,7 +174,6 @@ public class Carrier extends Robot {
         }
 
         if (well != null) {
-            int a = Clock.getBytecodesLeft();
             if (wantToDump) {
                 MapLocation manaWell = tracker.getBestManaWell();
                 if (manaWell != null)
@@ -188,7 +187,6 @@ public class Carrier extends Robot {
             well = tracker.getBestWell(attack.getThreat());
             tryMine(well);
             tryMine(well);
-            System.out.println(Clock.getBytecodesLeft() - a);
             return;
         }
         explore();
