@@ -1,4 +1,4 @@
-package sylveontest;
+package optiver;
 
 import battlecode.common.*;
 
@@ -1638,13 +1638,13 @@ public class BFS {
         seen.replace(0, 81, "000000000000000000000000000000000000000000000000000000000000000000000000000000000");
     }
 
-    Direction tryBFS(MapLocation currentTarget) throws GameActionException {
+    void initBFS() throws GameActionException {
         reset();
 
         MapLocation curLoc = rc.getLocation();
 
-        if ((currentTarget.x - curLoc.x) * (currentTarget.x - curLoc.x) + (currentTarget.y - curLoc.y) * ((currentTarget.y - curLoc.y)) > 15)
-            return null;
+        //if ((currentTarget.x - curLoc.x) * (currentTarget.x - curLoc.x) + (currentTarget.y - curLoc.y) * ((currentTarget.y - curLoc.y)) > 15)
+        //    return null;
 
 
         int offsetx = curLoc.x % 10, offsety = curLoc.y % 10;
@@ -1657,7 +1657,8 @@ public class BFS {
             seen.setCharAt((loc.x - curLoc.x + 4) * 9 + (loc.y - curLoc.y + 4), '1');
         }
 
-        seen.setCharAt((currentTarget.x - curLoc.x + 4) * 9 + (currentTarget.y - curLoc.y + 4), '0');
+        /*seen.setCharAt((currentTarget.x - curLoc.x + 4) * 9 + (currentTarget.y - curLoc.y + 4), '0');*/
+
         seen.setCharAt(40, '1');
         Queue.queuePush(40);
         dist40 = 0;
@@ -3209,10 +3210,10 @@ public class BFS {
                     break;
             }
         }
-
-
         System.out.println("B: " + Clock.getBytecodesLeft());
+    }
 
+    Direction bfs(MapLocation currentTarget) {
         int x = currentTarget.x - rc.getLocation().x + 4;
         int y = currentTarget.y - rc.getLocation().y + 4;
 
@@ -3310,6 +3311,5 @@ public class BFS {
         }
 
         return null;
-
     }
 }
