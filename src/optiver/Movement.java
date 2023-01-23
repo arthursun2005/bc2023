@@ -32,6 +32,7 @@ public class Movement {
     StringBuilder invalid;
 
     void reset() throws GameActionException {
+        rc.setIndicatorDot(rc.getLocation(),69,255,69);
         path[0] = rc.getLocation();
         cur = 0;
         currentState = State.NORMAL;
@@ -95,7 +96,6 @@ public class Movement {
 
             currentState = State.WALL;
             lastWall = path[cur];
-            turningLeft = (setDir == 1);
             canSwitch = true;
 
             Direction checkDir = dir;
@@ -169,15 +169,15 @@ public class Movement {
         return true;
     }
 
+    int resetCnt = 0;
+
     void localMove(MapLocation loc) throws GameActionException {
         if (!rc.isMovementReady()) return;
-        boolean toReset = true;
         if (!rc.senseCloud(rc.getLocation()) && rc.getRoundNum() != robot.creationRound) {
             bfs.initBFS(path, cur);
             for (int i = cur; i >= Math.max(0, cur - 5); i--) {
                 if (rc.getLocation().distanceSquaredTo(path[i]) > 15) continue;
                 rc.setIndicatorDot(path[i], 255, 69, 69);
-                toReset = false;
                 Direction tmp = bfs.bfs(path[i]);
                 if (tmp != null && rc.canMove(tmp)) {
                     rc.setIndicatorLine(path[i], rc.getLocation(), 255, 255, 69);
@@ -186,7 +186,7 @@ public class Movement {
                 }
             }
         }
-        else toReset = false;
+        resetCnt++;
         //ohno probably jammed up
         Direction bestDir = rc.getLocation().directionTo(loc);
         Direction[] directions = {bestDir,
@@ -205,9 +205,10 @@ public class Movement {
                 break;
             }
         }
-        if (toReset) {
+        if (resetCnt >= 3) {
             rc.setIndicatorString("bruh");
             reset();
+            resetCnt = 0;
         }
     }
 
@@ -222,11 +223,11 @@ public class Movement {
         if (rc.getLocation().distanceSquaredTo(loc) == 0) return;
         if (rc.getLocation().distanceSquaredTo(loc) <= 2 && (rc.senseRobotAtLocation(loc) != null || !rc.sensePassability(loc))) return;
         if (lastUpdate != rc.getRoundNum()) {
-            update(loc);
-            update(loc);
-            update(loc);
-            update(loc);
-            update(loc);
+            if (update(loc))
+            if (update(loc))
+            if (update(loc))
+            if (update(loc))
+            if (update(loc));
             lastUpdate = rc.getRoundNum();
         }
         /*for (int i = 0; i < 3; i++) {
@@ -238,8 +239,9 @@ public class Movement {
         /*for (int i = 0; i + 1 <= cur; i++) {
             rc.setIndicatorLine(path[i], path[i+1], 225, 235, 255);
         }*/
-        //rc.setIndicatorLine(path[cur], rc.getLocation(), 235, 69, 255);
         localMove(loc);
         rc.setIndicatorLine(loc, rc.getLocation(), 69, 235, 255);
+        //rc.setIndicatorLine(path[cur], rc.getLocation(), 235, 69, 255);
+        //rc.setIndicatorString("value " + cur + " sus " + turningLeft + ":" + (setDir == 1));
     }
 }

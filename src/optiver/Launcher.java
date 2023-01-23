@@ -58,6 +58,8 @@ public class Launcher extends Robot {
 
         if (gc != 0)
             rc.move(allGood[rng.nextInt(gc)]);
+        else
+            moveTo(target);
     }
 
     public void run() throws GameActionException {
