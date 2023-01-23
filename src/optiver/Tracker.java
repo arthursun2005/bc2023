@@ -69,7 +69,7 @@ public class Tracker {
 
     void update() throws GameActionException {
         senseWells();
-        senseIslands();
+        if (rc.getType() == RobotType.CARRIER) senseIslands();
         readWells();
         shareWells();
     }
@@ -492,7 +492,7 @@ public class Tracker {
             MapLocation loc = null;
             // 1 for passable, 2 for impassable
             if (Clock.getBytecodesLeft() >= 5500) {
-                // System.out.println(Clock.getBytecodesLeft());
+                //System.out.println(Clock.getBytecodesLeft());
                 for (int i = 0; i < toCheck.length; i++) {
                     loc = toCheck[i];
 
@@ -546,7 +546,7 @@ public class Tracker {
                 }
             }
             while (Clock.getBytecodesLeft() >= 500) {
-                // System.out.println(Clock.getBytecodesLeft());
+                //System.out.println(Clock.getBytecodesLeft());
                 // :skull:
                 loc = toCheck[rng.nextInt(toCheck.length)];
 

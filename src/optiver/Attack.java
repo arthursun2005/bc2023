@@ -46,16 +46,24 @@ public class Attack {
     }
 
     public void update() throws GameActionException {
-        for (int i = 0; i < times - 1; i++)
-            acrossTime[i] = acrossTime[i + 1];
-        acrossTime[times - 1] = rc.senseNearbyRobots(-1, rc.getTeam().opponent());
+        //for (int i = 0; i < times - 1; i++)
+            //acrossTime[i] = acrossTime[i + 1];
+        acrossTime[0] = acrossTime[1];
+        acrossTime[1] = acrossTime[2];
+        acrossTime[2] = rc.senseNearbyRobots(-1, rc.getTeam().opponent());
 
         ArrayList<RobotInfo> using = new ArrayList<>(Arrays.asList(acrossTime[times - 1]));
         StringBuilder hashset = new StringBuilder(String.format("%30000s", ""));
-        for (int i = times - 2; i >= 0; i--) {
-            if (acrossTime[i] == null)
-                continue;
-            for (RobotInfo ri : acrossTime[i]) {
+        if (acrossTime[1] != null) {
+            for (RobotInfo ri : acrossTime[1]) {
+                if (!rc.canSenseLocation(ri.location) && hashset.charAt(ri.ID) == ' ') {
+                    hashset.setCharAt(ri.ID, '1');
+                    using.add(ri);
+                }
+            }
+        }
+        if (acrossTime[0] != null) {
+            for (RobotInfo ri : acrossTime[0]) {
                 if (!rc.canSenseLocation(ri.location) && hashset.charAt(ri.ID) == ' ') {
                     hashset.setCharAt(ri.ID, '1');
                     using.add(ri);
@@ -635,7 +643,7 @@ public class Attack {
     public int getStatus(MapLocation weakLoc) throws GameActionException {
 
         RobotInfo[] enemies = getEnemies();
-        RobotInfo[] friends = rc.senseNearbyRobots(-1, rc.getTeam());
+        //RobotInfo[] friends = rc.senseNearbyRobots(-1, rc.getTeam());
 
         // int friendOffensiveCnt = 3 + rc.getHealth();
         // int enemyOffensiveCnt = 0;

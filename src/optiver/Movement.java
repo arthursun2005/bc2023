@@ -57,9 +57,13 @@ public class Movement {
 
         if (path[cur].distanceSquaredTo(loc)<=2) return false;
 
+        if (rc.onTheMap(path[cur].add(Direction.NORTH)) && !rc.canSenseLocation(path[cur].add(Direction.NORTH))) return false;
         if (rc.onTheMap(path[cur].add(Direction.NORTHEAST)) && !rc.canSenseLocation(path[cur].add(Direction.NORTHEAST))) return false;
+        if (rc.onTheMap(path[cur].add(Direction.EAST)) && !rc.canSenseLocation(path[cur].add(Direction.EAST))) return false;
         if (rc.onTheMap(path[cur].add(Direction.SOUTHEAST)) && !rc.canSenseLocation(path[cur].add(Direction.SOUTHEAST))) return false;
+        if (rc.onTheMap(path[cur].add(Direction.SOUTH)) && !rc.canSenseLocation(path[cur].add(Direction.SOUTH))) return false;
         if (rc.onTheMap(path[cur].add(Direction.SOUTHWEST)) && !rc.canSenseLocation(path[cur].add(Direction.SOUTHWEST))) return false;
+        if (rc.onTheMap(path[cur].add(Direction.WEST)) && !rc.canSenseLocation(path[cur].add(Direction.WEST))) return false;
         if (rc.onTheMap(path[cur].add(Direction.NORTHWEST)) && !rc.canSenseLocation(path[cur].add(Direction.NORTHWEST))) return false;
 
         if (currentState == State.WALL) {
@@ -173,7 +177,7 @@ public class Movement {
 
     void localMove(MapLocation loc) throws GameActionException {
         if (!rc.isMovementReady()) return;
-        if (!rc.senseCloud(rc.getLocation()) && rc.getRoundNum() != robot.creationRound) {
+        if (!rc.senseCloud(rc.getLocation()) && rc.getRoundNum() != robot.creationRound + 1) {
             bfs.initBFS(path, cur);
             for (int i = cur; i >= Math.max(0, cur - 5); i--) {
                 if (rc.getLocation().distanceSquaredTo(path[i]) > 15) continue;
@@ -220,6 +224,10 @@ public class Movement {
             turningLeft = (setDir == 1);
         }
         if (!rc.isMovementReady()) return;
+        if (bfs.lastDir != null && rc.canMove(bfs.lastDir)) {
+            rc.move(bfs.lastDir);
+            return;
+        }
         if (rc.getLocation().distanceSquaredTo(loc) == 0) return;
         if (rc.getLocation().distanceSquaredTo(loc) <= 2 && (rc.senseRobotAtLocation(loc) != null || !rc.sensePassability(loc))) return;
         if (lastUpdate != rc.getRoundNum()) {

@@ -29,7 +29,7 @@ public abstract class Robot {
         rng = new Random(rc.getID() + 369);
         creationRound = rc.getRoundNum();
         turnCount = 0;
-        prevLocation = rc.getLocation();
+        prevLocation = null;
 
         tracker.readHQLocs();
     }
@@ -43,11 +43,12 @@ public abstract class Robot {
         attack.update();
         turnCount++;
         roundNum = rc.getRoundNum();
+        bfs.lastDir = null;
 
         MapLocation curLocation = rc.getLocation();
 
-        if (!curLocation.equals(prevLocation)) {
-            if (!rc.canSenseLocation(prevLocation)) {
+        if (!curLocation.equals(prevLocation) && rc.getRoundNum() != creationRound + 1) {
+            if (prevLocation == null || !rc.canSenseLocation(prevLocation)) {
                 bfs.redoMap();
             } else if (!rc.senseCloud(curLocation) && rc.senseCloud(prevLocation)) {
                 // kinda gotta redo the array
@@ -58,8 +59,6 @@ public abstract class Robot {
                 if (curLocation.distanceSquaredTo(prevLocation) <= 2) {
                     Direction moved = prevLocation.directionTo(curLocation);
                     update(moved, curLocation);
-                } else if (curLocation.distanceSquaredTo(prevLocation) <= 8) {
-                    updateDouble();
                 } else {
                     bfs.redoMap();
                 }

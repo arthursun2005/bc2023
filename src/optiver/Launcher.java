@@ -87,9 +87,9 @@ public class Launcher extends Robot {
             randomizedGreedy(weakLoc, -1, 1_000_000);
             attack.tryAttack();
         } else if (status == 0) {
-            int mini = rc.getLocation().distanceSquaredTo(symmetry.target.loc);
+            // int mini = rc.getLocation().distanceSquaredTo(symmetry.target.loc);
             // int lowerCount = 0;
-            MapLocation bestie = null;
+            /*MapLocation bestie = null;
             RobotInfo[] friends = rc.senseNearbyRobots(-1, rc.getTeam());
             int count = 0;
 
@@ -103,7 +103,7 @@ public class Launcher extends Robot {
                         bestie = friend.location;
                     }
                 }
-            }
+            }*/
 
             attack.tryAttack();
 
@@ -119,14 +119,14 @@ public class Launcher extends Robot {
             // if (mini < rc.getID() && lowerCount < 9) {
             // moveTo(bestie);
             // }
-            if (false && bestie != null) { //sus
+            /*if (false && bestie != null) { //sus
                 // Direction dir = rc.getLocation().directionTo(bestie);
                 // tryMove(dir.rotateLeft().rotateLeft());
                 // tryMove(dir.rotateRight().rotateRight());
                 // tryMove(dir.rotateLeft());
                 // tryMove(dir.rotateRight());
                 moveTo(bestie);
-            }
+            }*/
 
             moveTo(symmetry.update());
 

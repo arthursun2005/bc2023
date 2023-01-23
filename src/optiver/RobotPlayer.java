@@ -37,8 +37,8 @@ public strictfp class RobotPlayer {
                     robot.run();
                 }
                 if (rc.getRoundNum() != startRound) {
-                    rc.setIndicatorDot(rc.getLocation(), 0, 255, 0);
-                    System.out.println("NOOOOOOOOOOOO~~~~~");
+                    rc.setIndicatorDot(rc.getLocation(), 0, 0, 200);
+                    System.out.println("NOOOOOOOOOOOO~~~~~ " + robot.creationRound);
                 }
             } catch (GameActionException e) {
                 e.printStackTrace();
