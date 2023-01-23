@@ -159,11 +159,11 @@ public class Tracker {
     MapLocation bestWell = null;
 
     MapLocation getBestWell(MapLocation threat) throws GameActionException {
-        // if (bestWell != null && rc.senseNearbyRobots(bestWell, 2,
-        // rc.getTeam()).length >= 9)
-        // bestWell = null;
-        // if (bestWell != null)
-        // return bestWell;
+        if (bestWell != null && rc.canSenseLocation(bestWell) && rc.senseNearbyRobots(bestWell, 2,
+                rc.getTeam()).length >= 9)
+            bestWell = null;
+        if (bestWell != null)
+            return bestWell;
         int cnt = rc.getRobotCount();
         MapLocation best = null;
         int width = rc.getMapWidth();
