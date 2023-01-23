@@ -69,6 +69,7 @@ public abstract class Robot {
             }
             prevLocation = curLocation;
         }
+        //bfs.redoMap();
     }
 
     public void moveTo(MapLocation loc) throws GameActionException {

@@ -1946,7 +1946,7 @@ public class BFS {
             // if dist <= 8 (robot there) conitnue
             if (rc.getLocation().distanceSquaredTo(path[cur]) <= 8 && rc.senseRobotAtLocation(path[cur]) != null) continue;
             if ((path[i].x - curLoc.x) * (path[i].x - curLoc.x) + (path[i].y - curLoc.y) * (path[i].y - curLoc.y) > 15) continue;
-            seen.setCharAt((path[i].x - curLoc.x + 4) * 9 + (path[i].y - curLoc.y + 4), '0');
+            validLocation.setCharAt((path[i].x % 10) * 10 + (path[i].y % 10), '1');
         }
 
         /*seen.setCharAt((currentTarget.x - curLoc.x + 4) * 9 + (currentTarget.y - curLoc.y + 4), '0');*/
@@ -1958,1539 +1958,1538 @@ public class BFS {
         while (!Queue.queueEmpty()) {
             int current = Queue.queuePop();
             switch(current) {
-                case 11:
-                    if(seen.charAt(12) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(12, '1');
-                        Queue.queuePush(12);
-                        dist12 = dist11 + 1;
-                    }
-                    if(seen.charAt(19) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (7 + offsety) % 10) != '1') {
-                        seen.setCharAt(19, '1');
-                        Queue.queuePush(19);
-                        dist19 = dist11 + 1;
-                    }
-                    if(seen.charAt(20) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(20, '1');
-                        Queue.queuePush(20);
-                        dist20 = dist11 + 1;
-                    }
-                    if(seen.charAt(21) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(21, '1');
-                        Queue.queuePush(21);
-                        dist21 = dist11 + 1;
-                    }
-                    break;
-                case 12:
-                    if(seen.charAt(11) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(11, '1');
-                        Queue.queuePush(11);
-                        dist11 = dist12 + 1;
-                    }
-                    if(seen.charAt(13) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(13, '1');
-                        Queue.queuePush(13);
-                        dist13 = dist12 + 1;
-                    }
-                    if(seen.charAt(20) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(20, '1');
-                        Queue.queuePush(20);
-                        dist20 = dist12 + 1;
-                    }
-                    if(seen.charAt(21) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(21, '1');
-                        Queue.queuePush(21);
-                        dist21 = dist12 + 1;
-                    }
-                    if(seen.charAt(22) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(22, '1');
-                        Queue.queuePush(22);
-                        dist22 = dist12 + 1;
-                    }
-                    break;
-                case 13:
-                    if(seen.charAt(12) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(12, '1');
-                        Queue.queuePush(12);
-                        dist12 = dist13 + 1;
-                    }
-                    if(seen.charAt(14) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(14, '1');
-                        Queue.queuePush(14);
-                        dist14 = dist13 + 1;
-                    }
-                    if(seen.charAt(21) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(21, '1');
-                        Queue.queuePush(21);
-                        dist21 = dist13 + 1;
-                    }
-                    if(seen.charAt(22) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(22, '1');
-                        Queue.queuePush(22);
-                        dist22 = dist13 + 1;
-                    }
-                    if(seen.charAt(23) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(23, '1');
-                        Queue.queuePush(23);
-                        dist23 = dist13 + 1;
-                    }
-                    break;
-                case 14:
-                    if(seen.charAt(13) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(13, '1');
-                        Queue.queuePush(13);
-                        dist13 = dist14 + 1;
-                    }
-                    if(seen.charAt(15) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(15, '1');
-                        Queue.queuePush(15);
-                        dist15 = dist14 + 1;
-                    }
-                    if(seen.charAt(22) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(22, '1');
-                        Queue.queuePush(22);
-                        dist22 = dist14 + 1;
-                    }
-                    if(seen.charAt(23) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(23, '1');
-                        Queue.queuePush(23);
-                        dist23 = dist14 + 1;
-                    }
-                    if(seen.charAt(24) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(24, '1');
-                        Queue.queuePush(24);
-                        dist24 = dist14 + 1;
-                    }
-                    break;
-                case 15:
-                    if(seen.charAt(14) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(14, '1');
-                        Queue.queuePush(14);
-                        dist14 = dist15 + 1;
-                    }
-                    if(seen.charAt(23) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(23, '1');
-                        Queue.queuePush(23);
-                        dist23 = dist15 + 1;
-                    }
-                    if(seen.charAt(24) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(24, '1');
-                        Queue.queuePush(24);
-                        dist24 = dist15 + 1;
-                    }
-                    if(seen.charAt(25) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (13 + offsety) % 10) != '1') {
-                        seen.setCharAt(25, '1');
-                        Queue.queuePush(25);
-                        dist25 = dist15 + 1;
-                    }
-                    break;
-                case 19:
-                    if(seen.charAt(11) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(11, '1');
-                        Queue.queuePush(11);
-                        dist11 = dist19 + 1;
-                    }
-                    if(seen.charAt(20) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(20, '1');
-                        Queue.queuePush(20);
-                        dist20 = dist19 + 1;
-                    }
-                    if(seen.charAt(28) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (7 + offsety) % 10) != '1') {
-                        seen.setCharAt(28, '1');
-                        Queue.queuePush(28);
-                        dist28 = dist19 + 1;
-                    }
-                    if(seen.charAt(29) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(29, '1');
-                        Queue.queuePush(29);
-                        dist29 = dist19 + 1;
-                    }
-                    break;
-                case 20:
-                    if(seen.charAt(11) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(11, '1');
-                        Queue.queuePush(11);
-                        dist11 = dist20 + 1;
-                    }
-                    if(seen.charAt(12) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(12, '1');
-                        Queue.queuePush(12);
-                        dist12 = dist20 + 1;
-                    }
-                    if(seen.charAt(19) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (7 + offsety) % 10) != '1') {
-                        seen.setCharAt(19, '1');
-                        Queue.queuePush(19);
-                        dist19 = dist20 + 1;
-                    }
-                    if(seen.charAt(21) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(21, '1');
-                        Queue.queuePush(21);
-                        dist21 = dist20 + 1;
-                    }
-                    if(seen.charAt(28) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (7 + offsety) % 10) != '1') {
-                        seen.setCharAt(28, '1');
-                        Queue.queuePush(28);
-                        dist28 = dist20 + 1;
-                    }
-                    if(seen.charAt(29) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(29, '1');
-                        Queue.queuePush(29);
-                        dist29 = dist20 + 1;
-                    }
-                    if(seen.charAt(30) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(30, '1');
-                        Queue.queuePush(30);
-                        dist30 = dist20 + 1;
-                    }
-                    break;
-                case 21:
-                    if(seen.charAt(11) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(11, '1');
-                        Queue.queuePush(11);
-                        dist11 = dist21 + 1;
-                    }
-                    if(seen.charAt(12) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(12, '1');
-                        Queue.queuePush(12);
-                        dist12 = dist21 + 1;
-                    }
-                    if(seen.charAt(13) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(13, '1');
-                        Queue.queuePush(13);
-                        dist13 = dist21 + 1;
-                    }
-                    if(seen.charAt(20) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(20, '1');
-                        Queue.queuePush(20);
-                        dist20 = dist21 + 1;
-                    }
-                    if(seen.charAt(22) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(22, '1');
-                        Queue.queuePush(22);
-                        dist22 = dist21 + 1;
-                    }
-                    if(seen.charAt(29) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(29, '1');
-                        Queue.queuePush(29);
-                        dist29 = dist21 + 1;
-                    }
-                    if(seen.charAt(30) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(30, '1');
-                        Queue.queuePush(30);
-                        dist30 = dist21 + 1;
-                    }
-                    if(seen.charAt(31) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(31, '1');
-                        Queue.queuePush(31);
-                        dist31 = dist21 + 1;
-                    }
-                    break;
-                case 22:
-                    if(seen.charAt(12) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(12, '1');
-                        Queue.queuePush(12);
-                        dist12 = dist22 + 1;
-                    }
-                    if(seen.charAt(13) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(13, '1');
-                        Queue.queuePush(13);
-                        dist13 = dist22 + 1;
-                    }
-                    if(seen.charAt(14) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(14, '1');
-                        Queue.queuePush(14);
-                        dist14 = dist22 + 1;
-                    }
-                    if(seen.charAt(21) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(21, '1');
-                        Queue.queuePush(21);
-                        dist21 = dist22 + 1;
-                    }
-                    if(seen.charAt(23) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(23, '1');
-                        Queue.queuePush(23);
-                        dist23 = dist22 + 1;
-                    }
-                    if(seen.charAt(30) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(30, '1');
-                        Queue.queuePush(30);
-                        dist30 = dist22 + 1;
-                    }
-                    if(seen.charAt(31) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(31, '1');
-                        Queue.queuePush(31);
-                        dist31 = dist22 + 1;
-                    }
-                    if(seen.charAt(32) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(32, '1');
-                        Queue.queuePush(32);
-                        dist32 = dist22 + 1;
-                    }
-                    break;
-                case 23:
-                    if(seen.charAt(13) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(13, '1');
-                        Queue.queuePush(13);
-                        dist13 = dist23 + 1;
-                    }
-                    if(seen.charAt(14) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(14, '1');
-                        Queue.queuePush(14);
-                        dist14 = dist23 + 1;
-                    }
-                    if(seen.charAt(15) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(15, '1');
-                        Queue.queuePush(15);
-                        dist15 = dist23 + 1;
-                    }
-                    if(seen.charAt(22) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(22, '1');
-                        Queue.queuePush(22);
-                        dist22 = dist23 + 1;
-                    }
-                    if(seen.charAt(24) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(24, '1');
-                        Queue.queuePush(24);
-                        dist24 = dist23 + 1;
-                    }
-                    if(seen.charAt(31) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(31, '1');
-                        Queue.queuePush(31);
-                        dist31 = dist23 + 1;
-                    }
-                    if(seen.charAt(32) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(32, '1');
-                        Queue.queuePush(32);
-                        dist32 = dist23 + 1;
-                    }
-                    if(seen.charAt(33) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(33, '1');
-                        Queue.queuePush(33);
-                        dist33 = dist23 + 1;
-                    }
-                    break;
-                case 24:
-                    if(seen.charAt(14) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(14, '1');
-                        Queue.queuePush(14);
-                        dist14 = dist24 + 1;
-                    }
-                    if(seen.charAt(15) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(15, '1');
-                        Queue.queuePush(15);
-                        dist15 = dist24 + 1;
-                    }
-                    if(seen.charAt(23) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(23, '1');
-                        Queue.queuePush(23);
-                        dist23 = dist24 + 1;
-                    }
-                    if(seen.charAt(25) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (13 + offsety) % 10) != '1') {
-                        seen.setCharAt(25, '1');
-                        Queue.queuePush(25);
-                        dist25 = dist24 + 1;
-                    }
-                    if(seen.charAt(32) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(32, '1');
-                        Queue.queuePush(32);
-                        dist32 = dist24 + 1;
-                    }
-                    if(seen.charAt(33) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(33, '1');
-                        Queue.queuePush(33);
-                        dist33 = dist24 + 1;
-                    }
-                    if(seen.charAt(34) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (13 + offsety) % 10) != '1') {
-                        seen.setCharAt(34, '1');
-                        Queue.queuePush(34);
-                        dist34 = dist24 + 1;
-                    }
-                    break;
-                case 25:
-                    if(seen.charAt(15) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(15, '1');
-                        Queue.queuePush(15);
-                        dist15 = dist25 + 1;
-                    }
-                    if(seen.charAt(24) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(24, '1');
-                        Queue.queuePush(24);
-                        dist24 = dist25 + 1;
-                    }
-                    if(seen.charAt(33) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(33, '1');
-                        Queue.queuePush(33);
-                        dist33 = dist25 + 1;
-                    }
-                    if(seen.charAt(34) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (13 + offsety) % 10) != '1') {
-                        seen.setCharAt(34, '1');
-                        Queue.queuePush(34);
-                        dist34 = dist25 + 1;
-                    }
-                    break;
-                case 28:
-                    if(seen.charAt(19) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (7 + offsety) % 10) != '1') {
-                        seen.setCharAt(19, '1');
-                        Queue.queuePush(19);
-                        dist19 = dist28 + 1;
-                    }
-                    if(seen.charAt(20) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(20, '1');
-                        Queue.queuePush(20);
-                        dist20 = dist28 + 1;
-                    }
-                    if(seen.charAt(29) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(29, '1');
-                        Queue.queuePush(29);
-                        dist29 = dist28 + 1;
-                    }
-                    if(seen.charAt(37) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (7 + offsety) % 10) != '1') {
-                        seen.setCharAt(37, '1');
-                        Queue.queuePush(37);
-                        dist37 = dist28 + 1;
-                    }
-                    if(seen.charAt(38) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(38, '1');
-                        Queue.queuePush(38);
-                        dist38 = dist28 + 1;
-                    }
-                    break;
-                case 29:
-                    if(seen.charAt(19) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (7 + offsety) % 10) != '1') {
-                        seen.setCharAt(19, '1');
-                        Queue.queuePush(19);
-                        dist19 = dist29 + 1;
-                    }
-                    if(seen.charAt(20) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(20, '1');
-                        Queue.queuePush(20);
-                        dist20 = dist29 + 1;
-                    }
-                    if(seen.charAt(21) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(21, '1');
-                        Queue.queuePush(21);
-                        dist21 = dist29 + 1;
-                    }
-                    if(seen.charAt(28) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (7 + offsety) % 10) != '1') {
-                        seen.setCharAt(28, '1');
-                        Queue.queuePush(28);
-                        dist28 = dist29 + 1;
-                    }
-                    if(seen.charAt(30) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(30, '1');
-                        Queue.queuePush(30);
-                        dist30 = dist29 + 1;
-                    }
-                    if(seen.charAt(37) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (7 + offsety) % 10) != '1') {
-                        seen.setCharAt(37, '1');
-                        Queue.queuePush(37);
-                        dist37 = dist29 + 1;
-                    }
-                    if(seen.charAt(38) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(38, '1');
-                        Queue.queuePush(38);
-                        dist38 = dist29 + 1;
-                    }
-                    if(seen.charAt(39) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(39, '1');
-                        Queue.queuePush(39);
-                        dist39 = dist29 + 1;
-                    }
-                    break;
-                case 30:
-                    if(seen.charAt(20) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(20, '1');
-                        Queue.queuePush(20);
-                        dist20 = dist30 + 1;
-                    }
-                    if(seen.charAt(21) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(21, '1');
-                        Queue.queuePush(21);
-                        dist21 = dist30 + 1;
-                    }
-                    if(seen.charAt(22) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(22, '1');
-                        Queue.queuePush(22);
-                        dist22 = dist30 + 1;
-                    }
-                    if(seen.charAt(29) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(29, '1');
-                        Queue.queuePush(29);
-                        dist29 = dist30 + 1;
-                    }
-                    if(seen.charAt(31) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(31, '1');
-                        Queue.queuePush(31);
-                        dist31 = dist30 + 1;
-                    }
-                    if(seen.charAt(38) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(38, '1');
-                        Queue.queuePush(38);
-                        dist38 = dist30 + 1;
-                    }
-                    if(seen.charAt(39) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(39, '1');
-                        Queue.queuePush(39);
-                        dist39 = dist30 + 1;
-                    }
-                    if(seen.charAt(40) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(40, '1');
-                        Queue.queuePush(40);
-                        dist40 = dist30 + 1;
-                    }
-                    break;
-                case 31:
-                    if(seen.charAt(21) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(21, '1');
-                        Queue.queuePush(21);
-                        dist21 = dist31 + 1;
-                    }
-                    if(seen.charAt(22) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(22, '1');
-                        Queue.queuePush(22);
-                        dist22 = dist31 + 1;
-                    }
-                    if(seen.charAt(23) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(23, '1');
-                        Queue.queuePush(23);
-                        dist23 = dist31 + 1;
-                    }
-                    if(seen.charAt(30) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(30, '1');
-                        Queue.queuePush(30);
-                        dist30 = dist31 + 1;
-                    }
-                    if(seen.charAt(32) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(32, '1');
-                        Queue.queuePush(32);
-                        dist32 = dist31 + 1;
-                    }
-                    if(seen.charAt(39) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(39, '1');
-                        Queue.queuePush(39);
-                        dist39 = dist31 + 1;
-                    }
-                    if(seen.charAt(40) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(40, '1');
-                        Queue.queuePush(40);
-                        dist40 = dist31 + 1;
-                    }
-                    if(seen.charAt(41) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(41, '1');
-                        Queue.queuePush(41);
-                        dist41 = dist31 + 1;
-                    }
-                    break;
-                case 32:
-                    if(seen.charAt(22) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(22, '1');
-                        Queue.queuePush(22);
-                        dist22 = dist32 + 1;
-                    }
-                    if(seen.charAt(23) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(23, '1');
-                        Queue.queuePush(23);
-                        dist23 = dist32 + 1;
-                    }
-                    if(seen.charAt(24) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(24, '1');
-                        Queue.queuePush(24);
-                        dist24 = dist32 + 1;
-                    }
-                    if(seen.charAt(31) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(31, '1');
-                        Queue.queuePush(31);
-                        dist31 = dist32 + 1;
-                    }
-                    if(seen.charAt(33) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(33, '1');
-                        Queue.queuePush(33);
-                        dist33 = dist32 + 1;
-                    }
-                    if(seen.charAt(40) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(40, '1');
-                        Queue.queuePush(40);
-                        dist40 = dist32 + 1;
-                    }
-                    if(seen.charAt(41) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(41, '1');
-                        Queue.queuePush(41);
-                        dist41 = dist32 + 1;
-                    }
-                    if(seen.charAt(42) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(42, '1');
-                        Queue.queuePush(42);
-                        dist42 = dist32 + 1;
-                    }
-                    break;
-                case 33:
-                    if(seen.charAt(23) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(23, '1');
-                        Queue.queuePush(23);
-                        dist23 = dist33 + 1;
-                    }
-                    if(seen.charAt(24) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(24, '1');
-                        Queue.queuePush(24);
-                        dist24 = dist33 + 1;
-                    }
-                    if(seen.charAt(25) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (13 + offsety) % 10) != '1') {
-                        seen.setCharAt(25, '1');
-                        Queue.queuePush(25);
-                        dist25 = dist33 + 1;
-                    }
-                    if(seen.charAt(32) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(32, '1');
-                        Queue.queuePush(32);
-                        dist32 = dist33 + 1;
-                    }
-                    if(seen.charAt(34) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (13 + offsety) % 10) != '1') {
-                        seen.setCharAt(34, '1');
-                        Queue.queuePush(34);
-                        dist34 = dist33 + 1;
-                    }
-                    if(seen.charAt(41) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(41, '1');
-                        Queue.queuePush(41);
-                        dist41 = dist33 + 1;
-                    }
-                    if(seen.charAt(42) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(42, '1');
-                        Queue.queuePush(42);
-                        dist42 = dist33 + 1;
-                    }
-                    if(seen.charAt(43) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (13 + offsety) % 10) != '1') {
-                        seen.setCharAt(43, '1');
-                        Queue.queuePush(43);
-                        dist43 = dist33 + 1;
-                    }
-                    break;
-                case 34:
-                    if(seen.charAt(24) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(24, '1');
-                        Queue.queuePush(24);
-                        dist24 = dist34 + 1;
-                    }
-                    if(seen.charAt(25) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (13 + offsety) % 10) != '1') {
-                        seen.setCharAt(25, '1');
-                        Queue.queuePush(25);
-                        dist25 = dist34 + 1;
-                    }
-                    if(seen.charAt(33) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(33, '1');
-                        Queue.queuePush(33);
-                        dist33 = dist34 + 1;
-                    }
-                    if(seen.charAt(42) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(42, '1');
-                        Queue.queuePush(42);
-                        dist42 = dist34 + 1;
-                    }
-                    if(seen.charAt(43) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (13 + offsety) % 10) != '1') {
-                        seen.setCharAt(43, '1');
-                        Queue.queuePush(43);
-                        dist43 = dist34 + 1;
-                    }
-                    break;
-                case 37:
-                    if(seen.charAt(28) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (7 + offsety) % 10) != '1') {
-                        seen.setCharAt(28, '1');
-                        Queue.queuePush(28);
-                        dist28 = dist37 + 1;
-                    }
-                    if(seen.charAt(29) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(29, '1');
-                        Queue.queuePush(29);
-                        dist29 = dist37 + 1;
-                    }
-                    if(seen.charAt(38) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(38, '1');
-                        Queue.queuePush(38);
-                        dist38 = dist37 + 1;
-                    }
-                    if(seen.charAt(46) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (7 + offsety) % 10) != '1') {
-                        seen.setCharAt(46, '1');
-                        Queue.queuePush(46);
-                        dist46 = dist37 + 1;
-                    }
-                    if(seen.charAt(47) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(47, '1');
-                        Queue.queuePush(47);
-                        dist47 = dist37 + 1;
-                    }
-                    break;
-                case 38:
-                    if(seen.charAt(28) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (7 + offsety) % 10) != '1') {
-                        seen.setCharAt(28, '1');
-                        Queue.queuePush(28);
-                        dist28 = dist38 + 1;
-                    }
-                    if(seen.charAt(29) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(29, '1');
-                        Queue.queuePush(29);
-                        dist29 = dist38 + 1;
-                    }
-                    if(seen.charAt(30) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(30, '1');
-                        Queue.queuePush(30);
-                        dist30 = dist38 + 1;
-                    }
-                    if(seen.charAt(37) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (7 + offsety) % 10) != '1') {
-                        seen.setCharAt(37, '1');
-                        Queue.queuePush(37);
-                        dist37 = dist38 + 1;
-                    }
-                    if(seen.charAt(39) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(39, '1');
-                        Queue.queuePush(39);
-                        dist39 = dist38 + 1;
-                    }
-                    if(seen.charAt(46) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (7 + offsety) % 10) != '1') {
-                        seen.setCharAt(46, '1');
-                        Queue.queuePush(46);
-                        dist46 = dist38 + 1;
-                    }
-                    if(seen.charAt(47) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(47, '1');
-                        Queue.queuePush(47);
-                        dist47 = dist38 + 1;
-                    }
-                    if(seen.charAt(48) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(48, '1');
-                        Queue.queuePush(48);
-                        dist48 = dist38 + 1;
-                    }
-                    break;
-                case 39:
-                    if(seen.charAt(29) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(29, '1');
-                        Queue.queuePush(29);
-                        dist29 = dist39 + 1;
-                    }
-                    if(seen.charAt(30) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(30, '1');
-                        Queue.queuePush(30);
-                        dist30 = dist39 + 1;
-                    }
-                    if(seen.charAt(31) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(31, '1');
-                        Queue.queuePush(31);
-                        dist31 = dist39 + 1;
-                    }
-                    if(seen.charAt(38) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(38, '1');
-                        Queue.queuePush(38);
-                        dist38 = dist39 + 1;
-                    }
-                    if(seen.charAt(40) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(40, '1');
-                        Queue.queuePush(40);
-                        dist40 = dist39 + 1;
-                    }
-                    if(seen.charAt(47) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(47, '1');
-                        Queue.queuePush(47);
-                        dist47 = dist39 + 1;
-                    }
-                    if(seen.charAt(48) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(48, '1');
-                        Queue.queuePush(48);
-                        dist48 = dist39 + 1;
-                    }
-                    if(seen.charAt(49) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(49, '1');
-                        Queue.queuePush(49);
-                        dist49 = dist39 + 1;
-                    }
-                    break;
-                case 40:
-                    if(seen.charAt(30) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(30, '1');
-                        Queue.queuePush(30);
-                        dist30 = dist40 + 1;
-                    }
-                    if(seen.charAt(31) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(31, '1');
-                        Queue.queuePush(31);
-                        dist31 = dist40 + 1;
-                    }
-                    if(seen.charAt(32) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(32, '1');
-                        Queue.queuePush(32);
-                        dist32 = dist40 + 1;
-                    }
-                    if(seen.charAt(39) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(39, '1');
-                        Queue.queuePush(39);
-                        dist39 = dist40 + 1;
-                    }
-                    if(seen.charAt(41) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(41, '1');
-                        Queue.queuePush(41);
-                        dist41 = dist40 + 1;
-                    }
-                    if(seen.charAt(48) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(48, '1');
-                        Queue.queuePush(48);
-                        dist48 = dist40 + 1;
-                    }
-                    if(seen.charAt(49) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(49, '1');
-                        Queue.queuePush(49);
-                        dist49 = dist40 + 1;
-                    }
-                    if(seen.charAt(50) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(50, '1');
-                        Queue.queuePush(50);
-                        dist50 = dist40 + 1;
-                    }
-                    break;
-                case 41:
-                    if(seen.charAt(31) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(31, '1');
-                        Queue.queuePush(31);
-                        dist31 = dist41 + 1;
-                    }
-                    if(seen.charAt(32) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(32, '1');
-                        Queue.queuePush(32);
-                        dist32 = dist41 + 1;
-                    }
-                    if(seen.charAt(33) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(33, '1');
-                        Queue.queuePush(33);
-                        dist33 = dist41 + 1;
-                    }
-                    if(seen.charAt(40) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(40, '1');
-                        Queue.queuePush(40);
-                        dist40 = dist41 + 1;
-                    }
-                    if(seen.charAt(42) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(42, '1');
-                        Queue.queuePush(42);
-                        dist42 = dist41 + 1;
-                    }
-                    if(seen.charAt(49) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(49, '1');
-                        Queue.queuePush(49);
-                        dist49 = dist41 + 1;
-                    }
-                    if(seen.charAt(50) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(50, '1');
-                        Queue.queuePush(50);
-                        dist50 = dist41 + 1;
-                    }
-                    if(seen.charAt(51) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(51, '1');
-                        Queue.queuePush(51);
-                        dist51 = dist41 + 1;
-                    }
-                    break;
-                case 42:
-                    if(seen.charAt(32) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(32, '1');
-                        Queue.queuePush(32);
-                        dist32 = dist42 + 1;
-                    }
-                    if(seen.charAt(33) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(33, '1');
-                        Queue.queuePush(33);
-                        dist33 = dist42 + 1;
-                    }
-                    if(seen.charAt(34) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (13 + offsety) % 10) != '1') {
-                        seen.setCharAt(34, '1');
-                        Queue.queuePush(34);
-                        dist34 = dist42 + 1;
-                    }
-                    if(seen.charAt(41) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(41, '1');
-                        Queue.queuePush(41);
-                        dist41 = dist42 + 1;
-                    }
-                    if(seen.charAt(43) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (13 + offsety) % 10) != '1') {
-                        seen.setCharAt(43, '1');
-                        Queue.queuePush(43);
-                        dist43 = dist42 + 1;
-                    }
-                    if(seen.charAt(50) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(50, '1');
-                        Queue.queuePush(50);
-                        dist50 = dist42 + 1;
-                    }
-                    if(seen.charAt(51) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(51, '1');
-                        Queue.queuePush(51);
-                        dist51 = dist42 + 1;
-                    }
-                    if(seen.charAt(52) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (13 + offsety) % 10) != '1') {
-                        seen.setCharAt(52, '1');
-                        Queue.queuePush(52);
-                        dist52 = dist42 + 1;
-                    }
-                    break;
-                case 43:
-                    if(seen.charAt(33) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(33, '1');
-                        Queue.queuePush(33);
-                        dist33 = dist43 + 1;
-                    }
-                    if(seen.charAt(34) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (13 + offsety) % 10) != '1') {
-                        seen.setCharAt(34, '1');
-                        Queue.queuePush(34);
-                        dist34 = dist43 + 1;
-                    }
-                    if(seen.charAt(42) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(42, '1');
-                        Queue.queuePush(42);
-                        dist42 = dist43 + 1;
-                    }
-                    if(seen.charAt(51) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(51, '1');
-                        Queue.queuePush(51);
-                        dist51 = dist43 + 1;
-                    }
-                    if(seen.charAt(52) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (13 + offsety) % 10) != '1') {
-                        seen.setCharAt(52, '1');
-                        Queue.queuePush(52);
-                        dist52 = dist43 + 1;
-                    }
-                    break;
-                case 46:
-                    if(seen.charAt(37) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (7 + offsety) % 10) != '1') {
-                        seen.setCharAt(37, '1');
-                        Queue.queuePush(37);
-                        dist37 = dist46 + 1;
-                    }
-                    if(seen.charAt(38) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(38, '1');
-                        Queue.queuePush(38);
-                        dist38 = dist46 + 1;
-                    }
-                    if(seen.charAt(47) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(47, '1');
-                        Queue.queuePush(47);
-                        dist47 = dist46 + 1;
-                    }
-                    if(seen.charAt(55) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (7 + offsety) % 10) != '1') {
-                        seen.setCharAt(55, '1');
-                        Queue.queuePush(55);
-                        dist55 = dist46 + 1;
-                    }
-                    if(seen.charAt(56) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(56, '1');
-                        Queue.queuePush(56);
-                        dist56 = dist46 + 1;
-                    }
-                    break;
-                case 47:
-                    if(seen.charAt(37) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (7 + offsety) % 10) != '1') {
-                        seen.setCharAt(37, '1');
-                        Queue.queuePush(37);
-                        dist37 = dist47 + 1;
-                    }
-                    if(seen.charAt(38) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(38, '1');
-                        Queue.queuePush(38);
-                        dist38 = dist47 + 1;
-                    }
-                    if(seen.charAt(39) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(39, '1');
-                        Queue.queuePush(39);
-                        dist39 = dist47 + 1;
-                    }
-                    if(seen.charAt(46) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (7 + offsety) % 10) != '1') {
-                        seen.setCharAt(46, '1');
-                        Queue.queuePush(46);
-                        dist46 = dist47 + 1;
-                    }
-                    if(seen.charAt(48) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(48, '1');
-                        Queue.queuePush(48);
-                        dist48 = dist47 + 1;
-                    }
-                    if(seen.charAt(55) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (7 + offsety) % 10) != '1') {
-                        seen.setCharAt(55, '1');
-                        Queue.queuePush(55);
-                        dist55 = dist47 + 1;
-                    }
-                    if(seen.charAt(56) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(56, '1');
-                        Queue.queuePush(56);
-                        dist56 = dist47 + 1;
-                    }
-                    if(seen.charAt(57) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(57, '1');
-                        Queue.queuePush(57);
-                        dist57 = dist47 + 1;
-                    }
-                    break;
-                case 48:
-                    if(seen.charAt(38) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(38, '1');
-                        Queue.queuePush(38);
-                        dist38 = dist48 + 1;
-                    }
-                    if(seen.charAt(39) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(39, '1');
-                        Queue.queuePush(39);
-                        dist39 = dist48 + 1;
-                    }
-                    if(seen.charAt(40) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(40, '1');
-                        Queue.queuePush(40);
-                        dist40 = dist48 + 1;
-                    }
-                    if(seen.charAt(47) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(47, '1');
-                        Queue.queuePush(47);
-                        dist47 = dist48 + 1;
-                    }
-                    if(seen.charAt(49) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(49, '1');
-                        Queue.queuePush(49);
-                        dist49 = dist48 + 1;
-                    }
-                    if(seen.charAt(56) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(56, '1');
-                        Queue.queuePush(56);
-                        dist56 = dist48 + 1;
-                    }
-                    if(seen.charAt(57) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(57, '1');
-                        Queue.queuePush(57);
-                        dist57 = dist48 + 1;
-                    }
-                    if(seen.charAt(58) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(58, '1');
-                        Queue.queuePush(58);
-                        dist58 = dist48 + 1;
-                    }
-                    break;
-                case 49:
-                    if(seen.charAt(39) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(39, '1');
-                        Queue.queuePush(39);
-                        dist39 = dist49 + 1;
-                    }
-                    if(seen.charAt(40) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(40, '1');
-                        Queue.queuePush(40);
-                        dist40 = dist49 + 1;
-                    }
-                    if(seen.charAt(41) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(41, '1');
-                        Queue.queuePush(41);
-                        dist41 = dist49 + 1;
-                    }
-                    if(seen.charAt(48) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(48, '1');
-                        Queue.queuePush(48);
-                        dist48 = dist49 + 1;
-                    }
-                    if(seen.charAt(50) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(50, '1');
-                        Queue.queuePush(50);
-                        dist50 = dist49 + 1;
-                    }
-                    if(seen.charAt(57) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(57, '1');
-                        Queue.queuePush(57);
-                        dist57 = dist49 + 1;
-                    }
-                    if(seen.charAt(58) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(58, '1');
-                        Queue.queuePush(58);
-                        dist58 = dist49 + 1;
-                    }
-                    if(seen.charAt(59) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(59, '1');
-                        Queue.queuePush(59);
-                        dist59 = dist49 + 1;
-                    }
-                    break;
-                case 50:
-                    if(seen.charAt(40) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(40, '1');
-                        Queue.queuePush(40);
-                        dist40 = dist50 + 1;
-                    }
-                    if(seen.charAt(41) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(41, '1');
-                        Queue.queuePush(41);
-                        dist41 = dist50 + 1;
-                    }
-                    if(seen.charAt(42) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(42, '1');
-                        Queue.queuePush(42);
-                        dist42 = dist50 + 1;
-                    }
-                    if(seen.charAt(49) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(49, '1');
-                        Queue.queuePush(49);
-                        dist49 = dist50 + 1;
-                    }
-                    if(seen.charAt(51) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(51, '1');
-                        Queue.queuePush(51);
-                        dist51 = dist50 + 1;
-                    }
-                    if(seen.charAt(58) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(58, '1');
-                        Queue.queuePush(58);
-                        dist58 = dist50 + 1;
-                    }
-                    if(seen.charAt(59) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(59, '1');
-                        Queue.queuePush(59);
-                        dist59 = dist50 + 1;
-                    }
-                    if(seen.charAt(60) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(60, '1');
-                        Queue.queuePush(60);
-                        dist60 = dist50 + 1;
-                    }
-                    break;
-                case 51:
-                    if(seen.charAt(41) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(41, '1');
-                        Queue.queuePush(41);
-                        dist41 = dist51 + 1;
-                    }
-                    if(seen.charAt(42) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(42, '1');
-                        Queue.queuePush(42);
-                        dist42 = dist51 + 1;
-                    }
-                    if(seen.charAt(43) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (13 + offsety) % 10) != '1') {
-                        seen.setCharAt(43, '1');
-                        Queue.queuePush(43);
-                        dist43 = dist51 + 1;
-                    }
-                    if(seen.charAt(50) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(50, '1');
-                        Queue.queuePush(50);
-                        dist50 = dist51 + 1;
-                    }
-                    if(seen.charAt(52) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (13 + offsety) % 10) != '1') {
-                        seen.setCharAt(52, '1');
-                        Queue.queuePush(52);
-                        dist52 = dist51 + 1;
-                    }
-                    if(seen.charAt(59) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(59, '1');
-                        Queue.queuePush(59);
-                        dist59 = dist51 + 1;
-                    }
-                    if(seen.charAt(60) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(60, '1');
-                        Queue.queuePush(60);
-                        dist60 = dist51 + 1;
-                    }
-                    if(seen.charAt(61) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (13 + offsety) % 10) != '1') {
-                        seen.setCharAt(61, '1');
-                        Queue.queuePush(61);
-                        dist61 = dist51 + 1;
-                    }
-                    break;
-                case 52:
-                    if(seen.charAt(42) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(42, '1');
-                        Queue.queuePush(42);
-                        dist42 = dist52 + 1;
-                    }
-                    if(seen.charAt(43) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (13 + offsety) % 10) != '1') {
-                        seen.setCharAt(43, '1');
-                        Queue.queuePush(43);
-                        dist43 = dist52 + 1;
-                    }
-                    if(seen.charAt(51) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(51, '1');
-                        Queue.queuePush(51);
-                        dist51 = dist52 + 1;
-                    }
-                    if(seen.charAt(60) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(60, '1');
-                        Queue.queuePush(60);
-                        dist60 = dist52 + 1;
-                    }
-                    if(seen.charAt(61) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (13 + offsety) % 10) != '1') {
-                        seen.setCharAt(61, '1');
-                        Queue.queuePush(61);
-                        dist61 = dist52 + 1;
-                    }
-                    break;
-                case 55:
-                    if(seen.charAt(46) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (7 + offsety) % 10) != '1') {
-                        seen.setCharAt(46, '1');
-                        Queue.queuePush(46);
-                        dist46 = dist55 + 1;
-                    }
-                    if(seen.charAt(47) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(47, '1');
-                        Queue.queuePush(47);
-                        dist47 = dist55 + 1;
-                    }
-                    if(seen.charAt(56) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(56, '1');
-                        Queue.queuePush(56);
-                        dist56 = dist55 + 1;
-                    }
-                    if(seen.charAt(65) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(65, '1');
-                        Queue.queuePush(65);
-                        dist65 = dist55 + 1;
-                    }
-                    break;
-                case 56:
-                    if(seen.charAt(46) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (7 + offsety) % 10) != '1') {
-                        seen.setCharAt(46, '1');
-                        Queue.queuePush(46);
-                        dist46 = dist56 + 1;
-                    }
-                    if(seen.charAt(47) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(47, '1');
-                        Queue.queuePush(47);
-                        dist47 = dist56 + 1;
-                    }
-                    if(seen.charAt(48) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(48, '1');
-                        Queue.queuePush(48);
-                        dist48 = dist56 + 1;
-                    }
-                    if(seen.charAt(55) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (7 + offsety) % 10) != '1') {
-                        seen.setCharAt(55, '1');
-                        Queue.queuePush(55);
-                        dist55 = dist56 + 1;
-                    }
-                    if(seen.charAt(57) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(57, '1');
-                        Queue.queuePush(57);
-                        dist57 = dist56 + 1;
-                    }
-                    if(seen.charAt(65) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(65, '1');
-                        Queue.queuePush(65);
-                        dist65 = dist56 + 1;
-                    }
-                    if(seen.charAt(66) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(66, '1');
-                        Queue.queuePush(66);
-                        dist66 = dist56 + 1;
-                    }
-                    break;
-                case 57:
-                    if(seen.charAt(47) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(47, '1');
-                        Queue.queuePush(47);
-                        dist47 = dist57 + 1;
-                    }
-                    if(seen.charAt(48) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(48, '1');
-                        Queue.queuePush(48);
-                        dist48 = dist57 + 1;
-                    }
-                    if(seen.charAt(49) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(49, '1');
-                        Queue.queuePush(49);
-                        dist49 = dist57 + 1;
-                    }
-                    if(seen.charAt(56) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(56, '1');
-                        Queue.queuePush(56);
-                        dist56 = dist57 + 1;
-                    }
-                    if(seen.charAt(58) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(58, '1');
-                        Queue.queuePush(58);
-                        dist58 = dist57 + 1;
-                    }
-                    if(seen.charAt(65) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(65, '1');
-                        Queue.queuePush(65);
-                        dist65 = dist57 + 1;
-                    }
-                    if(seen.charAt(66) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(66, '1');
-                        Queue.queuePush(66);
-                        dist66 = dist57 + 1;
-                    }
-                    if(seen.charAt(67) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(67, '1');
-                        Queue.queuePush(67);
-                        dist67 = dist57 + 1;
-                    }
-                    break;
-                case 58:
-                    if(seen.charAt(48) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(48, '1');
-                        Queue.queuePush(48);
-                        dist48 = dist58 + 1;
-                    }
-                    if(seen.charAt(49) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(49, '1');
-                        Queue.queuePush(49);
-                        dist49 = dist58 + 1;
-                    }
-                    if(seen.charAt(50) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(50, '1');
-                        Queue.queuePush(50);
-                        dist50 = dist58 + 1;
-                    }
-                    if(seen.charAt(57) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(57, '1');
-                        Queue.queuePush(57);
-                        dist57 = dist58 + 1;
-                    }
-                    if(seen.charAt(59) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(59, '1');
-                        Queue.queuePush(59);
-                        dist59 = dist58 + 1;
-                    }
-                    if(seen.charAt(66) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(66, '1');
-                        Queue.queuePush(66);
-                        dist66 = dist58 + 1;
-                    }
-                    if(seen.charAt(67) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(67, '1');
-                        Queue.queuePush(67);
-                        dist67 = dist58 + 1;
-                    }
-                    if(seen.charAt(68) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(68, '1');
-                        Queue.queuePush(68);
-                        dist68 = dist58 + 1;
-                    }
-                    break;
-                case 59:
-                    if(seen.charAt(49) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(49, '1');
-                        Queue.queuePush(49);
-                        dist49 = dist59 + 1;
-                    }
-                    if(seen.charAt(50) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(50, '1');
-                        Queue.queuePush(50);
-                        dist50 = dist59 + 1;
-                    }
-                    if(seen.charAt(51) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(51, '1');
-                        Queue.queuePush(51);
-                        dist51 = dist59 + 1;
-                    }
-                    if(seen.charAt(58) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(58, '1');
-                        Queue.queuePush(58);
-                        dist58 = dist59 + 1;
-                    }
-                    if(seen.charAt(60) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(60, '1');
-                        Queue.queuePush(60);
-                        dist60 = dist59 + 1;
-                    }
-                    if(seen.charAt(67) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(67, '1');
-                        Queue.queuePush(67);
-                        dist67 = dist59 + 1;
-                    }
-                    if(seen.charAt(68) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(68, '1');
-                        Queue.queuePush(68);
-                        dist68 = dist59 + 1;
-                    }
-                    if(seen.charAt(69) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(69, '1');
-                        Queue.queuePush(69);
-                        dist69 = dist59 + 1;
-                    }
-                    break;
-                case 60:
-                    if(seen.charAt(50) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(50, '1');
-                        Queue.queuePush(50);
-                        dist50 = dist60 + 1;
-                    }
-                    if(seen.charAt(51) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(51, '1');
-                        Queue.queuePush(51);
-                        dist51 = dist60 + 1;
-                    }
-                    if(seen.charAt(52) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (13 + offsety) % 10) != '1') {
-                        seen.setCharAt(52, '1');
-                        Queue.queuePush(52);
-                        dist52 = dist60 + 1;
-                    }
-                    if(seen.charAt(59) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(59, '1');
-                        Queue.queuePush(59);
-                        dist59 = dist60 + 1;
-                    }
-                    if(seen.charAt(61) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (13 + offsety) % 10) != '1') {
-                        seen.setCharAt(61, '1');
-                        Queue.queuePush(61);
-                        dist61 = dist60 + 1;
-                    }
-                    if(seen.charAt(68) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(68, '1');
-                        Queue.queuePush(68);
-                        dist68 = dist60 + 1;
-                    }
-                    if(seen.charAt(69) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(69, '1');
-                        Queue.queuePush(69);
-                        dist69 = dist60 + 1;
-                    }
-                    break;
-                case 61:
-                    if(seen.charAt(51) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(51, '1');
-                        Queue.queuePush(51);
-                        dist51 = dist61 + 1;
-                    }
-                    if(seen.charAt(52) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (13 + offsety) % 10) != '1') {
-                        seen.setCharAt(52, '1');
-                        Queue.queuePush(52);
-                        dist52 = dist61 + 1;
-                    }
-                    if(seen.charAt(60) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(60, '1');
-                        Queue.queuePush(60);
-                        dist60 = dist61 + 1;
-                    }
-                    if(seen.charAt(69) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(69, '1');
-                        Queue.queuePush(69);
-                        dist69 = dist61 + 1;
-                    }
-                    break;
-                case 65:
-                    if(seen.charAt(55) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (7 + offsety) % 10) != '1') {
-                        seen.setCharAt(55, '1');
-                        Queue.queuePush(55);
-                        dist55 = dist65 + 1;
-                    }
-                    if(seen.charAt(56) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(56, '1');
-                        Queue.queuePush(56);
-                        dist56 = dist65 + 1;
-                    }
-                    if(seen.charAt(57) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(57, '1');
-                        Queue.queuePush(57);
-                        dist57 = dist65 + 1;
-                    }
-                    if(seen.charAt(66) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(66, '1');
-                        Queue.queuePush(66);
-                        dist66 = dist65 + 1;
-                    }
-                    break;
-                case 66:
-                    if(seen.charAt(56) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(56, '1');
-                        Queue.queuePush(56);
-                        dist56 = dist66 + 1;
-                    }
-                    if(seen.charAt(57) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(57, '1');
-                        Queue.queuePush(57);
-                        dist57 = dist66 + 1;
-                    }
-                    if(seen.charAt(58) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(58, '1');
-                        Queue.queuePush(58);
-                        dist58 = dist66 + 1;
-                    }
-                    if(seen.charAt(65) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (8 + offsety) % 10) != '1') {
-                        seen.setCharAt(65, '1');
-                        Queue.queuePush(65);
-                        dist65 = dist66 + 1;
-                    }
-                    if(seen.charAt(67) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(67, '1');
-                        Queue.queuePush(67);
-                        dist67 = dist66 + 1;
-                    }
-                    break;
-                case 67:
-                    if(seen.charAt(57) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(57, '1');
-                        Queue.queuePush(57);
-                        dist57 = dist67 + 1;
-                    }
-                    if(seen.charAt(58) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(58, '1');
-                        Queue.queuePush(58);
-                        dist58 = dist67 + 1;
-                    }
-                    if(seen.charAt(59) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(59, '1');
-                        Queue.queuePush(59);
-                        dist59 = dist67 + 1;
-                    }
-                    if(seen.charAt(66) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (9 + offsety) % 10) != '1') {
-                        seen.setCharAt(66, '1');
-                        Queue.queuePush(66);
-                        dist66 = dist67 + 1;
-                    }
-                    if(seen.charAt(68) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(68, '1');
-                        Queue.queuePush(68);
-                        dist68 = dist67 + 1;
-                    }
-                    break;
-                case 68:
-                    if(seen.charAt(58) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(58, '1');
-                        Queue.queuePush(58);
-                        dist58 = dist68 + 1;
-                    }
-                    if(seen.charAt(59) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(59, '1');
-                        Queue.queuePush(59);
-                        dist59 = dist68 + 1;
-                    }
-                    if(seen.charAt(60) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(60, '1');
-                        Queue.queuePush(60);
-                        dist60 = dist68 + 1;
-                    }
-                    if(seen.charAt(67) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (10 + offsety) % 10) != '1') {
-                        seen.setCharAt(67, '1');
-                        Queue.queuePush(67);
-                        dist67 = dist68 + 1;
-                    }
-                    if(seen.charAt(69) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(69, '1');
-                        Queue.queuePush(69);
-                        dist69 = dist68 + 1;
-                    }
-                    break;
-                case 69:
-                    if(seen.charAt(59) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(59, '1');
-                        Queue.queuePush(59);
-                        dist59 = dist69 + 1;
-                    }
-                    if(seen.charAt(60) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (12 + offsety) % 10) != '1') {
-                        seen.setCharAt(60, '1');
-                        Queue.queuePush(60);
-                        dist60 = dist69 + 1;
-                    }
-                    if(seen.charAt(61) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (13 + offsety) % 10) != '1') {
-                        seen.setCharAt(61, '1');
-                        Queue.queuePush(61);
-                        dist61 = dist69 + 1;
-                    }
-                    if(seen.charAt(68) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (11 + offsety) % 10) != '1') {
-                        seen.setCharAt(68, '1');
-                        Queue.queuePush(68);
-                        dist68 = dist69 + 1;
-                    }
-                    break;
+            case 11:
+            if(seen.charAt(12) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(12, '1');
+            Queue.queuePush(12);
+            dist12 = dist11 + 1;
             }
-
+            if(seen.charAt(19) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (7 + offsety) % 10) == '1') {
+            seen.setCharAt(19, '1');
+            Queue.queuePush(19);
+            dist19 = dist11 + 1;
+            }
+            if(seen.charAt(20) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(20, '1');
+            Queue.queuePush(20);
+            dist20 = dist11 + 1;
+            }
+            if(seen.charAt(21) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(21, '1');
+            Queue.queuePush(21);
+            dist21 = dist11 + 1;
+            }
+            break;
+            case 12:
+            if(seen.charAt(11) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(11, '1');
+            Queue.queuePush(11);
+            dist11 = dist12 + 1;
+            }
+            if(seen.charAt(13) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(13, '1');
+            Queue.queuePush(13);
+            dist13 = dist12 + 1;
+            }
+            if(seen.charAt(20) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(20, '1');
+            Queue.queuePush(20);
+            dist20 = dist12 + 1;
+            }
+            if(seen.charAt(21) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(21, '1');
+            Queue.queuePush(21);
+            dist21 = dist12 + 1;
+            }
+            if(seen.charAt(22) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(22, '1');
+            Queue.queuePush(22);
+            dist22 = dist12 + 1;
+            }
+            break;
+            case 13:
+            if(seen.charAt(12) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(12, '1');
+            Queue.queuePush(12);
+            dist12 = dist13 + 1;
+            }
+            if(seen.charAt(14) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(14, '1');
+            Queue.queuePush(14);
+            dist14 = dist13 + 1;
+            }
+            if(seen.charAt(21) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(21, '1');
+            Queue.queuePush(21);
+            dist21 = dist13 + 1;
+            }
+            if(seen.charAt(22) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(22, '1');
+            Queue.queuePush(22);
+            dist22 = dist13 + 1;
+            }
+            if(seen.charAt(23) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(23, '1');
+            Queue.queuePush(23);
+            dist23 = dist13 + 1;
+            }
+            break;
+            case 14:
+            if(seen.charAt(13) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(13, '1');
+            Queue.queuePush(13);
+            dist13 = dist14 + 1;
+            }
+            if(seen.charAt(15) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(15, '1');
+            Queue.queuePush(15);
+            dist15 = dist14 + 1;
+            }
+            if(seen.charAt(22) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(22, '1');
+            Queue.queuePush(22);
+            dist22 = dist14 + 1;
+            }
+            if(seen.charAt(23) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(23, '1');
+            Queue.queuePush(23);
+            dist23 = dist14 + 1;
+            }
+            if(seen.charAt(24) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(24, '1');
+            Queue.queuePush(24);
+            dist24 = dist14 + 1;
+            }
+            break;
+            case 15:
+            if(seen.charAt(14) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(14, '1');
+            Queue.queuePush(14);
+            dist14 = dist15 + 1;
+            }
+            if(seen.charAt(23) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(23, '1');
+            Queue.queuePush(23);
+            dist23 = dist15 + 1;
+            }
+            if(seen.charAt(24) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(24, '1');
+            Queue.queuePush(24);
+            dist24 = dist15 + 1;
+            }
+            if(seen.charAt(25) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (13 + offsety) % 10) == '1') {
+            seen.setCharAt(25, '1');
+            Queue.queuePush(25);
+            dist25 = dist15 + 1;
+            }
+            break;
+            case 19:
+            if(seen.charAt(11) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(11, '1');
+            Queue.queuePush(11);
+            dist11 = dist19 + 1;
+            }
+            if(seen.charAt(20) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(20, '1');
+            Queue.queuePush(20);
+            dist20 = dist19 + 1;
+            }
+            if(seen.charAt(28) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (7 + offsety) % 10) == '1') {
+            seen.setCharAt(28, '1');
+            Queue.queuePush(28);
+            dist28 = dist19 + 1;
+            }
+            if(seen.charAt(29) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(29, '1');
+            Queue.queuePush(29);
+            dist29 = dist19 + 1;
+            }
+            break;
+            case 20:
+            if(seen.charAt(11) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(11, '1');
+            Queue.queuePush(11);
+            dist11 = dist20 + 1;
+            }
+            if(seen.charAt(12) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(12, '1');
+            Queue.queuePush(12);
+            dist12 = dist20 + 1;
+            }
+            if(seen.charAt(19) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (7 + offsety) % 10) == '1') {
+            seen.setCharAt(19, '1');
+            Queue.queuePush(19);
+            dist19 = dist20 + 1;
+            }
+            if(seen.charAt(21) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(21, '1');
+            Queue.queuePush(21);
+            dist21 = dist20 + 1;
+            }
+            if(seen.charAt(28) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (7 + offsety) % 10) == '1') {
+            seen.setCharAt(28, '1');
+            Queue.queuePush(28);
+            dist28 = dist20 + 1;
+            }
+            if(seen.charAt(29) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(29, '1');
+            Queue.queuePush(29);
+            dist29 = dist20 + 1;
+            }
+            if(seen.charAt(30) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(30, '1');
+            Queue.queuePush(30);
+            dist30 = dist20 + 1;
+            }
+            break;
+            case 21:
+            if(seen.charAt(11) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(11, '1');
+            Queue.queuePush(11);
+            dist11 = dist21 + 1;
+            }
+            if(seen.charAt(12) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(12, '1');
+            Queue.queuePush(12);
+            dist12 = dist21 + 1;
+            }
+            if(seen.charAt(13) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(13, '1');
+            Queue.queuePush(13);
+            dist13 = dist21 + 1;
+            }
+            if(seen.charAt(20) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(20, '1');
+            Queue.queuePush(20);
+            dist20 = dist21 + 1;
+            }
+            if(seen.charAt(22) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(22, '1');
+            Queue.queuePush(22);
+            dist22 = dist21 + 1;
+            }
+            if(seen.charAt(29) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(29, '1');
+            Queue.queuePush(29);
+            dist29 = dist21 + 1;
+            }
+            if(seen.charAt(30) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(30, '1');
+            Queue.queuePush(30);
+            dist30 = dist21 + 1;
+            }
+            if(seen.charAt(31) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(31, '1');
+            Queue.queuePush(31);
+            dist31 = dist21 + 1;
+            }
+            break;
+            case 22:
+            if(seen.charAt(12) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(12, '1');
+            Queue.queuePush(12);
+            dist12 = dist22 + 1;
+            }
+            if(seen.charAt(13) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(13, '1');
+            Queue.queuePush(13);
+            dist13 = dist22 + 1;
+            }
+            if(seen.charAt(14) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(14, '1');
+            Queue.queuePush(14);
+            dist14 = dist22 + 1;
+            }
+            if(seen.charAt(21) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(21, '1');
+            Queue.queuePush(21);
+            dist21 = dist22 + 1;
+            }
+            if(seen.charAt(23) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(23, '1');
+            Queue.queuePush(23);
+            dist23 = dist22 + 1;
+            }
+            if(seen.charAt(30) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(30, '1');
+            Queue.queuePush(30);
+            dist30 = dist22 + 1;
+            }
+            if(seen.charAt(31) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(31, '1');
+            Queue.queuePush(31);
+            dist31 = dist22 + 1;
+            }
+            if(seen.charAt(32) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(32, '1');
+            Queue.queuePush(32);
+            dist32 = dist22 + 1;
+            }
+            break;
+            case 23:
+            if(seen.charAt(13) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(13, '1');
+            Queue.queuePush(13);
+            dist13 = dist23 + 1;
+            }
+            if(seen.charAt(14) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(14, '1');
+            Queue.queuePush(14);
+            dist14 = dist23 + 1;
+            }
+            if(seen.charAt(15) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(15, '1');
+            Queue.queuePush(15);
+            dist15 = dist23 + 1;
+            }
+            if(seen.charAt(22) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(22, '1');
+            Queue.queuePush(22);
+            dist22 = dist23 + 1;
+            }
+            if(seen.charAt(24) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(24, '1');
+            Queue.queuePush(24);
+            dist24 = dist23 + 1;
+            }
+            if(seen.charAt(31) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(31, '1');
+            Queue.queuePush(31);
+            dist31 = dist23 + 1;
+            }
+            if(seen.charAt(32) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(32, '1');
+            Queue.queuePush(32);
+            dist32 = dist23 + 1;
+            }
+            if(seen.charAt(33) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(33, '1');
+            Queue.queuePush(33);
+            dist33 = dist23 + 1;
+            }
+            break;
+            case 24:
+            if(seen.charAt(14) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(14, '1');
+            Queue.queuePush(14);
+            dist14 = dist24 + 1;
+            }
+            if(seen.charAt(15) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(15, '1');
+            Queue.queuePush(15);
+            dist15 = dist24 + 1;
+            }
+            if(seen.charAt(23) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(23, '1');
+            Queue.queuePush(23);
+            dist23 = dist24 + 1;
+            }
+            if(seen.charAt(25) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (13 + offsety) % 10) == '1') {
+            seen.setCharAt(25, '1');
+            Queue.queuePush(25);
+            dist25 = dist24 + 1;
+            }
+            if(seen.charAt(32) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(32, '1');
+            Queue.queuePush(32);
+            dist32 = dist24 + 1;
+            }
+            if(seen.charAt(33) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(33, '1');
+            Queue.queuePush(33);
+            dist33 = dist24 + 1;
+            }
+            if(seen.charAt(34) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (13 + offsety) % 10) == '1') {
+            seen.setCharAt(34, '1');
+            Queue.queuePush(34);
+            dist34 = dist24 + 1;
+            }
+            break;
+            case 25:
+            if(seen.charAt(15) == '0' && validLocation.charAt(((7 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(15, '1');
+            Queue.queuePush(15);
+            dist15 = dist25 + 1;
+            }
+            if(seen.charAt(24) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(24, '1');
+            Queue.queuePush(24);
+            dist24 = dist25 + 1;
+            }
+            if(seen.charAt(33) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(33, '1');
+            Queue.queuePush(33);
+            dist33 = dist25 + 1;
+            }
+            if(seen.charAt(34) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (13 + offsety) % 10) == '1') {
+            seen.setCharAt(34, '1');
+            Queue.queuePush(34);
+            dist34 = dist25 + 1;
+            }
+            break;
+            case 28:
+            if(seen.charAt(19) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (7 + offsety) % 10) == '1') {
+            seen.setCharAt(19, '1');
+            Queue.queuePush(19);
+            dist19 = dist28 + 1;
+            }
+            if(seen.charAt(20) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(20, '1');
+            Queue.queuePush(20);
+            dist20 = dist28 + 1;
+            }
+            if(seen.charAt(29) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(29, '1');
+            Queue.queuePush(29);
+            dist29 = dist28 + 1;
+            }
+            if(seen.charAt(37) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (7 + offsety) % 10) == '1') {
+            seen.setCharAt(37, '1');
+            Queue.queuePush(37);
+            dist37 = dist28 + 1;
+            }
+            if(seen.charAt(38) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(38, '1');
+            Queue.queuePush(38);
+            dist38 = dist28 + 1;
+            }
+            break;
+            case 29:
+            if(seen.charAt(19) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (7 + offsety) % 10) == '1') {
+            seen.setCharAt(19, '1');
+            Queue.queuePush(19);
+            dist19 = dist29 + 1;
+            }
+            if(seen.charAt(20) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(20, '1');
+            Queue.queuePush(20);
+            dist20 = dist29 + 1;
+            }
+            if(seen.charAt(21) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(21, '1');
+            Queue.queuePush(21);
+            dist21 = dist29 + 1;
+            }
+            if(seen.charAt(28) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (7 + offsety) % 10) == '1') {
+            seen.setCharAt(28, '1');
+            Queue.queuePush(28);
+            dist28 = dist29 + 1;
+            }
+            if(seen.charAt(30) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(30, '1');
+            Queue.queuePush(30);
+            dist30 = dist29 + 1;
+            }
+            if(seen.charAt(37) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (7 + offsety) % 10) == '1') {
+            seen.setCharAt(37, '1');
+            Queue.queuePush(37);
+            dist37 = dist29 + 1;
+            }
+            if(seen.charAt(38) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(38, '1');
+            Queue.queuePush(38);
+            dist38 = dist29 + 1;
+            }
+            if(seen.charAt(39) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(39, '1');
+            Queue.queuePush(39);
+            dist39 = dist29 + 1;
+            }
+            break;
+            case 30:
+            if(seen.charAt(20) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(20, '1');
+            Queue.queuePush(20);
+            dist20 = dist30 + 1;
+            }
+            if(seen.charAt(21) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(21, '1');
+            Queue.queuePush(21);
+            dist21 = dist30 + 1;
+            }
+            if(seen.charAt(22) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(22, '1');
+            Queue.queuePush(22);
+            dist22 = dist30 + 1;
+            }
+            if(seen.charAt(29) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(29, '1');
+            Queue.queuePush(29);
+            dist29 = dist30 + 1;
+            }
+            if(seen.charAt(31) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(31, '1');
+            Queue.queuePush(31);
+            dist31 = dist30 + 1;
+            }
+            if(seen.charAt(38) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(38, '1');
+            Queue.queuePush(38);
+            dist38 = dist30 + 1;
+            }
+            if(seen.charAt(39) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(39, '1');
+            Queue.queuePush(39);
+            dist39 = dist30 + 1;
+            }
+            if(seen.charAt(40) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(40, '1');
+            Queue.queuePush(40);
+            dist40 = dist30 + 1;
+            }
+            break;
+            case 31:
+            if(seen.charAt(21) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(21, '1');
+            Queue.queuePush(21);
+            dist21 = dist31 + 1;
+            }
+            if(seen.charAt(22) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(22, '1');
+            Queue.queuePush(22);
+            dist22 = dist31 + 1;
+            }
+            if(seen.charAt(23) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(23, '1');
+            Queue.queuePush(23);
+            dist23 = dist31 + 1;
+            }
+            if(seen.charAt(30) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(30, '1');
+            Queue.queuePush(30);
+            dist30 = dist31 + 1;
+            }
+            if(seen.charAt(32) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(32, '1');
+            Queue.queuePush(32);
+            dist32 = dist31 + 1;
+            }
+            if(seen.charAt(39) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(39, '1');
+            Queue.queuePush(39);
+            dist39 = dist31 + 1;
+            }
+            if(seen.charAt(40) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(40, '1');
+            Queue.queuePush(40);
+            dist40 = dist31 + 1;
+            }
+            if(seen.charAt(41) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(41, '1');
+            Queue.queuePush(41);
+            dist41 = dist31 + 1;
+            }
+            break;
+            case 32:
+            if(seen.charAt(22) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(22, '1');
+            Queue.queuePush(22);
+            dist22 = dist32 + 1;
+            }
+            if(seen.charAt(23) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(23, '1');
+            Queue.queuePush(23);
+            dist23 = dist32 + 1;
+            }
+            if(seen.charAt(24) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(24, '1');
+            Queue.queuePush(24);
+            dist24 = dist32 + 1;
+            }
+            if(seen.charAt(31) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(31, '1');
+            Queue.queuePush(31);
+            dist31 = dist32 + 1;
+            }
+            if(seen.charAt(33) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(33, '1');
+            Queue.queuePush(33);
+            dist33 = dist32 + 1;
+            }
+            if(seen.charAt(40) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(40, '1');
+            Queue.queuePush(40);
+            dist40 = dist32 + 1;
+            }
+            if(seen.charAt(41) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(41, '1');
+            Queue.queuePush(41);
+            dist41 = dist32 + 1;
+            }
+            if(seen.charAt(42) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(42, '1');
+            Queue.queuePush(42);
+            dist42 = dist32 + 1;
+            }
+            break;
+            case 33:
+            if(seen.charAt(23) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(23, '1');
+            Queue.queuePush(23);
+            dist23 = dist33 + 1;
+            }
+            if(seen.charAt(24) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(24, '1');
+            Queue.queuePush(24);
+            dist24 = dist33 + 1;
+            }
+            if(seen.charAt(25) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (13 + offsety) % 10) == '1') {
+            seen.setCharAt(25, '1');
+            Queue.queuePush(25);
+            dist25 = dist33 + 1;
+            }
+            if(seen.charAt(32) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(32, '1');
+            Queue.queuePush(32);
+            dist32 = dist33 + 1;
+            }
+            if(seen.charAt(34) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (13 + offsety) % 10) == '1') {
+            seen.setCharAt(34, '1');
+            Queue.queuePush(34);
+            dist34 = dist33 + 1;
+            }
+            if(seen.charAt(41) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(41, '1');
+            Queue.queuePush(41);
+            dist41 = dist33 + 1;
+            }
+            if(seen.charAt(42) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(42, '1');
+            Queue.queuePush(42);
+            dist42 = dist33 + 1;
+            }
+            if(seen.charAt(43) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (13 + offsety) % 10) == '1') {
+            seen.setCharAt(43, '1');
+            Queue.queuePush(43);
+            dist43 = dist33 + 1;
+            }
+            break;
+            case 34:
+            if(seen.charAt(24) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(24, '1');
+            Queue.queuePush(24);
+            dist24 = dist34 + 1;
+            }
+            if(seen.charAt(25) == '0' && validLocation.charAt(((8 + offsetx) % 10) * 10 + (13 + offsety) % 10) == '1') {
+            seen.setCharAt(25, '1');
+            Queue.queuePush(25);
+            dist25 = dist34 + 1;
+            }
+            if(seen.charAt(33) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(33, '1');
+            Queue.queuePush(33);
+            dist33 = dist34 + 1;
+            }
+            if(seen.charAt(42) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(42, '1');
+            Queue.queuePush(42);
+            dist42 = dist34 + 1;
+            }
+            if(seen.charAt(43) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (13 + offsety) % 10) == '1') {
+            seen.setCharAt(43, '1');
+            Queue.queuePush(43);
+            dist43 = dist34 + 1;
+            }
+            break;
+            case 37:
+            if(seen.charAt(28) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (7 + offsety) % 10) == '1') {
+            seen.setCharAt(28, '1');
+            Queue.queuePush(28);
+            dist28 = dist37 + 1;
+            }
+            if(seen.charAt(29) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(29, '1');
+            Queue.queuePush(29);
+            dist29 = dist37 + 1;
+            }
+            if(seen.charAt(38) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(38, '1');
+            Queue.queuePush(38);
+            dist38 = dist37 + 1;
+            }
+            if(seen.charAt(46) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (7 + offsety) % 10) == '1') {
+            seen.setCharAt(46, '1');
+            Queue.queuePush(46);
+            dist46 = dist37 + 1;
+            }
+            if(seen.charAt(47) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(47, '1');
+            Queue.queuePush(47);
+            dist47 = dist37 + 1;
+            }
+            break;
+            case 38:
+            if(seen.charAt(28) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (7 + offsety) % 10) == '1') {
+            seen.setCharAt(28, '1');
+            Queue.queuePush(28);
+            dist28 = dist38 + 1;
+            }
+            if(seen.charAt(29) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(29, '1');
+            Queue.queuePush(29);
+            dist29 = dist38 + 1;
+            }
+            if(seen.charAt(30) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(30, '1');
+            Queue.queuePush(30);
+            dist30 = dist38 + 1;
+            }
+            if(seen.charAt(37) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (7 + offsety) % 10) == '1') {
+            seen.setCharAt(37, '1');
+            Queue.queuePush(37);
+            dist37 = dist38 + 1;
+            }
+            if(seen.charAt(39) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(39, '1');
+            Queue.queuePush(39);
+            dist39 = dist38 + 1;
+            }
+            if(seen.charAt(46) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (7 + offsety) % 10) == '1') {
+            seen.setCharAt(46, '1');
+            Queue.queuePush(46);
+            dist46 = dist38 + 1;
+            }
+            if(seen.charAt(47) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(47, '1');
+            Queue.queuePush(47);
+            dist47 = dist38 + 1;
+            }
+            if(seen.charAt(48) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(48, '1');
+            Queue.queuePush(48);
+            dist48 = dist38 + 1;
+            }
+            break;
+            case 39:
+            if(seen.charAt(29) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(29, '1');
+            Queue.queuePush(29);
+            dist29 = dist39 + 1;
+            }
+            if(seen.charAt(30) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(30, '1');
+            Queue.queuePush(30);
+            dist30 = dist39 + 1;
+            }
+            if(seen.charAt(31) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(31, '1');
+            Queue.queuePush(31);
+            dist31 = dist39 + 1;
+            }
+            if(seen.charAt(38) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(38, '1');
+            Queue.queuePush(38);
+            dist38 = dist39 + 1;
+            }
+            if(seen.charAt(40) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(40, '1');
+            Queue.queuePush(40);
+            dist40 = dist39 + 1;
+            }
+            if(seen.charAt(47) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(47, '1');
+            Queue.queuePush(47);
+            dist47 = dist39 + 1;
+            }
+            if(seen.charAt(48) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(48, '1');
+            Queue.queuePush(48);
+            dist48 = dist39 + 1;
+            }
+            if(seen.charAt(49) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(49, '1');
+            Queue.queuePush(49);
+            dist49 = dist39 + 1;
+            }
+            break;
+            case 40:
+            if(seen.charAt(30) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(30, '1');
+            Queue.queuePush(30);
+            dist30 = dist40 + 1;
+            }
+            if(seen.charAt(31) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(31, '1');
+            Queue.queuePush(31);
+            dist31 = dist40 + 1;
+            }
+            if(seen.charAt(32) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(32, '1');
+            Queue.queuePush(32);
+            dist32 = dist40 + 1;
+            }
+            if(seen.charAt(39) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(39, '1');
+            Queue.queuePush(39);
+            dist39 = dist40 + 1;
+            }
+            if(seen.charAt(41) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(41, '1');
+            Queue.queuePush(41);
+            dist41 = dist40 + 1;
+            }
+            if(seen.charAt(48) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(48, '1');
+            Queue.queuePush(48);
+            dist48 = dist40 + 1;
+            }
+            if(seen.charAt(49) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(49, '1');
+            Queue.queuePush(49);
+            dist49 = dist40 + 1;
+            }
+            if(seen.charAt(50) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(50, '1');
+            Queue.queuePush(50);
+            dist50 = dist40 + 1;
+            }
+            break;
+            case 41:
+            if(seen.charAt(31) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(31, '1');
+            Queue.queuePush(31);
+            dist31 = dist41 + 1;
+            }
+            if(seen.charAt(32) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(32, '1');
+            Queue.queuePush(32);
+            dist32 = dist41 + 1;
+            }
+            if(seen.charAt(33) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(33, '1');
+            Queue.queuePush(33);
+            dist33 = dist41 + 1;
+            }
+            if(seen.charAt(40) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(40, '1');
+            Queue.queuePush(40);
+            dist40 = dist41 + 1;
+            }
+            if(seen.charAt(42) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(42, '1');
+            Queue.queuePush(42);
+            dist42 = dist41 + 1;
+            }
+            if(seen.charAt(49) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(49, '1');
+            Queue.queuePush(49);
+            dist49 = dist41 + 1;
+            }
+            if(seen.charAt(50) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(50, '1');
+            Queue.queuePush(50);
+            dist50 = dist41 + 1;
+            }
+            if(seen.charAt(51) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(51, '1');
+            Queue.queuePush(51);
+            dist51 = dist41 + 1;
+            }
+            break;
+            case 42:
+            if(seen.charAt(32) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(32, '1');
+            Queue.queuePush(32);
+            dist32 = dist42 + 1;
+            }
+            if(seen.charAt(33) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(33, '1');
+            Queue.queuePush(33);
+            dist33 = dist42 + 1;
+            }
+            if(seen.charAt(34) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (13 + offsety) % 10) == '1') {
+            seen.setCharAt(34, '1');
+            Queue.queuePush(34);
+            dist34 = dist42 + 1;
+            }
+            if(seen.charAt(41) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(41, '1');
+            Queue.queuePush(41);
+            dist41 = dist42 + 1;
+            }
+            if(seen.charAt(43) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (13 + offsety) % 10) == '1') {
+            seen.setCharAt(43, '1');
+            Queue.queuePush(43);
+            dist43 = dist42 + 1;
+            }
+            if(seen.charAt(50) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(50, '1');
+            Queue.queuePush(50);
+            dist50 = dist42 + 1;
+            }
+            if(seen.charAt(51) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(51, '1');
+            Queue.queuePush(51);
+            dist51 = dist42 + 1;
+            }
+            if(seen.charAt(52) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (13 + offsety) % 10) == '1') {
+            seen.setCharAt(52, '1');
+            Queue.queuePush(52);
+            dist52 = dist42 + 1;
+            }
+            break;
+            case 43:
+            if(seen.charAt(33) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(33, '1');
+            Queue.queuePush(33);
+            dist33 = dist43 + 1;
+            }
+            if(seen.charAt(34) == '0' && validLocation.charAt(((9 + offsetx) % 10) * 10 + (13 + offsety) % 10) == '1') {
+            seen.setCharAt(34, '1');
+            Queue.queuePush(34);
+            dist34 = dist43 + 1;
+            }
+            if(seen.charAt(42) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(42, '1');
+            Queue.queuePush(42);
+            dist42 = dist43 + 1;
+            }
+            if(seen.charAt(51) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(51, '1');
+            Queue.queuePush(51);
+            dist51 = dist43 + 1;
+            }
+            if(seen.charAt(52) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (13 + offsety) % 10) == '1') {
+            seen.setCharAt(52, '1');
+            Queue.queuePush(52);
+            dist52 = dist43 + 1;
+            }
+            break;
+            case 46:
+            if(seen.charAt(37) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (7 + offsety) % 10) == '1') {
+            seen.setCharAt(37, '1');
+            Queue.queuePush(37);
+            dist37 = dist46 + 1;
+            }
+            if(seen.charAt(38) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(38, '1');
+            Queue.queuePush(38);
+            dist38 = dist46 + 1;
+            }
+            if(seen.charAt(47) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(47, '1');
+            Queue.queuePush(47);
+            dist47 = dist46 + 1;
+            }
+            if(seen.charAt(55) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (7 + offsety) % 10) == '1') {
+            seen.setCharAt(55, '1');
+            Queue.queuePush(55);
+            dist55 = dist46 + 1;
+            }
+            if(seen.charAt(56) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(56, '1');
+            Queue.queuePush(56);
+            dist56 = dist46 + 1;
+            }
+            break;
+            case 47:
+            if(seen.charAt(37) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (7 + offsety) % 10) == '1') {
+            seen.setCharAt(37, '1');
+            Queue.queuePush(37);
+            dist37 = dist47 + 1;
+            }
+            if(seen.charAt(38) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(38, '1');
+            Queue.queuePush(38);
+            dist38 = dist47 + 1;
+            }
+            if(seen.charAt(39) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(39, '1');
+            Queue.queuePush(39);
+            dist39 = dist47 + 1;
+            }
+            if(seen.charAt(46) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (7 + offsety) % 10) == '1') {
+            seen.setCharAt(46, '1');
+            Queue.queuePush(46);
+            dist46 = dist47 + 1;
+            }
+            if(seen.charAt(48) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(48, '1');
+            Queue.queuePush(48);
+            dist48 = dist47 + 1;
+            }
+            if(seen.charAt(55) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (7 + offsety) % 10) == '1') {
+            seen.setCharAt(55, '1');
+            Queue.queuePush(55);
+            dist55 = dist47 + 1;
+            }
+            if(seen.charAt(56) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(56, '1');
+            Queue.queuePush(56);
+            dist56 = dist47 + 1;
+            }
+            if(seen.charAt(57) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(57, '1');
+            Queue.queuePush(57);
+            dist57 = dist47 + 1;
+            }
+            break;
+            case 48:
+            if(seen.charAt(38) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(38, '1');
+            Queue.queuePush(38);
+            dist38 = dist48 + 1;
+            }
+            if(seen.charAt(39) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(39, '1');
+            Queue.queuePush(39);
+            dist39 = dist48 + 1;
+            }
+            if(seen.charAt(40) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(40, '1');
+            Queue.queuePush(40);
+            dist40 = dist48 + 1;
+            }
+            if(seen.charAt(47) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(47, '1');
+            Queue.queuePush(47);
+            dist47 = dist48 + 1;
+            }
+            if(seen.charAt(49) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(49, '1');
+            Queue.queuePush(49);
+            dist49 = dist48 + 1;
+            }
+            if(seen.charAt(56) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(56, '1');
+            Queue.queuePush(56);
+            dist56 = dist48 + 1;
+            }
+            if(seen.charAt(57) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(57, '1');
+            Queue.queuePush(57);
+            dist57 = dist48 + 1;
+            }
+            if(seen.charAt(58) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(58, '1');
+            Queue.queuePush(58);
+            dist58 = dist48 + 1;
+            }
+            break;
+            case 49:
+            if(seen.charAt(39) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(39, '1');
+            Queue.queuePush(39);
+            dist39 = dist49 + 1;
+            }
+            if(seen.charAt(40) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(40, '1');
+            Queue.queuePush(40);
+            dist40 = dist49 + 1;
+            }
+            if(seen.charAt(41) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(41, '1');
+            Queue.queuePush(41);
+            dist41 = dist49 + 1;
+            }
+            if(seen.charAt(48) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(48, '1');
+            Queue.queuePush(48);
+            dist48 = dist49 + 1;
+            }
+            if(seen.charAt(50) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(50, '1');
+            Queue.queuePush(50);
+            dist50 = dist49 + 1;
+            }
+            if(seen.charAt(57) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(57, '1');
+            Queue.queuePush(57);
+            dist57 = dist49 + 1;
+            }
+            if(seen.charAt(58) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(58, '1');
+            Queue.queuePush(58);
+            dist58 = dist49 + 1;
+            }
+            if(seen.charAt(59) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(59, '1');
+            Queue.queuePush(59);
+            dist59 = dist49 + 1;
+            }
+            break;
+            case 50:
+            if(seen.charAt(40) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(40, '1');
+            Queue.queuePush(40);
+            dist40 = dist50 + 1;
+            }
+            if(seen.charAt(41) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(41, '1');
+            Queue.queuePush(41);
+            dist41 = dist50 + 1;
+            }
+            if(seen.charAt(42) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(42, '1');
+            Queue.queuePush(42);
+            dist42 = dist50 + 1;
+            }
+            if(seen.charAt(49) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(49, '1');
+            Queue.queuePush(49);
+            dist49 = dist50 + 1;
+            }
+            if(seen.charAt(51) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(51, '1');
+            Queue.queuePush(51);
+            dist51 = dist50 + 1;
+            }
+            if(seen.charAt(58) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(58, '1');
+            Queue.queuePush(58);
+            dist58 = dist50 + 1;
+            }
+            if(seen.charAt(59) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(59, '1');
+            Queue.queuePush(59);
+            dist59 = dist50 + 1;
+            }
+            if(seen.charAt(60) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(60, '1');
+            Queue.queuePush(60);
+            dist60 = dist50 + 1;
+            }
+            break;
+            case 51:
+            if(seen.charAt(41) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(41, '1');
+            Queue.queuePush(41);
+            dist41 = dist51 + 1;
+            }
+            if(seen.charAt(42) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(42, '1');
+            Queue.queuePush(42);
+            dist42 = dist51 + 1;
+            }
+            if(seen.charAt(43) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (13 + offsety) % 10) == '1') {
+            seen.setCharAt(43, '1');
+            Queue.queuePush(43);
+            dist43 = dist51 + 1;
+            }
+            if(seen.charAt(50) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(50, '1');
+            Queue.queuePush(50);
+            dist50 = dist51 + 1;
+            }
+            if(seen.charAt(52) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (13 + offsety) % 10) == '1') {
+            seen.setCharAt(52, '1');
+            Queue.queuePush(52);
+            dist52 = dist51 + 1;
+            }
+            if(seen.charAt(59) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(59, '1');
+            Queue.queuePush(59);
+            dist59 = dist51 + 1;
+            }
+            if(seen.charAt(60) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(60, '1');
+            Queue.queuePush(60);
+            dist60 = dist51 + 1;
+            }
+            if(seen.charAt(61) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (13 + offsety) % 10) == '1') {
+            seen.setCharAt(61, '1');
+            Queue.queuePush(61);
+            dist61 = dist51 + 1;
+            }
+            break;
+            case 52:
+            if(seen.charAt(42) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(42, '1');
+            Queue.queuePush(42);
+            dist42 = dist52 + 1;
+            }
+            if(seen.charAt(43) == '0' && validLocation.charAt(((10 + offsetx) % 10) * 10 + (13 + offsety) % 10) == '1') {
+            seen.setCharAt(43, '1');
+            Queue.queuePush(43);
+            dist43 = dist52 + 1;
+            }
+            if(seen.charAt(51) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(51, '1');
+            Queue.queuePush(51);
+            dist51 = dist52 + 1;
+            }
+            if(seen.charAt(60) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(60, '1');
+            Queue.queuePush(60);
+            dist60 = dist52 + 1;
+            }
+            if(seen.charAt(61) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (13 + offsety) % 10) == '1') {
+            seen.setCharAt(61, '1');
+            Queue.queuePush(61);
+            dist61 = dist52 + 1;
+            }
+            break;
+            case 55:
+            if(seen.charAt(46) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (7 + offsety) % 10) == '1') {
+            seen.setCharAt(46, '1');
+            Queue.queuePush(46);
+            dist46 = dist55 + 1;
+            }
+            if(seen.charAt(47) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(47, '1');
+            Queue.queuePush(47);
+            dist47 = dist55 + 1;
+            }
+            if(seen.charAt(56) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(56, '1');
+            Queue.queuePush(56);
+            dist56 = dist55 + 1;
+            }
+            if(seen.charAt(65) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(65, '1');
+            Queue.queuePush(65);
+            dist65 = dist55 + 1;
+            }
+            break;
+            case 56:
+            if(seen.charAt(46) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (7 + offsety) % 10) == '1') {
+            seen.setCharAt(46, '1');
+            Queue.queuePush(46);
+            dist46 = dist56 + 1;
+            }
+            if(seen.charAt(47) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(47, '1');
+            Queue.queuePush(47);
+            dist47 = dist56 + 1;
+            }
+            if(seen.charAt(48) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(48, '1');
+            Queue.queuePush(48);
+            dist48 = dist56 + 1;
+            }
+            if(seen.charAt(55) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (7 + offsety) % 10) == '1') {
+            seen.setCharAt(55, '1');
+            Queue.queuePush(55);
+            dist55 = dist56 + 1;
+            }
+            if(seen.charAt(57) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(57, '1');
+            Queue.queuePush(57);
+            dist57 = dist56 + 1;
+            }
+            if(seen.charAt(65) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(65, '1');
+            Queue.queuePush(65);
+            dist65 = dist56 + 1;
+            }
+            if(seen.charAt(66) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(66, '1');
+            Queue.queuePush(66);
+            dist66 = dist56 + 1;
+            }
+            break;
+            case 57:
+            if(seen.charAt(47) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(47, '1');
+            Queue.queuePush(47);
+            dist47 = dist57 + 1;
+            }
+            if(seen.charAt(48) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(48, '1');
+            Queue.queuePush(48);
+            dist48 = dist57 + 1;
+            }
+            if(seen.charAt(49) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(49, '1');
+            Queue.queuePush(49);
+            dist49 = dist57 + 1;
+            }
+            if(seen.charAt(56) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(56, '1');
+            Queue.queuePush(56);
+            dist56 = dist57 + 1;
+            }
+            if(seen.charAt(58) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(58, '1');
+            Queue.queuePush(58);
+            dist58 = dist57 + 1;
+            }
+            if(seen.charAt(65) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(65, '1');
+            Queue.queuePush(65);
+            dist65 = dist57 + 1;
+            }
+            if(seen.charAt(66) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(66, '1');
+            Queue.queuePush(66);
+            dist66 = dist57 + 1;
+            }
+            if(seen.charAt(67) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(67, '1');
+            Queue.queuePush(67);
+            dist67 = dist57 + 1;
+            }
+            break;
+            case 58:
+            if(seen.charAt(48) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(48, '1');
+            Queue.queuePush(48);
+            dist48 = dist58 + 1;
+            }
+            if(seen.charAt(49) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(49, '1');
+            Queue.queuePush(49);
+            dist49 = dist58 + 1;
+            }
+            if(seen.charAt(50) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(50, '1');
+            Queue.queuePush(50);
+            dist50 = dist58 + 1;
+            }
+            if(seen.charAt(57) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(57, '1');
+            Queue.queuePush(57);
+            dist57 = dist58 + 1;
+            }
+            if(seen.charAt(59) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(59, '1');
+            Queue.queuePush(59);
+            dist59 = dist58 + 1;
+            }
+            if(seen.charAt(66) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(66, '1');
+            Queue.queuePush(66);
+            dist66 = dist58 + 1;
+            }
+            if(seen.charAt(67) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(67, '1');
+            Queue.queuePush(67);
+            dist67 = dist58 + 1;
+            }
+            if(seen.charAt(68) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(68, '1');
+            Queue.queuePush(68);
+            dist68 = dist58 + 1;
+            }
+            break;
+            case 59:
+            if(seen.charAt(49) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(49, '1');
+            Queue.queuePush(49);
+            dist49 = dist59 + 1;
+            }
+            if(seen.charAt(50) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(50, '1');
+            Queue.queuePush(50);
+            dist50 = dist59 + 1;
+            }
+            if(seen.charAt(51) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(51, '1');
+            Queue.queuePush(51);
+            dist51 = dist59 + 1;
+            }
+            if(seen.charAt(58) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(58, '1');
+            Queue.queuePush(58);
+            dist58 = dist59 + 1;
+            }
+            if(seen.charAt(60) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(60, '1');
+            Queue.queuePush(60);
+            dist60 = dist59 + 1;
+            }
+            if(seen.charAt(67) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(67, '1');
+            Queue.queuePush(67);
+            dist67 = dist59 + 1;
+            }
+            if(seen.charAt(68) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(68, '1');
+            Queue.queuePush(68);
+            dist68 = dist59 + 1;
+            }
+            if(seen.charAt(69) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(69, '1');
+            Queue.queuePush(69);
+            dist69 = dist59 + 1;
+            }
+            break;
+            case 60:
+            if(seen.charAt(50) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(50, '1');
+            Queue.queuePush(50);
+            dist50 = dist60 + 1;
+            }
+            if(seen.charAt(51) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(51, '1');
+            Queue.queuePush(51);
+            dist51 = dist60 + 1;
+            }
+            if(seen.charAt(52) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (13 + offsety) % 10) == '1') {
+            seen.setCharAt(52, '1');
+            Queue.queuePush(52);
+            dist52 = dist60 + 1;
+            }
+            if(seen.charAt(59) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(59, '1');
+            Queue.queuePush(59);
+            dist59 = dist60 + 1;
+            }
+            if(seen.charAt(61) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (13 + offsety) % 10) == '1') {
+            seen.setCharAt(61, '1');
+            Queue.queuePush(61);
+            dist61 = dist60 + 1;
+            }
+            if(seen.charAt(68) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(68, '1');
+            Queue.queuePush(68);
+            dist68 = dist60 + 1;
+            }
+            if(seen.charAt(69) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(69, '1');
+            Queue.queuePush(69);
+            dist69 = dist60 + 1;
+            }
+            break;
+            case 61:
+            if(seen.charAt(51) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(51, '1');
+            Queue.queuePush(51);
+            dist51 = dist61 + 1;
+            }
+            if(seen.charAt(52) == '0' && validLocation.charAt(((11 + offsetx) % 10) * 10 + (13 + offsety) % 10) == '1') {
+            seen.setCharAt(52, '1');
+            Queue.queuePush(52);
+            dist52 = dist61 + 1;
+            }
+            if(seen.charAt(60) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(60, '1');
+            Queue.queuePush(60);
+            dist60 = dist61 + 1;
+            }
+            if(seen.charAt(69) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(69, '1');
+            Queue.queuePush(69);
+            dist69 = dist61 + 1;
+            }
+            break;
+            case 65:
+            if(seen.charAt(55) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (7 + offsety) % 10) == '1') {
+            seen.setCharAt(55, '1');
+            Queue.queuePush(55);
+            dist55 = dist65 + 1;
+            }
+            if(seen.charAt(56) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(56, '1');
+            Queue.queuePush(56);
+            dist56 = dist65 + 1;
+            }
+            if(seen.charAt(57) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(57, '1');
+            Queue.queuePush(57);
+            dist57 = dist65 + 1;
+            }
+            if(seen.charAt(66) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(66, '1');
+            Queue.queuePush(66);
+            dist66 = dist65 + 1;
+            }
+            break;
+            case 66:
+            if(seen.charAt(56) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(56, '1');
+            Queue.queuePush(56);
+            dist56 = dist66 + 1;
+            }
+            if(seen.charAt(57) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(57, '1');
+            Queue.queuePush(57);
+            dist57 = dist66 + 1;
+            }
+            if(seen.charAt(58) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(58, '1');
+            Queue.queuePush(58);
+            dist58 = dist66 + 1;
+            }
+            if(seen.charAt(65) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (8 + offsety) % 10) == '1') {
+            seen.setCharAt(65, '1');
+            Queue.queuePush(65);
+            dist65 = dist66 + 1;
+            }
+            if(seen.charAt(67) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(67, '1');
+            Queue.queuePush(67);
+            dist67 = dist66 + 1;
+            }
+            break;
+            case 67:
+            if(seen.charAt(57) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(57, '1');
+            Queue.queuePush(57);
+            dist57 = dist67 + 1;
+            }
+            if(seen.charAt(58) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(58, '1');
+            Queue.queuePush(58);
+            dist58 = dist67 + 1;
+            }
+            if(seen.charAt(59) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(59, '1');
+            Queue.queuePush(59);
+            dist59 = dist67 + 1;
+            }
+            if(seen.charAt(66) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (9 + offsety) % 10) == '1') {
+            seen.setCharAt(66, '1');
+            Queue.queuePush(66);
+            dist66 = dist67 + 1;
+            }
+            if(seen.charAt(68) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(68, '1');
+            Queue.queuePush(68);
+            dist68 = dist67 + 1;
+            }
+            break;
+            case 68:
+            if(seen.charAt(58) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(58, '1');
+            Queue.queuePush(58);
+            dist58 = dist68 + 1;
+            }
+            if(seen.charAt(59) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(59, '1');
+            Queue.queuePush(59);
+            dist59 = dist68 + 1;
+            }
+            if(seen.charAt(60) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(60, '1');
+            Queue.queuePush(60);
+            dist60 = dist68 + 1;
+            }
+            if(seen.charAt(67) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (10 + offsety) % 10) == '1') {
+            seen.setCharAt(67, '1');
+            Queue.queuePush(67);
+            dist67 = dist68 + 1;
+            }
+            if(seen.charAt(69) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(69, '1');
+            Queue.queuePush(69);
+            dist69 = dist68 + 1;
+            }
+            break;
+            case 69:
+            if(seen.charAt(59) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(59, '1');
+            Queue.queuePush(59);
+            dist59 = dist69 + 1;
+            }
+            if(seen.charAt(60) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (12 + offsety) % 10) == '1') {
+            seen.setCharAt(60, '1');
+            Queue.queuePush(60);
+            dist60 = dist69 + 1;
+            }
+            if(seen.charAt(61) == '0' && validLocation.charAt(((12 + offsetx) % 10) * 10 + (13 + offsety) % 10) == '1') {
+            seen.setCharAt(61, '1');
+            Queue.queuePush(61);
+            dist61 = dist69 + 1;
+            }
+            if(seen.charAt(68) == '0' && validLocation.charAt(((13 + offsetx) % 10) * 10 + (11 + offsety) % 10) == '1') {
+            seen.setCharAt(68, '1');
+            Queue.queuePush(68);
+            dist68 = dist69 + 1;
+            }
+            break;
         }
+    }
     }
 
     Direction bfs(MapLocation currentTarget) {
