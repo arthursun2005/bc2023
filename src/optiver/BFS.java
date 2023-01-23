@@ -2238,8 +2238,8 @@ public class BFS {
         for (int i = cur; i >= Math.max(0, cur - 7); i--) {
             // if dist <= 8 (robot there) conitnue
             if ((path[i].x - curLoc.x) * (path[i].x - curLoc.x) + (path[i].y - curLoc.y) * (path[i].y - curLoc.y) > 15) continue;
-            if (rc.getLocation().distanceSquaredTo(path[cur]) <= 8 && rc.senseRobotAtLocation(path[cur]) != null) continue;
-            validLocation.setCharAt((path[i].x % 10) * 10 + (path[i].y % 10), '1');
+            if (rc.getLocation().distanceSquaredTo(path[i]) <= 8 && rc.senseRobotAtLocation(path[i]) != null) continue;
+            seen.setCharAt((path[i].x - curLoc.x + 4) * 9 + (path[i].y - curLoc.y + 4), '0');
         }
 
         /*seen.setCharAt((currentTarget.x - curLoc.x + 4) * 9 + (currentTarget.y - curLoc.y + 4), '0');*/

@@ -44,6 +44,7 @@ public abstract class Robot {
         turnCount++;
         roundNum = rc.getRoundNum();
         bfs.lastDir = null;
+        movement.hasBFS = false;
 
         MapLocation curLocation = rc.getLocation();
 
