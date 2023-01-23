@@ -80,7 +80,7 @@ public class Carrier extends Robot {
 
     public void run() throws GameActionException {
         MapLocation HQLoc = tracker.getClosestHQLoc();
-        rc.setIndicatorLine(HQLoc, rc.getLocation(), 100, 100, 255);
+        //rc.setIndicatorLine(HQLoc, rc.getLocation(), 100, 100, 255);
 
         boolean shouldReturn = false;
 
@@ -133,7 +133,7 @@ public class Carrier extends Robot {
         if (well != null) {
             tryMine(well);
             tryMine(well);
-            rc.setIndicatorLine(well, rc.getLocation(), 255, 255, 200);
+            //rc.setIndicatorLine(well, rc.getLocation(), 255, 255, 200);
 
             if (rc.getLocation().distanceSquaredTo(well) > rc.getLocation().distanceSquaredTo(HQLoc) && huhh >= 20)
                 shouldReturn = true;

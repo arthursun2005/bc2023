@@ -47,19 +47,29 @@ public abstract class Robot {
         MapLocation curLocation = rc.getLocation();
 
         if (!curLocation.equals(prevLocation)) {
-            if (rc.senseCloud(prevLocation) && !rc.senseCloud(curLocation)) {
+            if (!rc.canSenseLocation(prevLocation)) {
+                bfs.redoMap();
+            } else if (!rc.senseCloud(curLocation) && rc.senseCloud(prevLocation)) {
                 // kinda gotta redo the array
                 // TODO: NOW WE DONT RUN BFS PROBABLY CUZ NOT ENOUGH BYTECODE
                 bfs.redoMap();
 
             } else {
-                Direction moved = prevLocation.directionTo(curLocation);
-                update(moved, curLocation);
+                if (curLocation.distanceSquaredTo(prevLocation) <= 2) {
+                    Direction moved = prevLocation.directionTo(curLocation);
+                    update(moved, curLocation);
+                } else if (curLocation.distanceSquaredTo(prevLocation) <= 8) {
+                    updateDouble();
+                } else {
+                    bfs.redoMap();
+                }
 
-                System.out.println(bfs.validLocation);
+
+//                System.out.println(bfs.validLocation);
             }
             prevLocation = curLocation;
         }
+        //bfs.redoMap();
     }
 
     public void moveTo(MapLocation loc) throws GameActionException {
@@ -151,6 +161,539 @@ public abstract class Robot {
     static int nx, ny;
     MapInfo mapInfo;
     MapLocation temp;
+
+    public void updateDouble() throws GameActionException {
+        int width = rc.getMapWidth(); int height = rc.getMapHeight();
+        MapLocation curLocation = rc.getLocation();
+        nx = curLocation.x + -4;
+        ny = curLocation.y + -2;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+        nx = curLocation.x + -4;
+        ny = curLocation.y + -1;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+        nx = curLocation.x + -4;
+        ny = curLocation.y + 0;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+        nx = curLocation.x + -4;
+        ny = curLocation.y + 1;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+        nx = curLocation.x + -4;
+        ny = curLocation.y + 2;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+        nx = curLocation.x + -3;
+        ny = curLocation.y + -3;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+        nx = curLocation.x + -3;
+        ny = curLocation.y + -2;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+        nx = curLocation.x + -3;
+        ny = curLocation.y + -1;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+        nx = curLocation.x + -3;
+        ny = curLocation.y + 0;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+        nx = curLocation.x + -3;
+        ny = curLocation.y + 1;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+        nx = curLocation.x + -3;
+        ny = curLocation.y + 2;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+        nx = curLocation.x + -3;
+        ny = curLocation.y + 3;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+        nx = curLocation.x + -2;
+        ny = curLocation.y + -4;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+        nx = curLocation.x + -2;
+        ny = curLocation.y + -3;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+        nx = curLocation.x + -2;
+        ny = curLocation.y + 3;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+        nx = curLocation.x + -2;
+        ny = curLocation.y + 4;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+        nx = curLocation.x + -1;
+        ny = curLocation.y + -4;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+        nx = curLocation.x + -1;
+        ny = curLocation.y + -3;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+        nx = curLocation.x + -1;
+        ny = curLocation.y + 3;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+        nx = curLocation.x + -1;
+        ny = curLocation.y + 4;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+        nx = curLocation.x + 0;
+        ny = curLocation.y + -4;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+        nx = curLocation.x + 0;
+        ny = curLocation.y + -3;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+        nx = curLocation.x + 0;
+        ny = curLocation.y + 3;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+        nx = curLocation.x + 0;
+        ny = curLocation.y + 4;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+        nx = curLocation.x + 1;
+        ny = curLocation.y + -4;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+        nx = curLocation.x + 1;
+        ny = curLocation.y + -3;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+        nx = curLocation.x + 1;
+        ny = curLocation.y + 3;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+        nx = curLocation.x + 1;
+        ny = curLocation.y + 4;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+        nx = curLocation.x + 2;
+        ny = curLocation.y + -4;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+        nx = curLocation.x + 2;
+        ny = curLocation.y + -3;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+        nx = curLocation.x + 2;
+        ny = curLocation.y + 3;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+        nx = curLocation.x + 2;
+        ny = curLocation.y + 4;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+        nx = curLocation.x + 3;
+        ny = curLocation.y + -3;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+        nx = curLocation.x + 3;
+        ny = curLocation.y + -2;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+        nx = curLocation.x + 3;
+        ny = curLocation.y + -1;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+        nx = curLocation.x + 3;
+        ny = curLocation.y + 0;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+        nx = curLocation.x + 3;
+        ny = curLocation.y + 1;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+        nx = curLocation.x + 3;
+        ny = curLocation.y + 2;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+        nx = curLocation.x + 3;
+        ny = curLocation.y + 3;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+        nx = curLocation.x + 4;
+        ny = curLocation.y + -2;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+        nx = curLocation.x + 4;
+        ny = curLocation.y + -1;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+        nx = curLocation.x + 4;
+        ny = curLocation.y + 0;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+        nx = curLocation.x + 4;
+        ny = curLocation.y + 1;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+        nx = curLocation.x + 4;
+        ny = curLocation.y + 2;
+        if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            temp = new MapLocation(nx, ny);
+            if (rc.canSenseLocation(temp)) {
+                mapInfo = rc.senseMapInfo(temp);
+                if (mapInfo.isPassable()) {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + '0'));
+                    if (!mapInfo.getCurrentDirection().equals(Direction.CENTER)) bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) (1 + mapInfo.getCurrentDirection().getDirectionOrderNum() + '0'));
+                } else {
+                    bfs.validLocation.setCharAt((nx % 10) * 10 + (ny % 10), (char) ('0'));
+                }}}
+    }
     public void update(Direction moved, MapLocation curLocation) throws GameActionException {
 
         int width = rc.getMapWidth(); int height = rc.getMapHeight();

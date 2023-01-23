@@ -28,7 +28,7 @@ public class Destabilizer extends Robot {
             rc.setIndicatorDot(weakLoc, 255, 255, 100);
         }
         if (target != null) {
-            rc.setIndicatorLine(target, rc.getLocation(), 225, 235, 255);
+            //rc.setIndicatorLine(target, rc.getLocation(), 225, 235, 255);
         }
         if (status == 1) {
             if (weakLoc != null)

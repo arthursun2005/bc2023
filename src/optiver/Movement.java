@@ -10,13 +10,15 @@ enum State {
 
 public class Movement {
     RobotController rc;
+    Robot robot;
     BFS bfs;
     Movement(Robot rc) {
         this.rc = rc.rc;
+        this.robot = rc;
         this.bfs = rc.bfs;
     }
 
-    Random rng = null;
+    //Random rng = null;
 
     MapLocation[] path = new MapLocation[269];
     MapLocation prevLocation = null;
@@ -83,7 +85,7 @@ public class Movement {
 
             currentState = State.WALL;
             lastWall = path[cur];
-            turningLeft = (rng.nextInt(2) == 1);
+            turningLeft = true;//(rng.nextInt(2) == 1);
             canSwitch = true;
 
             Direction checkDir = dir;
@@ -159,14 +161,16 @@ public class Movement {
 
     void localMove(MapLocation loc) throws GameActionException {
         if (!rc.isMovementReady()) return;
-        bfs.initBFS();
         boolean toReset = true;
-        if (!rc.senseCloud(rc.getLocation())) {
+        if (!rc.senseCloud(rc.getLocation()) && rc.getRoundNum() != robot.creationRound) {
+            bfs.initBFS(path, cur);
             for (int i = cur; i >= Math.max(0, cur - 5); i--) {
-                if (rc.getLocation().distanceSquaredTo(path[cur]) > 15) continue;
+                if (rc.getLocation().distanceSquaredTo(path[i]) > 15) continue;
+                rc.setIndicatorDot(path[i], 255, 69, 69);
                 toReset = false;
-                Direction tmp = bfs.bfs(path[cur]);
+                Direction tmp = bfs.bfs(path[i]);
                 if (tmp != null && rc.canMove(tmp)) {
+                    rc.setIndicatorLine(path[i], rc.getLocation(), 255, 255, 69);
                     rc.move(tmp);
                     return;
                 }
@@ -191,13 +195,16 @@ public class Movement {
                 break;
             }
         }
-        if (toReset) reset();
+        if (toReset) {
+            rc.setIndicatorString("bruh");
+            reset();
+        }
     }
 
     int lastUpdate = -1;
 
     void moveTo(MapLocation loc) throws GameActionException {
-        if (rng == null) rng = new Random(rc.getID());
+        //if (rng == null) rng = new Random(rc.getID());
         if (!rc.isMovementReady()) return;
         if (rc.getLocation().distanceSquaredTo(loc) == 0) return;
         if (rc.getLocation().distanceSquaredTo(loc) <= 2 && (rc.senseRobotAtLocation(loc) != null || !rc.sensePassability(loc))) return;
@@ -216,6 +223,8 @@ public class Movement {
         /*for (int i = 0; i + 1 <= cur; i++) {
             rc.setIndicatorLine(path[i], path[i+1], 225, 235, 255);
         }*/
+        //rc.setIndicatorLine(path[cur], rc.getLocation(), 235, 69, 255);
+        rc.setIndicatorLine(loc, rc.getLocation(), 69, 235, 255);
         localMove(loc);
     }
 }
