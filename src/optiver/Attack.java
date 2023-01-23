@@ -12,10 +12,8 @@ public class Attack {
         this.robot = robot;
     }
 
-    final int times = 3;
     final int coef = 100;
-
-    RobotInfo[][] acrossTime = new RobotInfo[times][];
+    RobotInfo[][] acrossTime = new RobotInfo[3][];
 
     RobotInfo[] friends;
 
@@ -49,22 +47,26 @@ public class Attack {
     }
 
     public void update() throws GameActionException {
-        for (int i = 0; i < times - 1; i++)
-            acrossTime[i] = acrossTime[i + 1];
-        acrossTime[times - 1] = rc.senseNearbyRobots(-1, rc.getTeam().opponent());
+        acrossTime[0] = acrossTime[1];
+        acrossTime[1] = acrossTime[2];
+        acrossTime[2] = rc.senseNearbyRobots(-1, rc.getTeam().opponent());
 
-        ArrayList<RobotInfo> using = new ArrayList<>(Arrays.asList(acrossTime[times - 1]));
+        ArrayList<RobotInfo> using = new ArrayList<>(Arrays.asList(acrossTime[2]));
         StringBuilder hashset = new StringBuilder(String.format("%30000s", ""));
-        for (int i = times - 2; i >= 0; i--) {
-            if (acrossTime[i] == null)
-                continue;
-            for (RobotInfo ri : acrossTime[i]) {
+        if (acrossTime[1] != null)
+            for (RobotInfo ri : acrossTime[1]) {
                 if (!rc.canSenseLocation(ri.location) && hashset.charAt(ri.ID) == ' ') {
                     hashset.setCharAt(ri.ID, '1');
                     using.add(ri);
                 }
             }
-        }
+        if (acrossTime[0] != null)
+            for (RobotInfo ri : acrossTime[0]) {
+                if (!rc.canSenseLocation(ri.location) && hashset.charAt(ri.ID) == ' ') {
+                    hashset.setCharAt(ri.ID, '1');
+                    using.add(ri);
+                }
+            }
         persistentEnemies = using.toArray(new RobotInfo[using.size()]);
     }
 

@@ -28,14 +28,14 @@ public class Launcher extends Robot {
     int eval(MapLocation loc, MapLocation target, int mul) throws GameActionException {
         int base = target.distanceSquaredTo(loc) * mul;// * 1_000_000 - loc.distanceSquaredTo(HQLoc);
         if (rc.senseCloud(loc))
-            base += 1_000_000_000;
+            base += 1_000;
         return base;
     }
 
     public void randomizedGreedy(MapLocation target, int mul, int tol) throws GameActionException {
         int hits = rc.getLocation().distanceSquaredTo(target) <= tol
                 ? eval(rc.getLocation(), target, mul)
-                : 1_000_000_000;
+                : 2_000_000_000;
         Direction[] allGood = new Direction[9];
         int gc = 0;
 
@@ -43,9 +43,9 @@ public class Launcher extends Robot {
             if (!rc.canMove(dir))
                 continue;
             MapLocation loc = rc.adjacentLocation(dir);
-            if (loc.distanceSquaredTo(target) > tol)
-                continue;
             int w = eval(loc, target, mul);
+            if (loc.distanceSquaredTo(target) > tol)
+                w += loc.distanceSquaredTo(target) * 1_000_000;
             if (w < hits) {
                 hits = w;
                 allGood[0] = dir;
@@ -58,8 +58,6 @@ public class Launcher extends Robot {
 
         if (gc != 0)
             rc.move(allGood[rng.nextInt(gc)]);
-        else
-            moveTo(target);
     }
 
     public void run() throws GameActionException {
@@ -71,7 +69,7 @@ public class Launcher extends Robot {
             rc.setIndicatorDot(weakLoc, 255, 255, 100);
         }
         if (symmetry.target != null) {
-            // rc.setIndicatorLine(symmetry.target.loc, rc.getLocation(), 225, 235, 255);
+            rc.setIndicatorLine(symmetry.target.loc, rc.getLocation(), 225, 235, 255);
         }
 
         // if (status == 0 && rc.canSenseLocation(target.loc))
@@ -93,24 +91,22 @@ public class Launcher extends Robot {
             attack.tryAttack();
         } else if (status == 0) {
             // int mini = rc.getLocation().distanceSquaredTo(symmetry.target.loc);
-            // int lowerCount = 0;
-            /*
-             * MapLocation bestie = null;
-             * RobotInfo[] friends = rc.senseNearbyRobots(-1, rc.getTeam());
-             * int count = 0;
-             * 
-             * for (RobotInfo friend : friends) {
-             * if (friend.type == RobotType.LAUNCHER) {
-             * // if (friend.ID < rc.getID())
-             * // lowerCount++;
-             * count++;
-             * if (friend.location.distanceSquaredTo(symmetry.target.loc) < mini) {
-             * mini = friend.location.distanceSquaredTo(symmetry.target.loc);
-             * bestie = friend.location;
-             * }
-             * }
-             * }
-             */
+            // // int lowerCount = 0;
+            // MapLocation bestie = null;
+            // RobotInfo[] friends = rc.senseNearbyRobots(-1, rc.getTeam());
+            // int count = 0;
+
+            // for (RobotInfo friend : friends) {
+            //     if (friend.type == RobotType.LAUNCHER) {
+            //         // if (friend.ID < rc.getID())
+            //         // lowerCount++;
+            //         count++;
+            //         if (friend.location.distanceSquaredTo(symmetry.target.loc) < mini) {
+            //             mini = friend.location.distanceSquaredTo(symmetry.target.loc);
+            //             bestie = friend.location;
+            //         }
+            //     }
+            // }
 
             attack.tryAttack();
 
@@ -119,7 +115,7 @@ public class Launcher extends Robot {
                     && rc.getLocation().distanceSquaredTo(site) < 2
                             * rc.getLocation().distanceSquaredTo(symmetry.target.loc)) {
                 moveTo(site);
-                // rc.setIndicatorLine(site, rc.getLocation(), 255, 0, 0);
+                rc.setIndicatorLine(site, rc.getLocation(), 255, 0, 0);
             }
 
             int req = 0;// (int) (rc.getRoundNum() / 100) + 1;
@@ -127,16 +123,14 @@ public class Launcher extends Robot {
             // if (mini < rc.getID() && lowerCount < 9) {
             // moveTo(bestie);
             // }
-            /*
-             * if (false && bestie != null) { //sus
-             * // Direction dir = rc.getLocation().directionTo(bestie);
-             * // tryMove(dir.rotateLeft().rotateLeft());
-             * // tryMove(dir.rotateRight().rotateRight());
-             * // tryMove(dir.rotateLeft());
-             * // tryMove(dir.rotateRight());
-             * moveTo(bestie);
-             * }
-             */
+            // if (bestie != null) {
+                // Direction dir = rc.getLocation().directionTo(bestie);
+                // tryMove(dir.rotateLeft().rotateLeft());
+                // tryMove(dir.rotateRight().rotateRight());
+                // tryMove(dir.rotateLeft());
+                // tryMove(dir.rotateRight());
+                // moveTo(bestie);
+            // }
 
             moveTo(symmetry.update());
 
