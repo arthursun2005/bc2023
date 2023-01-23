@@ -80,8 +80,8 @@ public class Carrier extends Robot {
 
 //        if (rc.canMove(Direction.EAST)) rc.move(Direction.EAST);
         Direction dir = bfs.tryBFS(new MapLocation(5, 20));
-        if (dir == null) return;
-        if (rc.canMove(dir)) rc.move(dir);
+//        if (dir == null) return;
+//        if (rc.canMove(dir)) rc.move(dir);
         //        System.out.println(Clock.getBytecodesLeft());
 //
 //        Direction dir = bfs.tryBFS(new MapLocation(6, 22));
