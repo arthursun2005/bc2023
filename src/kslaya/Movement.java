@@ -188,7 +188,7 @@ public class Movement {
                 }
                 if (rc.getLocation().distanceSquaredTo(path[i]) <= 15) {
                     rc.setIndicatorDot(path[i], 255, 69, 69);
-                    int idx = bfs.result.indexOf("^" + ((path[i].x - curLoc.x + 3) * 7 + (path[i].y - curLoc.y + 3)));
+                    int idx = bfs.result.indexOf("^" + ((path[i].x - curLoc.x + 3) * 7 + (path[i].y - curLoc.y + 3)) + ":");
                     if (idx != -1) {
                         int comidx = bfs.result.indexOf(":", idx);
                         System.out.println(bfs.result.charAt(comidx+1));

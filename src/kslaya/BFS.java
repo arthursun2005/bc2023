@@ -57,7 +57,7 @@ public class BFS {
         seen.setCharAt(24, '1');
         Queue.queuePush(24 << 8);
 
-        if (rc.getID() == 11267) {
+        if (rc.getID() == 13659) {
             System.out.println(seen);
         }
 
@@ -67,14 +67,15 @@ public class BFS {
             int second = (current & 15);
             int idx = current >> 8;
 
-            if (rc.getID() == 11267) {
+/*            if (rc.getID() == 13659) {
 //                System.out.println(curLoc);
                 System.out.println(new MapLocation(curLoc.x + idx / 7 - 3, curLoc.y + idx % 7 - 3));
                 System.out.println(Direction.DIRECTION_ORDER[first] + " " + Direction.DIRECTION_ORDER[second]);
-            }
+            }*/
 
             if (stb.indexOf(String.valueOf(idx)) != -1) {
                 result.append("^" + (idx) + ":" + (first) + "" + (second));
+//                System.out.println(result);
             }
 
             switch(idx) {
