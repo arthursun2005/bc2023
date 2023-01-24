@@ -191,6 +191,7 @@ public class Movement {
                     int idx = bfs.result.indexOf("^" + ((path[i].x - curLoc.x + 3) * 7 + (path[i].y - curLoc.y + 3)));
                     if (idx != -1) {
                         int comidx = bfs.result.indexOf(":", idx);
+                        if (rc.getID() == 11267) System.out.println(rc.getLocation() + " To " + path[i] + "Direction is " + Direction.DIRECTION_ORDER[bfs.result.charAt(comidx+2) - '0']);
                         System.out.println(bfs.result.charAt(comidx+1));
                         Direction firstDir = Direction.DIRECTION_ORDER[bfs.result.charAt(comidx+1) - '0'];
                         if (rc.canMove(firstDir)) {
@@ -262,7 +263,7 @@ public class Movement {
             if (update(loc))
             if (update(loc))
             if (update(loc))
-            if (update(loc))
+//            if (update(loc))
             if (update(loc));
             lastUpdate = rc.getRoundNum();
         }
