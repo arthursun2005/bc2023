@@ -195,6 +195,7 @@ public class Movement {
                         Direction firstDir = Direction.DIRECTION_ORDER[bfs.result.charAt(comidx+1) - '0'];
                         if (rc.canMove(firstDir)) {
                             rc.setIndicatorLine(path[i], rc.getLocation(), 255, 255, 69);
+                            rc.setIndicatorString("Trying to go to " + path[i] + " by heading " + firstDir);
                             nextMove = Direction.DIRECTION_ORDER[bfs.result.charAt(comidx+2) - '0'];
                             rc.move(firstDir);
                             resetCnt = 0;
