@@ -197,6 +197,7 @@ public class Movement {
                             rc.setIndicatorLine(path[i], rc.getLocation(), 255, 255, 69);
                             nextMove = Direction.DIRECTION_ORDER[bfs.result.charAt(comidx+2) - '0'];
                             rc.move(firstDir);
+                            resetCnt = 0;
                             return;
                         }
                     }
@@ -213,6 +214,7 @@ public class Movement {
                     if (rc.canMove(curLoc.directionTo(path[i]))) {
                         rc.setIndicatorLine(path[i], rc.getLocation(), 255, 255, 69);
                         rc.move(curLoc.directionTo(path[i]));
+                        resetCnt = 0;
                         return;
                     }
                 }
