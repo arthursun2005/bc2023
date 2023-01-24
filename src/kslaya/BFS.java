@@ -43,6 +43,7 @@ public class BFS {
 
         for (RobotInfo robotInfo : robotInfos) {
             loc = robotInfo.getLocation();
+            if (curLoc.distanceSquaredTo(loc) > 15) continue;
             seen.setCharAt((loc.x - curLoc.x + 3) * 7 + (loc.y - curLoc.y + 3), '1');
         }
 
