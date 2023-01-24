@@ -191,7 +191,7 @@ public class Movement {
                     int idx = bfs.result.indexOf("^" + ((path[i].x - curLoc.x + 3) * 7 + (path[i].y - curLoc.y + 3)));
                     if (idx != -1) {
                         int comidx = bfs.result.indexOf(":", idx);
-                        System.out.println(bfs.result.charAt(comidx+1));
+                        System.out.println(rc.getLocation() + " To " + path[i] + "Direction is " + Direction.DIRECTION_ORDER[bfs.result.charAt(comidx+2) - '0']);
                         Direction firstDir = Direction.DIRECTION_ORDER[bfs.result.charAt(comidx+1) - '0'];
                         if (rc.canMove(firstDir)) {
                             rc.setIndicatorLine(path[i], rc.getLocation(), 255, 255, 69);
