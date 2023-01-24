@@ -9,16 +9,8 @@ public class Carrier extends Robot {
 
     public void runUnit() throws GameActionException {
 
-        MapLocation loc;
-        int x = 2, y = 3;
-        int width = rc.getMapWidth(), height= rc.getMapHeight();
-        StringBuilder stringBuilder = new StringBuilder();
-
-        stringBuilder.append("        ");
         int temp = Clock.getBytecodesLeft();
-
-
-        stringBuilder.replace(3, 4, "a");
-       System.out.println(Clock.getBytecodesLeft() - temp);
+        bfs.redoMap();
+        System.out.println("OMEGASUS: " + (temp - Clock.getBytecodesLeft()));
     }
 }

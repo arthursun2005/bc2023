@@ -31,12 +31,13 @@ public abstract class Robot {
 
     static Movement movement;
 
+    BFS bfs;
     static MapLocation prevLocation = null;
     static Direction prevDirection = null;
-    public Robot(RobotController rc) {
+    public Robot(RobotController rc) throws GameActionException {
         Robot.rc = rc;
         rng = new Random(rc.getID());
-
+        bfs = new BFS(rc);
     }
     public void run() throws GameActionException {
         runUnit();
