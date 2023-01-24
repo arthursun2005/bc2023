@@ -1,4 +1,4 @@
-package kslaya;
+package ksayalookahead;
 
 import battlecode.common.*;
 import java.util.*;
@@ -46,7 +46,8 @@ public class Symmetry {
         parentLoc = tracker.getClosestHQLoc();
         MapLocation oppositeLoc = new MapLocation(width - parentLoc.x - 1,
                 height - parentLoc.y - 1);
-        uuu = -1;// robot.rng.nextInt(20) == 0 ? 16 : 6900;
+        uuu = 16;// robot.rng.nextInt(20) == 0 ? 16 : 6900;
+        uuu = robot.rng.nextInt(20) == 0 ? 16 : 6900;
         target = new possiLoc(oppositeLoc, 3, uuu);
     }
 
