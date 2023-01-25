@@ -461,11 +461,11 @@ public class Tracker {
 
     boolean doneHQs = false;
 
-    Random rng = null;
+    CursedRandom rng = null;
 
     public void tryFindSymmetry() throws GameActionException {
         if (rng == null)
-            rng = new Random(rc.getID());
+            rng = new CursedRandom(rc.getID());
         if (!doneHQs) {
             int x, y, oppx, oppy, val;
             for (MapLocation loc : HQLocs) {

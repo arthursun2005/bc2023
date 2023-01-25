@@ -70,7 +70,8 @@ public class Destabilizer extends Robot {
                 int width = rc.getMapWidth();
                 int height = rc.getMapHeight();
                 MapLocation oppositeLoc;
-                if (rng.nextBoolean()) {
+                if (rng.nextInt(2) == 0) {
+                    //bruh
                     oppositeLoc = new MapLocation(parentLoc.x + rng.nextInt(M) - M / 2,
                             height - parentLoc.y - 1 + rng.nextInt(M) - M / 2);
                 } else {

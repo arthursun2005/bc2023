@@ -5,7 +5,7 @@ import java.util.*;
 
 public abstract class Robot {
     RobotController rc;
-    Random rng;
+    CursedRandom rng;
 
     Attack attack;
     Tracker tracker;
@@ -23,7 +23,7 @@ public abstract class Robot {
         attack = new Attack(rc, this);
         tracker = new Tracker(rc, this);
         movement = new Movement(rc);
-        rng = new Random(rc.getID() + 369);
+        rng = new CursedRandom(rc.getID() + 369);
         creationRound = rc.getRoundNum();
         turnCount = 0;
 

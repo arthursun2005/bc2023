@@ -1,7 +1,6 @@
 package ksayalookahead;
 
 import battlecode.common.*;
-import java.util.Random;
 
 enum State {
     WALL,
