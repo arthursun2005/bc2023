@@ -75,9 +75,9 @@ public class Attack {
     boolean shouldTargetHQ(MapLocation loc) throws GameActionException {
         // return (rc.getRoundNum() < 90 && rc.getID() % 3 == 0) || rc.getID() % 5 == 0;
         if (!rc.canSenseLocation(loc))
-        return true;
+            return true;
         if (rc.senseNearbyRobots(loc, rc.getType().actionRadiusSquared, rc.getTeam()).length >= 3)
-        return false;
+            return false;
         return true;
     }
 
@@ -190,8 +190,8 @@ public class Attack {
     MapLocation might = null;
 
     public void snipe() throws GameActionException {
-        if (!rc.isActionReady())
-        return;
+        if (!rc.isActionReady()) return;
+        if (rc.getRoundNum() == robot.creationRound) return;
         int mc = 0;
         MapLocation me = rc.getLocation();
         CursedRandom rng = robot.rng;

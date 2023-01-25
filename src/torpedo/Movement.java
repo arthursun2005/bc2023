@@ -1,4 +1,4 @@
-package ksaya;
+package torpedo;
 
 import battlecode.common.*;
 import java.util.Random;
@@ -161,9 +161,55 @@ public class Movement {
     }
 
     Direction normal(Direction togo) throws GameActionException {
+        // Direction left = togo.rotateLeft();
+        // Direction right = togo.rotateRight();
+
+        if (rc.onTheMap(currentLocation.add(togo)) && rc.canSenseRobotAtLocation(currentLocation.add(togo)))  {
+//            hardReset();
+//            return getGreedyDirection();
+//            return Direction.CENTER;
+        }
         if (canMove(togo)) {
             return togo;
         }
+/*
+        MapLocation tryLeft = currentLocation.add(left);
+        MapLocation tryRight = currentLocation.add(right);
+
+        if (tryLeft.distanceSquaredTo(oldTarget) < tryRight.distanceSquaredTo(oldTarget)) {
+            if (rc.onTheMap(currentLocation.add(left)) && rc.canSenseRobotAtLocation(currentLocation.add(left))
+                    && rc.senseRobotAtLocation(currentLocation.add(left)).getTeam() == rc.getTeam().opponent())  {
+                return Direction.CENTER;
+            }
+            if (canMove(left)) {
+                return left;
+            }
+            if (rc.onTheMap(currentLocation.add(right)) && rc.canSenseRobotAtLocation(currentLocation.add(right))
+                    && rc.senseRobotAtLocation(currentLocation.add(right)).getTeam() == rc.getTeam().opponent())  {
+                return Direction.CENTER;
+            }
+            if (canMove(right)) {
+                return right;
+            }
+        } else {
+            if (rc.onTheMap(currentLocation.add(right)) && rc.canSenseRobotAtLocation(currentLocation.add(right))
+                    && rc.senseRobotAtLocation(currentLocation.add(right)).getTeam() == rc.getTeam().opponent())  {
+                return Direction.CENTER;
+            }
+            if (canMove(right)) {
+                return right;
+            }
+            if (rc.onTheMap(currentLocation.add(left)) && rc.canSenseRobotAtLocation(currentLocation.add(left))
+                    && rc.senseRobotAtLocation(currentLocation.add(left)).getTeam() == rc.getTeam().opponent())  {
+                return Direction.CENTER;
+            }
+            if (canMove(left)) {
+                return left;
+            }
+        }
+
+        // bruh rip
+*/
         return null;
     }
 

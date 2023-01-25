@@ -1,4 +1,4 @@
-package ksayalookahead;
+package torpedo;
 
 import battlecode.common.*;
 import java.util.*;
@@ -46,7 +46,7 @@ public class Symmetry {
         parentLoc = tracker.getClosestHQLoc();
         MapLocation oppositeLoc = new MapLocation(width - parentLoc.x - 1,
                 height - parentLoc.y - 1);
-        uuu = 3;// robot.rng.nextInt(20) == 0 ? 16 : 6900;
+        uuu = robot.rng.nextInt(20) == 0 ? 16 : 6900;
         target = new possiLoc(oppositeLoc, 3, uuu);
     }
 
@@ -64,15 +64,16 @@ public class Symmetry {
                 if (tracker.possi[3] == 1)
                     enemyLocs.add(new possiLoc(oppositeLoc, 3, (hqLoc == parentLoc ? uuu : 6900)));
             }
-            Collections.sort(enemyLocs, new Comparator<possiLoc>() {
-                public int compare(possiLoc a, possiLoc b) {
-                    // return (Math.min(rc.getLocation().distanceSquaredTo(b.loc), b.offset)
-                    // - Math.min(rc.getLocation().distanceSquaredTo(a.loc), a.offset));
-                    return (Math.min(Util.l1(rc.getLocation(), b.loc), b.offset)
-                            - Math.min(Util.l1(rc.getLocation(), a.loc), a.offset));
-                }
-            });
         }
+
+        Collections.sort(enemyLocs, new Comparator<possiLoc>() {
+            public int compare(possiLoc a, possiLoc b) {
+                // return (Math.min(rc.getLocation().distanceSquaredTo(b.loc), b.offset)
+                // - Math.min(rc.getLocation().distanceSquaredTo(a.loc), a.offset));
+                return (Math.min(Util.l1(rc.getLocation(), b.loc), b.offset)
+                        - Math.min(Util.l1(rc.getLocation(), a.loc), a.offset));
+            }
+        });
 
         while (enemyLocs.size() > 0) {
             target = enemyLocs.get(enemyLocs.size() - 1);
@@ -123,30 +124,10 @@ public class Symmetry {
             }
             if (tracker.possi[target.val] == 0) {
                 enemyLocs.remove(enemyLocs.size() - 1);
-                if (enemyLocs.size() > 0) {
-                    Collections.sort(enemyLocs, new Comparator<possiLoc>() {
-                        public int compare(possiLoc a, possiLoc b) {
-                            // return (Math.min(rc.getLocation().distanceSquaredTo(b.loc), b.offset)
-                            // - Math.min(rc.getLocation().distanceSquaredTo(a.loc), a.offset));
-                            return (Math.min(Util.l1(rc.getLocation(), b.loc), b.offset)
-                                    - Math.min(Util.l1(rc.getLocation(), a.loc), a.offset));
-                        }
-                    });
-                }
                 continue;
             }
             if (rc.getLocation().distanceSquaredTo(target.loc) <= 5) {
                 enemyLocs.remove(enemyLocs.size() - 1);
-                if (enemyLocs.size() > 0) {
-                    Collections.sort(enemyLocs, new Comparator<possiLoc>() {
-                        public int compare(possiLoc a, possiLoc b) {
-                            // return (Math.min(rc.getLocation().distanceSquaredTo(b.loc), b.offset)
-                            // - Math.min(rc.getLocation().distanceSquaredTo(a.loc), a.offset));
-                            return (Math.min(Util.l1(rc.getLocation(), b.loc), b.offset)
-                                    - Math.min(Util.l1(rc.getLocation(), a.loc), a.offset));
-                        }
-                    });
-                }
                 continue;
             }
             return target.loc;

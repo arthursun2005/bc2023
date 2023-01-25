@@ -1,4 +1,4 @@
-package ksayalookahead;
+package torpedo;
 
 import battlecode.common.*;
 
@@ -127,7 +127,7 @@ public class Headquarter extends Robot {
             rc.writeSharedArray(Constants.MAKE_ELIXIR, 1);
         }
         if (getTotalAda() >= 1600 && rc.readSharedArray(Constants.AGGRO_CARRIERS) == 0) {
-            //rc.writeSharedArray(Constants.AGGRO_CARRIERS, rc.getRoundNum());
+            rc.writeSharedArray(Constants.AGGRO_CARRIERS, rc.getRoundNum());
         }
         if (rc.getRoundNum() == 1)
             lol = enemyHQIsDangerouslyCloseLmfao();

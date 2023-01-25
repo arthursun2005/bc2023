@@ -7,6 +7,25 @@ enum State {
     NORMAL
 }
 
+class GameState {
+    State state = State.NORMAL;
+    MapLocation lastWall = null;
+    boolean turningLeft = true;
+    boolean canSwitch = false;
+    StringBuilder invalid = new StringBuilder(String.format("%3690s",""));
+    public GameState(GameState bruh) {
+        this.state = bruh.state;
+        this.lastWall = bruh.lastWall;
+        this.turningLeft = bruh.turningLeft;
+        this.canSwitch = bruh.canSwitch;
+        this.invalid = new StringBuilder(bruh.invalid);
+    }
+    public GameState(boolean turningLeft) {
+        this.turningLeft = turningLeft;
+        return;
+    }
+}
+
 public class Movement {
     RobotController rc;
 
@@ -14,53 +33,42 @@ public class Movement {
         this.rc = rc;
     }
 
-    int setDir = -1;
-
-    MapLocation[] path = new MapLocation[269];
-    State[] state = new State[269];
+    MapLocation[] path = new MapLocation[369];
+    GameState[] gameStates = new GameState[369];
     MapLocation prevLocation = null;
     int cur = 0;
-
-    MapLocation lastWall = null;
-    boolean turningLeft = false;
-    boolean canSwitch = false;
 
     StringBuilder invalid;
 
     void reset() throws GameActionException {
         rc.setIndicatorDot(rc.getLocation(),69,255,69);
         path[0] = rc.getLocation();
-        state[0] = State.NORMAL;
+        gameStates[0] = new GameState(rc.getID()%2 == 1);
         cur = 0;
-        invalid = new StringBuilder(String.format("%3690s",""));
     }
 
     boolean canGo(MapLocation tar) throws GameActionException {
         if (!rc.onTheMap(tar) || !rc.sensePassability(tar)) return false;
-        if (rc.canSenseRobotAtLocation(tar)) return false;
+        if (rc.canSenseRobotAtLocation(tar) && !rc.getLocation().equals(tar)) return false;
         if (rc.senseMapInfo(tar).getCurrentDirection() == Direction.CENTER) return true;
         MapLocation actualTar = tar.add(rc.senseMapInfo(tar).getCurrentDirection());
-        if (invalid.charAt(tar.x*60+tar.y)=='1') return false;
+        if (gameStates[cur].invalid.charAt(tar.x*60+tar.y)=='1') return false;
         if (path[cur].distanceSquaredTo(actualTar) > 2) return true;
-        invalid.setCharAt(tar.x*60+tar.y, '1');
+        gameStates[cur].invalid.setCharAt(tar.x*60+tar.y, '1');
         return false;
     }
 
     boolean update(MapLocation loc) throws GameActionException {
-        if (loc != prevLocation) {
+        if (!loc.equals(prevLocation) || cur == 368) {
             reset();
-        }
-        if (cur == 268) {
-            System.out.println("poggers UwU it happened.");
-            path[0]=path[267];
-            state[0]=state[267];
-            path[1]=path[268];
-            state[1]=state[268];
-            cur = 1;
         }
         prevLocation = loc;
 
         if (path[cur].distanceSquaredTo(loc) <= 2) return false;
+
+        if (cur >= 5 && path[cur].equals(path[cur-4]) && path[cur-1].equals(path[cur-5])) {
+            gameStates[cur].state = State.NORMAL;
+        }
 
         if (rc.onTheMap(path[cur].add(Direction.NORTH)) && !rc.canSenseLocation(path[cur].add(Direction.NORTH))) return false;
         if (rc.onTheMap(path[cur].add(Direction.NORTHEAST)) && !rc.canSenseLocation(path[cur].add(Direction.NORTHEAST))) return false;
@@ -71,31 +79,33 @@ public class Movement {
         if (rc.onTheMap(path[cur].add(Direction.WEST)) && !rc.canSenseLocation(path[cur].add(Direction.WEST))) return false;
         if (rc.onTheMap(path[cur].add(Direction.NORTHWEST)) && !rc.canSenseLocation(path[cur].add(Direction.NORTHWEST))) return false;
 
-        if (state[cur] == State.WALL) {
+        if (gameStates[cur].state == State.WALL) {
             // rc.setIndicatorString("hmmm " + lastWall + " " + loc);
-            if (path[cur].distanceSquaredTo(loc) < lastWall.distanceSquaredTo(loc)) {
-                state[cur] = State.NORMAL;
+            if (path[cur].distanceSquaredTo(loc) < gameStates[cur].lastWall.distanceSquaredTo(loc)) {
+                gameStates[cur].state = State.NORMAL;
             }
         }
 
-        if (state[cur] == State.NORMAL) {
+        if (gameStates[cur].state == State.NORMAL) {
             Direction dir = path[cur].directionTo(loc);
             MapLocation best = null, tmp = null;
 
             tmp = path[cur].add(dir);
             if (canGo(tmp)) {
                 if (rc.senseMapInfo(tmp).getCurrentDirection() != Direction.CENTER) {
-                    state[cur+1] = state[cur];
+                    gameStates[cur+1] = new GameState(gameStates[cur]);
                     path[++cur] = tmp;
                     return true;
                 }
                 best = tmp;
             }
 
-            tmp = path[cur].add(dir.rotateLeft());
+            //TODO: use currents if next to friends
+
+            /*tmp = path[cur].add(dir.rotateLeft());
             if (canGo(tmp)) {
                 if (rc.senseMapInfo(tmp).getCurrentDirection() != Direction.CENTER) {
-                    state[cur+1] = state[cur];
+                    gameStates[cur+1] = new GameState(gameStates[cur]);
                     path[++cur] = tmp;
                     return true;
                 }
@@ -105,41 +115,41 @@ public class Movement {
             tmp = path[cur].add(dir.rotateRight());
             if (canGo(tmp)) {
                 if (rc.senseMapInfo(tmp).getCurrentDirection() != Direction.CENTER) {
-                    state[cur+1] = state[cur];
+                    gameStates[cur+1] = new GameState(gameStates[cur]);
                     path[++cur] = tmp;
                     return true;
                 }
                 if (best == null) best = tmp;
-            }
+            }*/
 
             if (best != null) {
-                state[cur+1] = state[cur];
+                gameStates[cur+1] = new GameState(gameStates[cur]);
                 path[++cur] = best;
                 return true;
             }
 
-            state[cur] = State.WALL;
-            lastWall = path[cur];
-            canSwitch = true;
+            gameStates[cur].state = State.WALL;
+            gameStates[cur].lastWall = path[cur];
+            gameStates[cur].canSwitch = true;
 
             Direction checkDir = dir;
 
             for (int i = 0; i < 8; i++) {
                 tmp = path[cur].add(checkDir);
 
-                if (!rc.onTheMap(tmp) && canSwitch) {
+                if (!rc.onTheMap(tmp) && gameStates[cur].canSwitch) {
                     checkDir = dir;
-                    turningLeft = !turningLeft;
-                    canSwitch = false;
+                    gameStates[cur].turningLeft = !gameStates[cur].turningLeft;
+                    gameStates[cur].canSwitch = false;
                 }
 
                 if (canGo(tmp)) {
-                    state[cur+1] = state[cur];
+                    gameStates[cur+1] = new GameState(gameStates[cur]);
                     path[++cur] = tmp;
                     return true;
                 }
 
-                if (turningLeft) {
+                if (gameStates[cur].turningLeft) {
                     checkDir = checkDir.rotateRight();
                 } else {
                     checkDir = checkDir.rotateLeft();
@@ -148,16 +158,17 @@ public class Movement {
 
             //yikes
             if (cur == 0) return false; //at least it shouldn't infinite loop
-            state[cur+1] = state[cur];
-            path[++cur] = path[cur-1];
+            gameStates[cur+1] = new GameState(gameStates[cur]);
+            path[cur+1] = path[cur-1];
+            cur++;
             return true;
         }
 
-        if (state[cur] == State.WALL) {
+        if (gameStates[cur].state == State.WALL) {
             //should always be true
             Direction checkDir = (cur == 0 ? path[0].directionTo(loc) : path[cur-1].directionTo(path[cur]));
 
-            if (turningLeft) {
+            if (gameStates[cur].turningLeft) {
                 checkDir = checkDir.rotateLeft().rotateLeft();
             } else {
                 checkDir = checkDir.rotateRight().rotateRight();
@@ -166,24 +177,24 @@ public class Movement {
             for (int i = 0; i < 8; i++) {
                 MapLocation tmp = path[cur].add(checkDir);
 
-                if (!rc.onTheMap(tmp) && canSwitch) {
-                    if (turningLeft) {
+                if (!rc.onTheMap(tmp) && gameStates[cur].canSwitch) {
+                    if (gameStates[cur].turningLeft) {
                         checkDir = checkDir.rotateLeft().rotateLeft();
                     } else {
                         checkDir = checkDir.rotateRight().rotateRight();
                     }
                     //this is the right order
-                    turningLeft = !turningLeft;
-                    canSwitch = false;
+                    gameStates[cur].turningLeft = !gameStates[cur].turningLeft;
+                    gameStates[cur].canSwitch = false;
                 }
 
                 if (canGo(tmp)) {
-                    state[cur+1] = state[cur];
+                    gameStates[cur+1] = new GameState(gameStates[cur]);
                     path[++cur] = tmp;
                     return true;
                 }
 
-                if (turningLeft) {
+                if (gameStates[cur].turningLeft) {
                     checkDir = checkDir.rotateRight();
                 } else {
                     checkDir = checkDir.rotateLeft();
@@ -192,12 +203,11 @@ public class Movement {
         }
         //yikes
         if (cur == 0) return false; //at least it shouldn't infinite loop
-        state[cur+1] = state[cur];
-        path[++cur] = path[cur-1];
+        gameStates[cur+1] = new GameState(gameStates[cur]);
+        path[cur+1] = path[cur-1];
+        cur++;
         return true;
     }
-
-    int resetCnt = 0;
 
     void tryMove() throws GameActionException {
         if (!rc.isMovementReady()) return;
@@ -217,10 +227,6 @@ public class Movement {
 
     void moveTo(MapLocation loc) throws GameActionException {
         if (cur < 0) reset();
-        if (setDir == -1) {
-            setDir = rc.getID()%2;
-            turningLeft = true;//(setDir == 1);
-        }
         if (!rc.isMovementReady()) return;
         if (rc.getLocation().distanceSquaredTo(loc) == 0) return;
         if (rc.getLocation().distanceSquaredTo(loc) <= 2) {
@@ -257,6 +263,6 @@ public class Movement {
         tryMove();
         rc.setIndicatorLine(loc, rc.getLocation(), 69, 235, 255);
         //rc.setIndicatorLine(path[cur], rc.getLocation(), 235, 69, 255);
-        //rc.setIndicatorString("value " + cur + " sus " + turningLeft + ":" + (setDir == 1));
+        //rc.setIndicatorString("value " + cur + " sus " + gameStates[cur].turningLeft + " state " + gameStates[cur].state);
     }
 }

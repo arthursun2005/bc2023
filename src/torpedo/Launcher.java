@@ -1,4 +1,4 @@
-package ksayalookahead;
+package torpedo;
 
 import battlecode.common.*;
 
@@ -109,7 +109,7 @@ public class Launcher extends Robot {
             if (site != null
                     && rc.getLocation().distanceSquaredTo(site) < 2 * rc.getLocation().distanceSquaredTo(symmetry.target.loc)) {
                 moveTo(site);
-                //rc.setIndicatorLine(site, rc.getLocation(), 255, 0, 0);
+                rc.setIndicatorLine(site, rc.getLocation(), 255, 0, 0);
             }
 
             int req = 0;// (int) (rc.getRoundNum() / 100) + 1;
@@ -123,7 +123,7 @@ public class Launcher extends Robot {
                 // tryMove(dir.rotateRight().rotateRight());
                 // tryMove(dir.rotateLeft());
                 // tryMove(dir.rotateRight());
-                if (rc.getLocation().distanceSquaredTo(bestie) > 2) moveTo(bestie);
+                moveTo(bestie);
             }
 
             moveTo(symmetry.update());
@@ -138,6 +138,6 @@ public class Launcher extends Robot {
             rc.attack(weakLoc);
         attack.snipe();
 
-        //tracker.tryFindSymmetry();
+        tracker.tryFindSymmetry();
     }
 }

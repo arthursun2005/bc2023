@@ -1,4 +1,4 @@
-package ksayalookahead;
+package torpedo;
 
 import battlecode.common.Clock;
 import battlecode.common.GameActionException;
@@ -37,8 +37,8 @@ public strictfp class RobotPlayer {
                     robot.run();
                 }
                 if (rc.getRoundNum() != startRound) {
-                    //rc.setIndicatorDot(rc.getLocation(), 0, 255, 0);
-                    System.out.println("NOOOOOOOOOOOO~~~~~ " + robot.creationRound);
+                    rc.setIndicatorDot(rc.getLocation(), 0, 255, 0);
+                    System.out.println("NOOOOOOOOOOOO~~~~~");
                 }
             } catch (GameActionException e) {
                 e.printStackTrace();
