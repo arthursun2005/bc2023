@@ -20,10 +20,10 @@ public abstract class Robot {
     public Robot(RobotController rc) throws GameActionException {
         this.rc = rc;
         Util.rc = rc;
+        rng = new CursedRandom(rc);
         attack = new Attack(rc, this);
         tracker = new Tracker(rc, this);
         movement = new Movement(rc);
-        rng = new CursedRandom(rc.getID() + 369);
         creationRound = rc.getRoundNum();
         turnCount = 0;
 
@@ -31,6 +31,7 @@ public abstract class Robot {
     }
 
     public void prepare() throws GameActionException {
+        rng = new CursedRandom(rc);
         if (turnCount > 3 || (!rc.getType().equals(RobotType.LAUNCHER) && !rc.getType().equals(RobotType.DESTABILIZER)))
             tracker.update();
         attack.updateFriends();

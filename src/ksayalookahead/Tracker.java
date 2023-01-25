@@ -461,11 +461,7 @@ public class Tracker {
 
     boolean doneHQs = false;
 
-    CursedRandom rng = null;
-
     public void tryFindSymmetry() throws GameActionException {
-        if (rng == null)
-            rng = new CursedRandom(rc.getID());
         if (!doneHQs) {
             int x, y, oppx, oppy, val;
             for (MapLocation loc : HQLocs) {
@@ -560,7 +556,7 @@ public class Tracker {
             while (Clock.getBytecodesLeft() >= 500) {
                 // System.out.println(Clock.getBytecodesLeft());
                 // :skull:
-                loc = toCheck[rng.nextInt(toCheck.length)];
+                loc = toCheck[robot.rng.nextInt(toCheck.length)];
 
                 x = loc.x;
                 y = loc.y;
