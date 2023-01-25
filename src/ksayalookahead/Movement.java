@@ -48,8 +48,16 @@ public class Movement {
     }
 
     boolean update(MapLocation loc) throws GameActionException {
-        if (loc != prevLocation || cur == 268) {
+        if (loc != prevLocation) {
             reset();
+        }
+        if (cur == 268) {
+            System.out.println("poggers UwU it happened.");
+            path[0]=path[267];
+            state[0]=state[267];
+            path[1]=path[268];
+            state[1]=state[268];
+            cur = 1;
         }
         prevLocation = loc;
 
@@ -244,9 +252,9 @@ public class Movement {
             rc.setIndicatorLine(path[Math.max(cur-1,0)], path[cur], 69, 235, 255);
             System.out.println("Value : " + (start - Clock.getBytecodesLeft()));
         }*/
-        for (int i = Math.max(0,cur-7); i + 1 <= cur; i++) {
+        /*for (int i = Math.max(0,cur-7); i + 1 <= cur; i++) {
             rc.setIndicatorLine(path[i], path[i+1], 225, 235, 255);
-        }
+        }*/
         tryMove();
         rc.setIndicatorLine(loc, rc.getLocation(), 69, 235, 255);
         //rc.setIndicatorLine(path[cur], rc.getLocation(), 235, 69, 255);
