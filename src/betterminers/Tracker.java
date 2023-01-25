@@ -193,12 +193,18 @@ public class Tracker {
             // if (rc.getRoundNum() > 100 && rc.getID() % 2 != 0) {
             // ignoreAda = true;
             // }
-            if (rc.getRoundNum() < 35 || cnt < 18) {
-                ignoreAda = true;
-            } else {
-                if (rc.getID() % 3 != 0) {
+            int sz = Math.max(width, height);
+            if (sz < 35) {
+                if (rc.getRoundNum() < 35 || cnt < 18) {
                     ignoreAda = true;
+                } else {
+                    if (rc.getID() % 3 != 0) {
+                        ignoreAda = true;
+                    }
                 }
+            } else {
+                if (rc.getID() % 2 == 0)
+                    ignoreAda = true;
             }
             if (rc.getID() % 3 != 0)
                 elixirOnly = true;

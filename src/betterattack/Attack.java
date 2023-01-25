@@ -682,7 +682,7 @@ public class Attack {
         }
         RobotInfo[] trolls = rc.senseNearbyRobots(rc.getType().actionRadiusSquared, rc.getTeam().opponent());
         int trade = 0;
-        if (trolls.length > 0) trade = 30000;
+        // if (trolls.length > 0) trade = 30000;
         if (W != 0) {
             if (delta >= trade + -4 && (ahead || frens == 0 || W <= 1 || rc.getHealth() > enemyHealth)) {
                 return 1;

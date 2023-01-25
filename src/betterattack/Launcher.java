@@ -46,6 +46,8 @@ public class Launcher extends Robot {
             if (loc.distanceSquaredTo(target) > tol)
                 continue;
             int w = eval(loc, target, mul);
+            int sum = Math.abs(dir.dx) + Math.abs(dir.dy);
+            if (sum == 2) w += 10000;
             if (w < hits) {
                 hits = w;
                 allGood[0] = dir;
@@ -126,7 +128,8 @@ public class Launcher extends Robot {
                 moveTo(bestie);
             }
 
-            moveTo(symmetry.update());
+            if (rc.getRoundNum() % 3 != 0)
+                moveTo(symmetry.update());
 
             attack.tryAttack();
         } else {
