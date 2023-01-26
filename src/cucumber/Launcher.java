@@ -1,4 +1,4 @@
-package susattack;
+package cucumber;
 
 import battlecode.common.*;
 
@@ -78,7 +78,10 @@ public class Launcher extends Robot {
         //     status = 1;
 
         if (status == 1) {
-            if (weakLoc != null) {
+            /*symmetry.update();
+            MapLocation defendLoc = HQLoc;
+            int offset = Util.rDist(rc.getLocation(), defendLoc) * 2 - Util.rDist(rc.getLocation(), symmetry.target.loc);*/
+            if (weakLoc != null/* && (offset > 3 || offset < -2)*/) {
                 randomizedGreedy(weakLoc, -1, rc.getType().actionRadiusSquared);
             }
             attack.tryAttack();
@@ -119,7 +122,7 @@ public class Launcher extends Robot {
             // if (mini < rc.getID() && lowerCount < 9) {
             // moveTo(bestie);
             // }
-            if (bestie != null) {
+            if (bestie != null && rc.getRoundNum() <= -1) {
                 // Direction dir = rc.getLocation().directionTo(bestie);
                 // tryMove(dir.rotateLeft().rotateLeft());
                 // tryMove(dir.rotateRight().rotateRight());
@@ -129,13 +132,36 @@ public class Launcher extends Robot {
             }
 
             symmetry.update();
-            MapLocation defendLoc = tracker.getBestWell(null);
+            MapLocation defendLoc = HQLoc;/*tracker.getBestWell(null);
             if (defendLoc == null || rc.getLocation().distanceSquaredTo(HQLoc) < rc.getLocation().distanceSquaredTo(defendLoc)) {
                 defendLoc = HQLoc;
+            }*/
+            int offset = Util.rDist(rc.getLocation(), defendLoc) * 2 - Util.rDist(rc.getLocation(), symmetry.target.loc);
+
+            if (rc.getRoundNum() % 3 != 0) {
+                if (Util.rDist(rc.getLocation(), symmetry.target.loc) <= 8 || rc.getRoundNum() > 900 || rc.getRoundNum() <= -1) {
+                    moveTo(symmetry.target.loc);
+                }
+                else if (offset > 3) {
+                    moveTo(defendLoc);
+                }
+                else if (offset < -2) {
+                    moveTo(symmetry.target.loc);
+                }
+                else {
+                    for (Direction dir : directions) {
+                        if (!rc.canMove(dir)) continue;
+                        MapLocation tloc = rc.getLocation().add(dir);
+                        if (tloc.distanceSquaredTo(symmetry.target.loc) < rc.getLocation().distanceSquaredTo(symmetry.target.loc)) {
+                            int toffset = Util.rDist(tloc, defendLoc) * 2 - Util.rDist(tloc, symmetry.target.loc);
+                            if (toffset <= 3 && toffset >= -2) {
+                                rc.move(dir);
+                                break;
+                            }
+                        }
+                    }
+                }
             }
-            int gatherX = (symmetry.target.loc.x + defendLoc.x * 2) / 3;
-            int gatherY = (symmetry.target.loc.y + defendLoc.y * 2) / 3;
-            moveTo(new MapLocation(gatherX, gatherY));
 
             attack.tryAttack();
         } else {
