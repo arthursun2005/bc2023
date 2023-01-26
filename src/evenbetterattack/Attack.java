@@ -33,16 +33,18 @@ public class Attack {
         }
         if (enemy.type.equals(RobotType.HEADQUARTERS))
             return 1_000_000_000;
-        int adjustedHealth = enemy.health * 10000 * coef
-                - centerLoc.distanceSquaredTo(enemy.location) * 10000
-                + rc.getID();
+        // int adjustedHealth = enemy.health * 10000 * coef
+        //         - centerLoc.distanceSquaredTo(enemy.location) * 10000
+        //         + rc.getID();
+        int adjustedHealth = -rc.getLocation().distanceSquaredTo(enemy.location) * 10000 + rc.getID();
+        if (enemy.health <= 20) adjustedHealth -= 100000000;
         if (enemy.type.equals(RobotType.LAUNCHER) || enemy.type.equals(RobotType.DESTABILIZER))
             // if (rc.getHealth() <= 39)
             //     adjustedHealth += 500_000_000;
             // else
             adjustedHealth -= 500_000_000;
-        if (rc.canSenseLocation(enemy.location))
-            adjustedHealth -= 500_000_000;
+        // if (rc.canSenseLocation(enemy.location))
+        //     adjustedHealth -= 500_000_000;
         return adjustedHealth;
     }
 
@@ -663,6 +665,9 @@ public class Attack {
             if (friend.type.equals(RobotType.LAUNCHER) || friend.type.equals(RobotType.DESTABILIZER)) {
                 friendOffensiveCnt += 20 + friend.health;
             }
+            if (weakLoc != null)
+                if (friend.location.distanceSquaredTo(weakLoc) < rc.getLocation().distanceSquaredTo(weakLoc))
+                    ahead = true;
         }
         for (RobotInfo enemy : enemies) {
             if (enemy.type.equals(RobotType.HEADQUARTERS)) {
@@ -685,13 +690,13 @@ public class Attack {
         boolean range = rc.senseNearbyRobots(rc.getType().actionRadiusSquared, rc.getTeam().opponent()).length > 0;
         if (W != 0) {
             // if (friendOffensiveCnt > enemyOffensiveCnt + 401) {
-            if (delta >= -4 && friendOffensiveCnt > enemyOffensiveCnt - 39) {
-                return 1;
-            } else if (range) {
-                return 2;
-            } else {
-                return 3;
-            }
+            // if (delta >= -4 && (friendOffensiveCnt > enemyOffensiveCnt - 39 || rc.getHealth() > enemyHealth)) {
+            //     return 1;
+            // } else if (range) {
+            //     return 2;
+            // } else {
+            //     return 3;
+            // }
             // if (delta >= -4 && (enemyOffensiveCnt == 0 || friendOffensiveCnt > enemyOffensiveCnt - 201)) {
             //     return 1;
             // } else if (delta < -4 && (enemyOffensiveCnt > friendOffensiveCnt + 201)) {
@@ -699,6 +704,13 @@ public class Attack {
             // } else {
             //     return 3;
             // }
+            if (delta >= -4 && ahead) {
+                return 1;
+            } else if (delta < -4) {
+                return 2;
+            } else {
+                return 3;
+            }
         }
         return 0;
     }
