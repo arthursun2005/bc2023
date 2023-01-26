@@ -1,4 +1,4 @@
-package torpedo;
+package sososus;
 
 import battlecode.common.*;
 
@@ -163,7 +163,20 @@ public class Launcher extends Robot {
                 moveTo(bestie);
             }
 
-            moveTo(symmetry.update());
+            /*MapLocation tmpTar = symmetry.update();
+            if (tmpTar.equals(new MapLocation(rc.getMapWidth() - symmetry.parentLoc.x - 1, rc.getMapHeight() - symmetry.parentLoc.y - 1))) {
+                moveTo(new MapLocation(rc.getMapWidth()/2,rc.getMapHeight()/2));
+            }
+            else {
+                moveTo(tmpTar);
+            }*/
+
+            if (rc.getMapWidth() <= 20 || rc.getMapHeight() <= 20 || (rc.getMapWidth() <= 35 && rc.getMapHeight() <= 35)) {
+                moveTo(new MapLocation(rc.getMapWidth()/2,rc.getMapHeight()/2));
+            }
+            else {
+                moveTo(symmetry.update());
+            }
 
             attack.tryAttack();
         } else {

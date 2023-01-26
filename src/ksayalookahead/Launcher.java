@@ -126,7 +126,8 @@ public class Launcher extends Robot {
                 if (rc.getLocation().distanceSquaredTo(bestie) > 2) moveTo(bestie);
             }
 
-            moveTo(symmetry.update());
+            moveTo(new MapLocation(rc.getMapWidth()/2,rc.getMapHeight()/2));
+            //moveTo(symmetry.update());
 
             attack.tryAttack();
         } else {

@@ -1,4 +1,4 @@
-package torpedo;
+package sososus;
 
 import battlecode.common.*;
 import java.util.*;

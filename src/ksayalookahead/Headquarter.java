@@ -150,7 +150,7 @@ public class Headquarter extends Robot {
 
             RobotType toMake = null;
 
-            if (mana >= 60 && (rc.getRoundNum() >= 2 || k == 4)) {
+            if (mana >= 45 && (rc.getRoundNum() >= 2 || k == 4)) {
                 toMake = RobotType.LAUNCHER;
             } else if (countCarriersNearby() < 1_000_000) {
                 toMake = RobotType.CARRIER;
