@@ -1,4 +1,4 @@
-package betterattack;
+package evenbetterattack;
 
 import battlecode.common.*;
 import java.util.*;
@@ -18,15 +18,19 @@ public class Attack {
     RobotInfo[][] acrossTime = new RobotInfo[times][];
 
     RobotInfo[] friends;
+    MapLocation HQLoc;
 
     public int getEnemyWeaknessMetric(RobotInfo enemy) throws GameActionException {
         if (enemy.type.equals(RobotType.HEADQUARTERS))
             return 1_000_000_000;
         int adjustedHealth = enemy.health * 10000 * coef
-                // + rc.getLocation().distanceSquaredTo(enemy.location) * 10000
+                - HQLoc.distanceSquaredTo(enemy.location) * 10000
                 + rc.getID();
         if (enemy.type.equals(RobotType.LAUNCHER) || enemy.type.equals(RobotType.DESTABILIZER))
-            adjustedHealth -= 500_000_000;
+            if (rc.getHealth() <= 39)
+                adjustedHealth += 500_000_000;
+            else
+                adjustedHealth -= 500_000_000;
         if (rc.canSenseLocation(enemy.location))
             adjustedHealth -= 500_000_000;
         return adjustedHealth;
@@ -93,6 +97,7 @@ public class Attack {
     public MapLocation getWeakLoc() throws GameActionException {
         RobotInfo[] enemies = getEnemies();
         MapLocation weakLoc = null;
+        HQLoc = robot.tracker.getClosestHQLoc();
         int weakness = 0;
         for (RobotInfo enemy : enemies) {
             if (enemy.type.equals(RobotType.HEADQUARTERS) && !shouldTargetHQ())
@@ -112,6 +117,7 @@ public class Attack {
             return;
         RobotInfo[] enemies = rc.senseNearbyRobots(rc.getType().actionRadiusSquared, rc.getTeam().opponent());
         MapLocation weakLoc = null;
+        HQLoc = robot.tracker.getClosestHQLoc();
         int weakness = 0;
         for (RobotInfo enemy : enemies) {
             MapLocation toAttack = enemy.location;
@@ -637,41 +643,27 @@ public class Attack {
         RobotInfo[] enemies = getEnemies();
         RobotInfo[] friends = rc.senseNearbyRobots(-1, rc.getTeam());
 
-        // int friendOffensiveCnt = 3 + rc.getHealth();
-        // int enemyOffensiveCnt = 0;
+        int friendOffensiveCnt = 20 + rc.getHealth();
+        int enemyOffensiveCnt = 0;
         int W = 0;
         int delta = rc.getHealth() - lastHealth;
         lastHealth = rc.getHealth();
         boolean ahead = false;
-        int frens = 0;
         for (RobotInfo friend : friends) {
-            // if (friend.type.equals(RobotType.LAUNCHER))
-            // friendOffensiveCnt += 3 + friend.health;
             if (friend.type.equals(RobotType.LAUNCHER) || friend.type.equals(RobotType.DESTABILIZER)) {
-                frens += friend.health;
-            }
-
-            if (weakLoc != null) {
-                // if (friend.type.equals(RobotType.LAUNCHER)
-
-                if (friend.location.distanceSquaredTo(weakLoc) < rc.getLocation().distanceSquaredTo(weakLoc)) {
-                    // if (Util.rDist(weakLoc, friend.location) < Util.rDist(weakLoc,
-                    // rc.adjacentLocation(rc.getLocation().directionTo(weakLoc))))
-                    ahead = true;
-                }
+                friendOffensiveCnt += 20 + friend.health;
             }
         }
         for (RobotInfo enemy : enemies) {
             if (enemy.type.equals(RobotType.HEADQUARTERS)) {
-                // if (shouldTargetHQ())
-                // enemyOffensiveCnt += 3;
                 if (shouldTargetHQ())
                     W++;
                 continue;
             }
-            if (enemy.type.equals(RobotType.LAUNCHER) || enemy.type.equals(RobotType.DESTABILIZER))
-                // enemyOffensiveCnt += 15 + enemy.health;
+            if (enemy.type.equals(RobotType.LAUNCHER) || enemy.type.equals(RobotType.DESTABILIZER)) {
+                enemyOffensiveCnt += 20 + enemy.health;
                 W += 3;
+            }
         }
         int enemyHealth = 0;
         RobotInfo a;
@@ -680,13 +672,10 @@ public class Attack {
             if (a != null)
                 enemyHealth = a.health;
         }
-        RobotInfo[] trolls = rc.senseNearbyRobots(rc.getType().actionRadiusSquared, rc.getTeam().opponent());
-        int trade = 0;
-        // if (trolls.length > 0) trade = 30000;
         if (W != 0) {
-            if (delta >= trade + -4 && (ahead || frens == 0 || W <= 1 || rc.getHealth() > enemyHealth)) {
+            if (delta >= -4 && (enemyOffensiveCnt == 0 || friendOffensiveCnt > enemyOffensiveCnt + 350)) {
                 return 1;
-            } else if (delta < trade + -4) {
+            } else if (delta < -4) {
                 return 2;
             } else {
                 return 3;
