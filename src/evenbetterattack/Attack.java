@@ -19,12 +19,21 @@ public class Attack {
 
     RobotInfo[] friends;
     MapLocation HQLoc;
+    MapLocation centerLoc;
 
     public int getEnemyWeaknessMetric(RobotInfo enemy) throws GameActionException {
+        if (centerLoc == null) {
+            int xTotal = rc.getLocation().x, yTotal = rc.getLocation().y;
+            for (RobotInfo friend : friends) {
+                xTotal += friend.location.x;
+                yTotal += friend.location.y;
+            }
+            centerLoc = new MapLocation(xTotal / (friends.length + 1), yTotal / (friends.length + 1));
+        }
         if (enemy.type.equals(RobotType.HEADQUARTERS))
             return 1_000_000_000;
         int adjustedHealth = enemy.health * 10000 * coef
-                - HQLoc.distanceSquaredTo(enemy.location) * 10000
+                + centerLoc.distanceSquaredTo(enemy.location) * 10000
                 + rc.getID();
         if (enemy.type.equals(RobotType.LAUNCHER) || enemy.type.equals(RobotType.DESTABILIZER))
             if (rc.getHealth() <= 39)
@@ -675,7 +684,7 @@ public class Attack {
         if (W != 0) {
             if (delta >= -4 && (enemyOffensiveCnt == 0 || friendOffensiveCnt > enemyOffensiveCnt + 350)) {
                 return 1;
-            } else if (delta < -4) {
+            } else if (delta < -4/* || (enemyOffensiveCnt > friendOffensiveCnt)*/) {
                 return 2;
             } else {
                 return 3;

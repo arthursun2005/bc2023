@@ -64,6 +64,7 @@ public class Launcher extends Robot {
 
     public void run() throws GameActionException {
         HQLoc = tracker.getClosestHQLoc();
+        attack.centerLoc = null;
         MapLocation weakLoc = attack.getWeakLoc();
         int status = attack.getStatus(weakLoc);
         rc.setIndicatorString(status + " " + weakLoc);
