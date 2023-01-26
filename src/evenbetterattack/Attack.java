@@ -36,10 +36,10 @@ public class Attack {
                 + centerLoc.distanceSquaredTo(enemy.location) * 10000
                 + rc.getID();
         if (enemy.type.equals(RobotType.LAUNCHER) || enemy.type.equals(RobotType.DESTABILIZER))
-            if (rc.getHealth() <= 39)
-                adjustedHealth += 500_000_000;
-            else
-                adjustedHealth -= 500_000_000;
+            // if (rc.getHealth() <= 39)
+            //     adjustedHealth += 500_000_000;
+            // else
+            adjustedHealth -= 500_000_000;
         if (rc.canSenseLocation(enemy.location))
             adjustedHealth -= 500_000_000;
         return adjustedHealth;
@@ -681,14 +681,23 @@ public class Attack {
             if (a != null)
                 enemyHealth = a.health;
         }
+        boolean range = rc.senseNearbyRobots(rc.getType().actionRadiusSquared, rc.getTeam().opponent()).length > 0;
         if (W != 0) {
-            if (delta >= -4 && (enemyOffensiveCnt == 0 || friendOffensiveCnt > enemyOffensiveCnt + 350)) {
+            // if (friendOffensiveCnt > enemyOffensiveCnt + 401) {
+            if (delta >= -4 && friendOffensiveCnt > enemyOffensiveCnt - 59) {
                 return 1;
-            } else if (delta < -4/* || (enemyOffensiveCnt > friendOffensiveCnt)*/) {
+            } else if (range) {
                 return 2;
             } else {
                 return 3;
             }
+            // if (delta >= -4 && (enemyOffensiveCnt == 0 || friendOffensiveCnt > enemyOffensiveCnt - 201)) {
+            //     return 1;
+            // } else if (delta < -4 && (enemyOffensiveCnt > friendOffensiveCnt + 201)) {
+            //     return 2;
+            // } else {
+            //     return 3;
+            // }
         }
         return 0;
     }

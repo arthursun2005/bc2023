@@ -131,10 +131,10 @@ public class Launcher extends Robot {
                 // tryMove(dir.rotateRight().rotateRight());
                 // tryMove(dir.rotateLeft());
                 // tryMove(dir.rotateRight());
-                moveTo(bestie);
+                // moveTo(bestie);
             }
 
-            if (rc.getRoundNum() % 3 != 0)
+            if (rc.getRoundNum() % 2 != 0)
                 moveTo(symmetry.update());
 
             attack.tryAttack();
