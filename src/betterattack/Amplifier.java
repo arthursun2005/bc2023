@@ -9,7 +9,9 @@ public class Amplifier extends Robot
         super(rc);
     }
 
-    public void run()
-    {
+    public void run() throws GameActionException {
+        moveTo(new MapLocation(rc.getMapWidth() / 2, rc.getMapHeight() / 2));
+        rc.setIndicatorString(String.valueOf(tracker.symmetry));
+        tracker.tryFindSymmetry();
     }
 }

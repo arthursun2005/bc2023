@@ -1,8 +1,8 @@
-package betterattack;
+package betterattacktest;
 
 import battlecode.common.*;
 
-import java.util.*;
+import java.util.Random;
 
 // HUGELY TODO
 
@@ -419,8 +419,7 @@ public class Tracker {
 
     int[] readpossi() throws GameActionException {
         int val = rc.readSharedArray(POSSI);
-//        System.out.println(val);
-        int vals[] = { 0, 1 - (val % 2), 1 - ((val / 2) % 2), 1 - (val / 4) };
+        int vals[] = { 0, 1 - val % 2, 1 - (val / 2) % 2, 1 - val / 4 };
         return vals;
     }
 
@@ -486,7 +485,7 @@ public class Tracker {
             doneHQs = true;
         }
         if (!foundSymmetry) {
-            possi = readpossi();
+            readpossi();
 
             MapLocation toCheck[] = rc.getAllLocationsWithinRadiusSquared(rc.getLocation(), 18);
             int x, y, oppx, oppy, val;

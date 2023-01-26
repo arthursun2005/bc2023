@@ -1,4 +1,4 @@
-package betterattack;
+package betterattacktest;
 
 import battlecode.common.*;
 
@@ -18,7 +18,6 @@ public class Headquarter extends Robot {
     int jerrysMade = 0;
 
     int pompom = 0;
-    int made = 0;
 
     public void suicide() throws GameActionException {
         RobotInfo[] friends = rc.senseNearbyRobots(-1, rc.getTeam());
@@ -70,12 +69,9 @@ public class Headquarter extends Robot {
             if (type.equals(RobotType.CARRIER)) {
                 rc.writeSharedArray(Constants.TOTAL_ADA, getTotalAda() + 50);
             } else if (type.equals(RobotType.LAUNCHER)) {
-                rc.writeSharedArray(Constants.TOTAL_MANA, getTotalMana() + 45);
+                rc.writeSharedArray(Constants.TOTAL_MANA, getTotalMana() + 60);
             } else if (type.equals(RobotType.DESTABILIZER)) {
                 rc.writeSharedArray(Constants.TOTAL_ELIXIR, getTotalElixir() + 200);
-            } else if (type.equals(RobotType.AMPLIFIER)) {
-                rc.writeSharedArray(Constants.TOTAL_ADA, getTotalAda() + 30);
-                rc.writeSharedArray(Constants.TOTAL_MANA, getTotalMana() + 15);
             }
         }
     }
@@ -154,7 +150,7 @@ public class Headquarter extends Robot {
 
             RobotType toMake = null;
 
-            if (mana >= 45 && (rc.getRoundNum() >= 2 || k == 4)) {
+            if (mana >= 60 && (rc.getRoundNum() >= 2 || k == 4)) {
                 toMake = RobotType.LAUNCHER;
             } else if (countCarriersNearby() < 1_000_000) {
                 toMake = RobotType.CARRIER;
@@ -166,11 +162,6 @@ public class Headquarter extends Robot {
 
             if (elixir >= 200) {
                 toMake = RobotType.DESTABILIZER;
-            }
-
-            if (k == 0 && rc.getRoundNum() % 15 == 0 && mana >= 15 && ada >= 30 && !tracker.foundSymmetry && made < 1) {
-                toMake = RobotType.AMPLIFIER;
-                made++;
             }
 
             rc.setIndicatorString("trying to make " + toMake + " totals: " + getTotalAda() + " " + getTotalMana() + " "
@@ -186,6 +177,5 @@ public class Headquarter extends Robot {
         }
         helpMe();
         suicide();
-        tracker.tryFindSymmetry();
     }
 }

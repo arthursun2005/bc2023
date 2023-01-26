@@ -1,7 +1,10 @@
-package betterattack;
+package betterattacktest;
 
 import battlecode.common.*;
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 class possiLoc {
     MapLocation loc;
@@ -122,7 +125,6 @@ public class Symmetry {
                     }
                 }
             }
-
             if (tracker.possi[target.val] == 0) {
                 enemyLocs.remove(enemyLocs.size() - 1);
                 continue;
