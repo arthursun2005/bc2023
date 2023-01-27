@@ -105,6 +105,7 @@ public class Symmetry {
                     int no = read(encode(x, oppy));
                     int oo = read(encode(oppx, oppy));
 
+                    tracker.possi = tracker.readpossi();
                     if (nn >= 5) {
                         if (on != 0 && on + nn != 11)
                             tracker.possi[1] = 0;
@@ -120,6 +121,7 @@ public class Symmetry {
                         if (oo != 0 && oo != nn)
                             tracker.possi[3] = 0;
                     }
+                    tracker.writepossi(tracker.possi);
                 }
             }
 
