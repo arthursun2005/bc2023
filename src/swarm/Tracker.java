@@ -24,6 +24,15 @@ final class EuropeanBanana {
         friendOffensiveCount = x;
         loc = y;
     }
+
+    int thickness() {
+        int LLLLL = loc.x * 69 + loc.y;
+        int E = friendOffensiveCount - enemyOffensiveCount;
+        if (E < -32) E = -32;
+        if (E > 31) E = 31;
+        E = (int) (Math.log(E + 32) / Math.log(2));
+        return LLLLL + E * 6666;
+    }
 }
 
 public class Tracker {
@@ -35,6 +44,7 @@ public class Tracker {
     long[] rA = new long[64];
     long[] rB = new long[64];
     long[] islands = new long[64];
+    // Enemy LocS (All)
     ArrayList<EuropeanBanana> elsa;
 
     long wellX = 0;
@@ -48,7 +58,16 @@ public class Tracker {
         elsa.add(new EuropeanBanana(a, x, y));
     }
 
+    int eid = Constants.ENEMY_LOCS;
+
     void tryShareEnemyGroups() {
+        if (!rc.writeSharedArray(0, 0)) return;
+        for (EuropeanBanana banana : elsa) {
+            for (; eid < Constants.ENEMY_LOCS + Constants.ENEMY_CNT; eid++) {
+                if (rc.readSharedArray(eid) > 0) continue;
+                rc.writeSharedArray(eid, banana.thickness());
+            }
+        }
     }
 
     void clearDistress() throws GameActionException {
