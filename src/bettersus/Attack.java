@@ -70,7 +70,7 @@ public class Attack {
     }
 
     boolean shouldTargetHQ() {
-        if (true) return false;
+        //if (true) return false;
         return rc.getRoundNum() < 120 || rc.getID() % 5 == 0;
     }
 

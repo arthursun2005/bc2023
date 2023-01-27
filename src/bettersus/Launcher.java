@@ -130,7 +130,8 @@ public class Launcher extends Robot {
                 moveTo(bestie);
                 rc.setIndicatorLine(bestie, rc.getLocation(), 122, 69, 69);
             } else if (true) {
-                if (count > ((Util.rDist(symmetry.target.loc, HQLoc) > 28) ? 4 : 3)) {
+                int dist = Util.rDist(symmetry.target.loc, HQLoc);
+                if (dist <= 15 || count > (dist > 28 ? 4 : 3)) {
                     moveTo(symmetry.target.loc);
                 }
                 else {
