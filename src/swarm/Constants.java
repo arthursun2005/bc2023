@@ -17,4 +17,7 @@ public class Constants {
     final static int POSSI = 42;
     
     final static int AGGRO_CARRIERS = 50;
+
+    final static int ENEMY_LOCS = 51;
+    final static int ENEMY_CNT = 10;
 }

@@ -107,6 +107,9 @@ public class Attack {
         return weakLoc;
     }
 
+    public void trySignalAttack() throws GameActionException {
+    }
+
     public void tryAttack() throws GameActionException {
         if (!rc.isActionReady())
             return;

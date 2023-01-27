@@ -14,6 +14,18 @@ import java.util.*;
 // if there are a really good well (for example, no friends has reached yet + far away from enemy)
 // then: signal the position in the shared array
 
+final class EuropeanBanana {
+    int enemyOffensiveCount;
+    int friendOffensiveCount;
+    MapLocation loc;
+
+    EuropeanBanana(int a, int x, MapLocation y) {
+        enemyOffensiveCount = a;
+        friendOffensiveCount = x;
+        loc = y;
+    }
+}
+
 public class Tracker {
     RobotController rc;
     Robot robot;
@@ -23,12 +35,20 @@ public class Tracker {
     long[] rA = new long[64];
     long[] rB = new long[64];
     long[] islands = new long[64];
+    ArrayList<EuropeanBanana> elsa;
 
     long wellX = 0;
 
     public Tracker(RobotController rc, Robot robot) {
         this.rc = rc;
         this.robot = robot;
+    }
+
+    void signalEnemyGroup(int a, int x, MapLocation y) {
+        elsa.add(new EuropeanBanana(a, x, y));
+    }
+
+    void tryShareEnemyGroups() {
     }
 
     void clearDistress() throws GameActionException {
