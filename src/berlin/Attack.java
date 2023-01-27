@@ -18,7 +18,8 @@ public class Attack {
     public int getEnemyWeaknessMetric(RobotInfo enemy, MapLocation HQLoc) throws GameActionException {
         if (enemy.type.equals(RobotType.HEADQUARTERS))
             return 1_000_000_000;
-        int adjustedHealth = enemy.health * 20000 * 50 + HQLoc.distanceSquaredTo(enemy.location) * 20000 + rc.getID();
+        // int adjustedHealth = enemy.health * 20000 * 50 + HQLoc.distanceSquaredTo(enemy.location) * 20000 + rc.getID();
+        int adjustedHealth = enemy.health * 20000 * 50 - rc.getLocation().distanceSquaredTo(enemy.location) * 20000 + rc.getID();
         if (enemy.type.equals(RobotType.LAUNCHER))
             adjustedHealth -= 1_000_000_000;
         return adjustedHealth;
@@ -173,6 +174,8 @@ public class Attack {
                 return 1;
             } else if (delta < 0) {
                 return 2;
+            } else {
+                return 3;
             }
         }
         return 0;

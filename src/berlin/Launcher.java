@@ -19,6 +19,41 @@ public class Launcher extends Robot {
         target = oppositeLoc;
     }
 
+    int eval(MapLocation loc, MapLocation target, int mul) throws GameActionException {
+        int base = target.distanceSquaredTo(loc) * mul;// * 1_000_000 - loc.distanceSquaredTo(HQLoc);
+        if (rc.senseCloud(loc))
+            base += 1_000_000_000;
+        return base;
+    }
+
+    public void randomizedGreedy(MapLocation target, int mul, int tol) throws GameActionException {
+        int hits = rc.getLocation().distanceSquaredTo(target) <= tol
+                ? eval(rc.getLocation(), target, mul)
+                : 1_000_000_000;
+        Direction[] allGood = new Direction[9];
+        int gc = 0;
+
+        for (Direction dir : directions) {
+            if (!rc.canMove(dir))
+                continue;
+            MapLocation loc = rc.adjacentLocation(dir);
+            if (loc.distanceSquaredTo(target) > tol)
+                continue;
+            int w = eval(loc, target, mul);
+            if (w < hits) {
+                hits = w;
+                allGood[0] = dir;
+                gc = 1;
+            } else if (w == hits) {
+                allGood[gc] = dir;
+                gc++;
+            }
+        }
+
+        if (gc != 0)
+            rc.move(allGood[rng.nextInt(gc)]);
+    }
+
     public void run() throws GameActionException {
         MapLocation weakLoc = attack.getWeakLoc();
         int status = attack.getStatus(weakLoc);
@@ -31,13 +66,16 @@ public class Launcher extends Robot {
         }
         if (status == 1) {
             if (weakLoc != null)
-                greedilyMove(weakLoc, 1);
-            weakLoc = attack.getWeakLoc();
-            if (weakLoc != null && rc.canAttack(weakLoc))
-                rc.attack(weakLoc);
+                randomizedGreedy(weakLoc, -1, rc.getType().actionRadiusSquared);
+                // greedilyMove(weakLoc, 1);
+            // weakLoc = attack.getWeakLoc();
+            // if (weakLoc != null && rc.canAttack(weakLoc))
+            //     rc.attack(weakLoc);
+            attack.tryAttack();
         } else if (status == 2) {
             attack.tryAttack();
-            greedilyMove(attack.getThreat(), -1);
+            // greedilyMove(attack.getThreat(), -1);
+            randomizedGreedy(weakLoc, -1, 1_000_000);
             attack.tryAttack();
         } else if (status == 0) {
             if (rc.getLocation().distanceSquaredTo(target) <= 8)
@@ -72,6 +110,10 @@ public class Launcher extends Robot {
                 target = oppositeLoc;
                 reached = false;
             }
+            attack.tryAttack();
+        } else {
+            attack.tryAttack();
+            randomizedGreedy(weakLoc, -1, rc.getType().visionRadiusSquared);
             attack.tryAttack();
         }
     }
