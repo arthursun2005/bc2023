@@ -1,4 +1,4 @@
-package swarm;
+package asianbanana;
 
 import battlecode.common.*;
 
@@ -14,27 +14,6 @@ import java.util.*;
 // if there are a really good well (for example, no friends has reached yet + far away from enemy)
 // then: signal the position in the shared array
 
-final class EuropeanBanana {
-    int enemyOffensiveCount;
-    int friendOffensiveCount;
-    MapLocation loc;
-
-    EuropeanBanana(int a, int x, MapLocation y) {
-        enemyOffensiveCount = a;
-        friendOffensiveCount = x;
-        loc = y;
-    }
-
-    int thickness() {
-        int LLLLL = loc.x * 69 + loc.y;
-        int E = friendOffensiveCount - enemyOffensiveCount;
-        if (E < -32) E = -32;
-        if (E > 31) E = 31;
-        E = (int) (Math.log(E + 32) / Math.log(2));
-        return LLLLL + E * 6666;
-    }
-}
-
 public class Tracker {
     RobotController rc;
     Robot robot;
@@ -44,8 +23,6 @@ public class Tracker {
     long[] rA = new long[64];
     long[] rB = new long[64];
     long[] islands = new long[64];
-    // Enemy LocS (All)
-    ArrayList<EuropeanBanana> elsa;
 
     long wellX = 0;
 
@@ -53,22 +30,6 @@ public class Tracker {
         this.rc = rc;
         this.robot = robot;
     }
-
-    void signalEnemyGroup(int a, int x, MapLocation y) {
-        elsa.add(new EuropeanBanana(a, x, y));
-    }
-
-    int eid = Constants.ENEMY_LOCS;
-
-    /*void tryShareEnemyGroups() throws GameActionException {
-        if (!rc.writeSharedArray(0, 0)) return;
-        for (EuropeanBanana banana : elsa) {
-            for (; eid < Constants.ENEMY_LOCS + Constants.ENEMY_CNT; eid++) {
-                if (rc.readSharedArray(eid) > 0) continue;
-                rc.writeSharedArray(eid, banana.thickness());
-            }
-        }
-    }*/
 
     void clearDistress() throws GameActionException {
         if (!rc.canWriteSharedArray(0, 0))
@@ -490,11 +451,7 @@ public class Tracker {
 
     boolean doneHQs = false;
 
-    Random rng = null;
-
     public void tryFindSymmetry() throws GameActionException {
-        if (rng == null)
-            rng = new Random(rc.getID());
         if (!doneHQs) {
             int x, y, oppx, oppy, val;
             for (MapLocation loc : HQLocs) {
@@ -588,7 +545,7 @@ public class Tracker {
             while (Clock.getBytecodesLeft() >= 500) {
                 // System.out.println(Clock.getBytecodesLeft());
                 // :skull:
-                loc = toCheck[rng.nextInt(toCheck.length)];
+                loc = toCheck[robot.rng.nextInt(toCheck.length)];
 
                 x = loc.x;
                 y = loc.y;
@@ -643,5 +600,61 @@ public class Tracker {
             }
         }
         writepossi(possi);
+    }
+
+    final int ENEMY_GROUP_RADIUS = 34; // How wide is a group
+    final int ENEMY_GROUP_SEPARATION = 50; // How far apart groups are
+    final int ENEMY_GROUP_THRESHOLD = 1; // Minimum enemies in a group
+
+    ArrayList<MapLocation> getEnemyGroups() throws GameActionException {
+        ArrayList<MapLocation> enemyCoords = new ArrayList<>();
+        for (int i=Constants.ENEMY_GROUP_START; i<=Constants.ENEMY_GROUP_END; i++) {
+            if (rc.readSharedArray(i)==0) continue;
+            int coord = (rc.readSharedArray(i) - 1) % 5000;
+            int coordX = coord / 69;
+            int coordY = coord % 69;
+            enemyCoords.add(new MapLocation(coordX, coordY));
+        }
+        return enemyCoords;
+    }
+    boolean addEnemyGroup() throws GameActionException {
+        // Add a new enemy group sighting, return false if unsuccessful
+        // Unsuccessful if array is full OR nearby group already
+        MapLocation pos = rc.getLocation();
+        ArrayList<MapLocation> enemyCoords = getEnemyGroups();
+        for (MapLocation group : enemyCoords) {
+            if (pos.isWithinDistanceSquared(group, ENEMY_GROUP_SEPARATION)) return false;
+        }
+        for (int i=Constants.ENEMY_GROUP_START; i<=Constants.ENEMY_GROUP_END; i++) {
+            if (rc.readSharedArray(i) == 0) {
+                rc.writeSharedArray(i, pos.x * 69 + pos.y + ((rc.getRoundNum()/3) % 13) * 5000 + 1);
+                return true;
+            }
+        }
+        rc.writeSharedArray(Constants.ENEMY_GROUP_START + robot.rng.nextInt(Constants.ENEMY_GROUP_END - Constants.ENEMY_GROUP_START + 1),
+            pos.x * 69 + pos.y + ((rc.getRoundNum()/3) % 13) * 5000 + 1);
+        return true;
+    }
+
+    boolean isEnemyGroup() throws GameActionException {
+        RobotInfo[] enemies = rc.senseNearbyRobots(ENEMY_GROUP_RADIUS, rc.getTeam().opponent());
+        return enemies.length >= ENEMY_GROUP_THRESHOLD;
+    }
+
+    void clearEnemyGroups() throws GameActionException {
+        if (rc.getRoundNum()%3!=0) return;
+        if (!rc.canWriteSharedArray(0, 0)) {
+            return;
+        }
+        for (int i=Constants.ENEMY_GROUP_START; i<=Constants.ENEMY_GROUP_END; i++) {
+            if (rc.readSharedArray(i) == 0) continue;
+            if ((rc.readSharedArray(i) - 1) / 5000 == (rc.getRoundNum()/3) % 13) {
+                int coord = (rc.readSharedArray(i) - 1) % 5000;
+                int coordX = coord / 69;
+                int coordY = coord % 69;
+                //System.out.println("removed " + coordX + " " + coordY);
+                rc.writeSharedArray(i, 0);
+            }
+        }
     }
 }
