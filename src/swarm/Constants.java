@@ -1,4 +1,4 @@
-package betterattack;
+package swarm;
 
 public class Constants {
     // [0, 5]

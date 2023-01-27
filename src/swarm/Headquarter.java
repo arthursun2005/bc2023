@@ -168,7 +168,7 @@ public class Headquarter extends Robot {
                 toMake = RobotType.DESTABILIZER;
             }
 
-            if (k == 0 && rc.getRoundNum() % 15 == 0 && mana >= 15 && ada >= 30 && !tracker.foundSymmetry && made < 1) {
+            if (k == 0 && mana >= 15 && ada >= 30 && made < 1 + rc.getRoundNum() / 80) {
                 toMake = RobotType.AMPLIFIER;
                 made++;
             }
