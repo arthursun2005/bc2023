@@ -3,12 +3,12 @@ package bettersus;
 import battlecode.common.*;
 import java.util.Random;
 
-enum State {
-    WALL,
-    NORMAL
-}
-
 public class Movement {
+
+    enum State {
+        WALL,
+        NORMAL
+    }
 
     MapLocation oldTarget;
     MapLocation lastWall;
@@ -29,6 +29,7 @@ public class Movement {
 
     Movement(RobotController rc) {
         this.rc = rc;
+        turningLeft = (rc.getID()%2 == 1);
     }
 
     boolean canMove(Direction desired) throws GameActionException {
@@ -40,7 +41,7 @@ public class Movement {
         lastDirection = Direction.CENTER;
         currentState = State.NORMAL;
 
-        turningLeft = true;
+        turningLeft = (rc.getID()%2 == 1);
         shouldRight = true;
         bugLength = 0;
         switchable = false;

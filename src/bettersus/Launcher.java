@@ -121,7 +121,7 @@ public class Launcher extends Robot {
             // if (mini < rc.getID() && lowerCount < 9) {
             // moveTo(bestie);
             // }
-            if (bestie != null && rc.getLocation().distanceSquaredTo(bestie) > 2) {
+            if (/*movement.currentState == Movement.State.NORMAL && */bestie != null && rc.getLocation().distanceSquaredTo(bestie) > 2) {
                 // Direction dir = rc.getLocation().directionTo(bestie);
                 // tryMove(dir.rotateLeft().rotateLeft());
                 // tryMove(dir.rotateRight().rotateRight());
@@ -129,9 +129,9 @@ public class Launcher extends Robot {
                 // tryMove(dir.rotateRight());
                 moveTo(bestie);
                 rc.setIndicatorLine(bestie, rc.getLocation(), 122, 69, 69);
-            } else if (true) {
+            } else if (/*true || */rc.getRoundNum()%2 == 0) {
                 int dist = Util.rDist(symmetry.target.loc, HQLoc);
-                if (dist <= 15 || count > (dist > 28 ? 4 : 3)) {
+                if (dist <= 15/* rc.getRoundNum() < 100*/ || count > (dist > 28 ? 4 : 3)) {
                     moveTo(symmetry.target.loc);
                 }
                 else {
