@@ -127,7 +127,7 @@ public class Headquarter extends Robot {
     }
 
     public void run() throws GameActionException {
-        if (getTotalAda() >= 4500 && getTotalMana() >= 6500) {
+        if (getTotalAda() >= 3500 && getTotalMana() >= 5000) {
             rc.writeSharedArray(Constants.MAKE_ELIXIR, 1);
         }
         if (getTotalAda() >= 1600 && rc.readSharedArray(Constants.AGGRO_CARRIERS) == 0) {
@@ -168,10 +168,10 @@ public class Headquarter extends Robot {
                 toMake = RobotType.DESTABILIZER;
             }
 
-            if (k == 0 && rc.getRoundNum() % 15 == 0 && mana >= 15 && ada >= 30 && !tracker.foundSymmetry && made < 1) {
-                toMake = RobotType.AMPLIFIER;
-                made++;
-            }
+            // if (k == 0 && rc.getRoundNum() % 15 == 0 && mana >= 15 && ada >= 30 && !tracker.foundSymmetry && made < 1) {
+            //     toMake = RobotType.AMPLIFIER;
+            //     made++;
+            // }
 
             rc.setIndicatorString("trying to make " + toMake + " totals: " + getTotalAda() + " " + getTotalMana() + " "
                     + locs.length);

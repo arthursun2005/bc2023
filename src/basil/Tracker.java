@@ -182,11 +182,24 @@ public class Tracker {
             // if (rc.getRoundNum() > 100 && rc.getID() % 2 != 0) {
             // ignoreAda = true;
             // }
-            if (rc.getRoundNum() < 35 || cnt < 18) {
-                ignoreAda = true;
-            } else {
-                if (rc.getID() % 3 != 0) {
+            MapLocation HQLoc = getClosestHQLoc();
+            int Rigged = Math.min(Math.abs(rc.getMapWidth() / 2 - HQLoc.x), Math.abs(rc.getMapHeight() / 2 - HQLoc.y));
+            int cutoff = 3 * Rigged / 2;
+            boolean mapsmall = Rigged <= 8;
+            if (mapsmall) {
+                if (rc.getRoundNum() < 35 || cnt < 18) {
                     ignoreAda = true;
+                } else {
+                    if (rc.getID() % 3 != 0) {
+                        ignoreAda = true;
+                    }
+                }
+            } else {
+                if (rc.getRoundNum() < 35) {
+                } else {
+                    if (rc.getID() % 3 != 0) {
+                        ignoreAda = true;
+                    }
                 }
             }
             if (rc.getID() % 3 != 0)

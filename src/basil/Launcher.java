@@ -26,16 +26,16 @@ public class Launcher extends Robot {
     MapLocation HQLoc;
 
     int eval(MapLocation loc, MapLocation target, int mul) throws GameActionException {
-        int base = target.distanceSquaredTo(loc) * mul;// * 1_000_000 - loc.distanceSquaredTo(HQLoc);
+        int base = target.distanceSquaredTo(loc) * mul;
         if (rc.senseCloud(loc))
-            base += 1_000_000_000;
+            base += 1_000;
         return base;
     }
 
     public void randomizedGreedy(MapLocation target, int mul, int tol) throws GameActionException {
         int hits = rc.getLocation().distanceSquaredTo(target) <= tol
                 ? eval(rc.getLocation(), target, mul)
-                : 1_000_000_000;
+                : 2_000_000_000;
         Direction[] allGood = new Direction[9];
         int gc = 0;
 
@@ -43,12 +43,11 @@ public class Launcher extends Robot {
             if (!rc.canMove(dir))
                 continue;
             MapLocation loc = rc.adjacentLocation(dir);
-            //loc = loc.add(rc.senseMapInfo(loc).getCurrentDirection());
-            if (loc.distanceSquaredTo(target) > tol)
-                continue;
             int w = eval(loc, target, mul);
             int sum = Math.abs(dir.dx) + Math.abs(dir.dy);
-            if (sum == 2) w += 10000;
+            if (sum == 2) w += 10_000;
+            if (loc.distanceSquaredTo(target) > tol)
+                w += 1_000_000 * loc.distanceSquaredTo(target);
             if (w < hits) {
                 hits = w;
                 allGood[0] = dir;
@@ -75,8 +74,22 @@ public class Launcher extends Robot {
             rc.setIndicatorLine(symmetry.target.loc, rc.getLocation(), 225, 235, 255);
         }
 
-        // if (status == 0 && rc.canSenseLocation(target.loc))
-        //     status = 1;
+        MapLocation bestie = null;
+        int bid = rc.getID();
+        RobotInfo[] friends = rc.senseNearbyRobots(-1, rc.getTeam());
+        int cnt = 0;
+        int bigcnt = 0;
+        for (RobotInfo ri : friends) {
+            if (!ri.type.equals(RobotType.LAUNCHER)) continue;
+            if (ri.location.distanceSquaredTo(rc.getLocation()) <= 8)
+                cnt++;
+            bigcnt++;
+            // if (bestie == null || rc.getLocation().distanceSquaredTo(ri.location) < rc.getLocation().distanceSquaredTo(bestie)) {
+            if (ri.ID < bid) {
+                bestie = ri.location;
+                bid = ri.ID;
+            }
+        }
 
         if (status == 1) {
             if (weakLoc != null) {
@@ -89,70 +102,29 @@ public class Launcher extends Robot {
             attack.tryAttack();
         } else if (status == 0) {
             symmetry.update();
-            int mini = rc.getLocation().distanceSquaredTo(symmetry.target.loc);
-            // int lowerCount = 0;
-            MapLocation bestie = null;
-            RobotInfo[] friends = rc.senseNearbyRobots(-1, rc.getTeam());
-            int count = 0;
-
-            for (RobotInfo friend : friends) {
-                if (friend.type == RobotType.LAUNCHER) {
-                    // if (friend.ID < rc.getID())
-                    // lowerCount++;
-                    count++;
-                    if (friend.location.distanceSquaredTo(symmetry.target.loc) < mini) {
-                        mini = friend.location.distanceSquaredTo(symmetry.target.loc);
-                        bestie = friend.location;
-                    }
-                }
-            }
-
             attack.tryAttack();
-
-            MapLocation site = tracker.pls();
-            if (site != null
-                    && rc.getLocation().distanceSquaredTo(site) < 100) {
-                moveTo(site);
-                rc.setIndicatorLine(site, rc.getLocation(), 255, 0, 0);
+            int Rigged = Math.min(Math.abs(rc.getMapWidth() / 2 - HQLoc.x), Math.abs(rc.getMapHeight() / 2 - HQLoc.y));
+            int cutoff = 3 * Rigged / 2;
+            boolean mapsmall = Rigged < 8;
+            if (bestie != null && cnt < 4 && (rc.getRoundNum() % 3 != 0 && turnCount > cutoff)) {
+                // moveTo(bestie);
+                randomizedGreedy(bestie, 1, 1000000);
+                rc.setIndicatorLine(rc.getLocation(), bestie, 190, 50, 50);
+            } else if (bigcnt == 0 || (turnCount < cutoff && mapsmall)) {
+                MapLocation center = new MapLocation(rc.getMapWidth() / 2, rc.getMapHeight() / 2);
+                moveTo(center);
+                rc.setIndicatorLine(rc.getLocation(), center, 190, 50, 150);
+            } else if (rc.getRoundNum() % 2 == 0) {
+                moveTo(symmetry.target.loc);
+                rc.setIndicatorLine(rc.getLocation(), symmetry.target.loc, 190, 150, 150);
             }
-
-            int req = 0;// (int) (rc.getRoundNum() / 100) + 1;
-
-            // if (mini < rc.getID() && lowerCount < 9) {
-            // moveTo(bestie);
-            // }
-            if (/*movement.currentState == Movement.State.NORMAL && */bestie != null && rc.getLocation().distanceSquaredTo(bestie) > 2) {
-                // Direction dir = rc.getLocation().directionTo(bestie);
-                // tryMove(dir.rotateLeft().rotateLeft());
-                // tryMove(dir.rotateRight().rotateRight());
-                // tryMove(dir.rotateLeft());
-                // tryMove(dir.rotateRight());
-                moveTo(bestie);
-                rc.setIndicatorLine(bestie, rc.getLocation(), 122, 69, 69);
-            } else if (/*true || */rc.getRoundNum()%2 == 0) {
-                int dist = Util.rDist(symmetry.target.loc, HQLoc);
-                if (dist <= 15/* rc.getRoundNum() < 100*/ || count > (dist > 28 ? 4 : 3)) {
-                    moveTo(symmetry.target.loc);
-                }
-                else {
-                    moveTo(HQLoc);
-                }
-                /*if (Util.rDist(rc.getLocation(), symmetry.target.loc) <= 8) {
-                    moveTo(symmetry.target.loc);
-                }
-                else {
-                    int tarX = (symmetry.parentLoc.x + symmetry.target.loc.x)/2;
-                    int tarY = (symmetry.parentLoc.y + symmetry.target.loc.y)/2;
-                    moveTo(new MapLocation(tarX, tarY));
-                    rc.setIndicatorLine(new MapLocation(tarX, tarY), rc.getLocation(), 122, 69, 69);
-                }*/
-            }
-
             attack.tryAttack();
         } else {
             attack.tryAttack();
-            randomizedGreedy(weakLoc, -1, rc.getType().visionRadiusSquared);
-            //moveTo(HQLoc);
+            if (bestie != null && false)
+                randomizedGreedy(bestie, 1, 1_000_000);
+            else
+                randomizedGreedy(weakLoc, -1, rc.getType().visionRadiusSquared);
             attack.tryAttack();
         }
         if (weakLoc != null && rc.canAttack(weakLoc))
