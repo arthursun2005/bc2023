@@ -1,4 +1,4 @@
-package cheat;
+package merlin;
 
 import battlecode.common.*;
 
@@ -129,7 +129,7 @@ public class Launcher extends Robot {
                 moveTo(bestie);
             }
 
-            if (rc.getRoundNum() % 2 == 1)
+            if (rc.getRoundNum() % 2 == 1 && rc.getRoundNum() % 3 != 0)
                 moveTo(symmetry.update());
 
             attack.tryAttack();
