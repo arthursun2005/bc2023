@@ -1,4 +1,4 @@
-package bettersus;
+package cheat;
 
 import battlecode.common.*;
 import java.util.*;
@@ -685,7 +685,7 @@ public class Attack {
         int trade = 0;
         // if (trolls.length > 0) trade = 30000;
         if (W != 0) {
-            if (delta >= trade + -4 && (ahead || W <= 1 || friends.length > enemies.length + 3)) {
+            if (delta >= trade + -4 && (ahead || frens == 0 || W <= 1 || rc.getHealth() > enemyHealth)) {
                 return 1;
             } else if (delta < trade + -4) {
                 return 2;

@@ -1,4 +1,4 @@
-package bettersus;
+package cheat;
 
 import battlecode.common.*;
 
@@ -43,7 +43,6 @@ public class Launcher extends Robot {
             if (!rc.canMove(dir))
                 continue;
             MapLocation loc = rc.adjacentLocation(dir);
-            //loc = loc.add(rc.senseMapInfo(loc).getCurrentDirection());
             if (loc.distanceSquaredTo(target) > tol)
                 continue;
             int w = eval(loc, target, mul);
@@ -88,7 +87,6 @@ public class Launcher extends Robot {
             randomizedGreedy(weakLoc, -1, 1_000_000);
             attack.tryAttack();
         } else if (status == 0) {
-            symmetry.update();
             int mini = rc.getLocation().distanceSquaredTo(symmetry.target.loc);
             // int lowerCount = 0;
             MapLocation bestie = null;
@@ -99,7 +97,7 @@ public class Launcher extends Robot {
                 if (friend.type == RobotType.LAUNCHER) {
                     // if (friend.ID < rc.getID())
                     // lowerCount++;
-                    if (rc.getLocation().distanceSquaredTo(friend.location) <= 10) count++;
+                    count++;
                     if (friend.location.distanceSquaredTo(symmetry.target.loc) < mini) {
                         mini = friend.location.distanceSquaredTo(symmetry.target.loc);
                         bestie = friend.location;
@@ -121,38 +119,22 @@ public class Launcher extends Robot {
             // if (mini < rc.getID() && lowerCount < 9) {
             // moveTo(bestie);
             // }
-            if (/*movement.currentState == Movement.State.NORMAL && */bestie != null && rc.getLocation().distanceSquaredTo(bestie) > 2) {
+            if (bestie != null) {
                 // Direction dir = rc.getLocation().directionTo(bestie);
                 // tryMove(dir.rotateLeft().rotateLeft());
                 // tryMove(dir.rotateRight().rotateRight());
                 // tryMove(dir.rotateLeft());
                 // tryMove(dir.rotateRight());
                 moveTo(bestie);
-                rc.setIndicatorLine(bestie, rc.getLocation(), 122, 69, 69);
-            } else if (/*true || */rc.getRoundNum()%2 == 0) {
-                int dist = Util.rDist(symmetry.target.loc, HQLoc);
-                if (dist <= 15/* rc.getRoundNum() < 100*/ || count > (dist > 28 ? 4 : 3)) {
-                    moveTo(symmetry.target.loc);
-                }
-                else {
-                    moveTo(HQLoc);
-                }
-                /*if (Util.rDist(rc.getLocation(), symmetry.target.loc) <= 8) {
-                    moveTo(symmetry.target.loc);
-                }
-                else {
-                    int tarX = (symmetry.parentLoc.x + symmetry.target.loc.x)/2;
-                    int tarY = (symmetry.parentLoc.y + symmetry.target.loc.y)/2;
-                    moveTo(new MapLocation(tarX, tarY));
-                    rc.setIndicatorLine(new MapLocation(tarX, tarY), rc.getLocation(), 122, 69, 69);
-                }*/
             }
+
+            if (rc.getRoundNum() % 3 != 0)
+                moveTo(symmetry.update());
 
             attack.tryAttack();
         } else {
             attack.tryAttack();
             randomizedGreedy(weakLoc, -1, rc.getType().visionRadiusSquared);
-            //moveTo(HQLoc);
             attack.tryAttack();
         }
         if (weakLoc != null && rc.canAttack(weakLoc))
