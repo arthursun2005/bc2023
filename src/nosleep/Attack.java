@@ -179,434 +179,246 @@ public class Attack {
             rc.destabilize(best);
     }
 
-    MapLocation[] might = new MapLocation[101];
+    MapLocation might = null;
 
     public void snipe() throws GameActionException {
-        if (!rc.isActionReady())
-            return;
+        if (!rc.isActionReady()) return;
+        if (rc.getRoundNum() == robot.creationRound) return;
         int mc = 0;
         MapLocation me = rc.getLocation();
+        CursedRandom rng = robot.rng;
+        int mx = 0, my = 0;
+        int width = rc.getMapWidth();
+        int height = rc.getMapHeight();
+
         if (rc.senseCloud(rc.getLocation())) {
-            MapLocation loc;
+            int fx, fy;
 
-            loc = new MapLocation(me.x + -4, me.y + -4);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
+            fx = me.x + -4;
+            fy = me.y + 0;
+            if (fx >= 0 && fx < width && fy >= 0 && fy < height) {
+                if (rng.nextInt(++mc) == 0) { mx = fx; my = fy; }
             }
 
-            loc = new MapLocation(me.x + -4, me.y + -3);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
+            fx = me.x + -3;
+            fy = me.y + -2;
+            if (fx >= 0 && fx < width && fy >= 0 && fy < height) {
+                if (rng.nextInt(++mc) == 0) { mx = fx; my = fy; }
             }
 
-            loc = new MapLocation(me.x + -4, me.y + -2);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
+            fx = me.x + -3;
+            fy = me.y + -1;
+            if (fx >= 0 && fx < width && fy >= 0 && fy < height) {
+                if (rng.nextInt(++mc) == 0) { mx = fx; my = fy; }
             }
 
-            loc = new MapLocation(me.x + -4, me.y + -1);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
+            fx = me.x + -3;
+            fy = me.y + 0;
+            if (fx >= 0 && fx < width && fy >= 0 && fy < height) {
+                if (rng.nextInt(++mc) == 0) { mx = fx; my = fy; }
             }
 
-            loc = new MapLocation(me.x + -4, me.y + 0);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
+            fx = me.x + -3;
+            fy = me.y + 1;
+            if (fx >= 0 && fx < width && fy >= 0 && fy < height) {
+                if (rng.nextInt(++mc) == 0) { mx = fx; my = fy; }
             }
 
-            loc = new MapLocation(me.x + -4, me.y + 1);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
+            fx = me.x + -3;
+            fy = me.y + 2;
+            if (fx >= 0 && fx < width && fy >= 0 && fy < height) {
+                if (rng.nextInt(++mc) == 0) { mx = fx; my = fy; }
             }
 
-            loc = new MapLocation(me.x + -4, me.y + 2);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
+            fx = me.x + -2;
+            fy = me.y + -3;
+            if (fx >= 0 && fx < width && fy >= 0 && fy < height) {
+                if (rng.nextInt(++mc) == 0) { mx = fx; my = fy; }
             }
 
-            loc = new MapLocation(me.x + -4, me.y + 3);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
+            fx = me.x + -2;
+            fy = me.y + -2;
+            if (fx >= 0 && fx < width && fy >= 0 && fy < height) {
+                if (rng.nextInt(++mc) == 0) { mx = fx; my = fy; }
             }
 
-            loc = new MapLocation(me.x + -4, me.y + 4);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
+            fx = me.x + -2;
+            fy = me.y + -1;
+            if (fx >= 0 && fx < width && fy >= 0 && fy < height) {
+                if (rng.nextInt(++mc) == 0) { mx = fx; my = fy; }
             }
 
-            loc = new MapLocation(me.x + -3, me.y + -4);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
+            fx = me.x + -2;
+            fy = me.y + 1;
+            if (fx >= 0 && fx < width && fy >= 0 && fy < height) {
+                if (rng.nextInt(++mc) == 0) { mx = fx; my = fy; }
             }
 
-            loc = new MapLocation(me.x + -3, me.y + -3);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
+            fx = me.x + -2;
+            fy = me.y + 2;
+            if (fx >= 0 && fx < width && fy >= 0 && fy < height) {
+                if (rng.nextInt(++mc) == 0) { mx = fx; my = fy; }
             }
 
-            loc = new MapLocation(me.x + -3, me.y + -2);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
+            fx = me.x + -2;
+            fy = me.y + 3;
+            if (fx >= 0 && fx < width && fy >= 0 && fy < height) {
+                if (rng.nextInt(++mc) == 0) { mx = fx; my = fy; }
             }
 
-            loc = new MapLocation(me.x + -3, me.y + -1);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
+            fx = me.x + -1;
+            fy = me.y + -3;
+            if (fx >= 0 && fx < width && fy >= 0 && fy < height) {
+                if (rng.nextInt(++mc) == 0) { mx = fx; my = fy; }
             }
 
-            loc = new MapLocation(me.x + -3, me.y + 0);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
+            fx = me.x + -1;
+            fy = me.y + -2;
+            if (fx >= 0 && fx < width && fy >= 0 && fy < height) {
+                if (rng.nextInt(++mc) == 0) { mx = fx; my = fy; }
             }
 
-            loc = new MapLocation(me.x + -3, me.y + 1);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
+            fx = me.x + -1;
+            fy = me.y + 2;
+            if (fx >= 0 && fx < width && fy >= 0 && fy < height) {
+                if (rng.nextInt(++mc) == 0) { mx = fx; my = fy; }
             }
 
-            loc = new MapLocation(me.x + -3, me.y + 2);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
+            fx = me.x + -1;
+            fy = me.y + 3;
+            if (fx >= 0 && fx < width && fy >= 0 && fy < height) {
+                if (rng.nextInt(++mc) == 0) { mx = fx; my = fy; }
             }
 
-            loc = new MapLocation(me.x + -3, me.y + 3);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
+            fx = me.x + 0;
+            fy = me.y + -4;
+            if (fx >= 0 && fx < width && fy >= 0 && fy < height) {
+                if (rng.nextInt(++mc) == 0) { mx = fx; my = fy; }
             }
 
-            loc = new MapLocation(me.x + -3, me.y + 4);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
+            fx = me.x + 0;
+            fy = me.y + -3;
+            if (fx >= 0 && fx < width && fy >= 0 && fy < height) {
+                if (rng.nextInt(++mc) == 0) { mx = fx; my = fy; }
             }
 
-            loc = new MapLocation(me.x + -2, me.y + -4);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
+            fx = me.x + 0;
+            fy = me.y + 3;
+            if (fx >= 0 && fx < width && fy >= 0 && fy < height) {
+                if (rng.nextInt(++mc) == 0) { mx = fx; my = fy; }
             }
 
-            loc = new MapLocation(me.x + -2, me.y + -3);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
+            fx = me.x + 0;
+            fy = me.y + 4;
+            if (fx >= 0 && fx < width && fy >= 0 && fy < height) {
+                if (rng.nextInt(++mc) == 0) { mx = fx; my = fy; }
             }
 
-            loc = new MapLocation(me.x + -2, me.y + -2);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
+            fx = me.x + 1;
+            fy = me.y + -3;
+            if (fx >= 0 && fx < width && fy >= 0 && fy < height) {
+                if (rng.nextInt(++mc) == 0) { mx = fx; my = fy; }
             }
 
-            loc = new MapLocation(me.x + -2, me.y + -1);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
+            fx = me.x + 1;
+            fy = me.y + -2;
+            if (fx >= 0 && fx < width && fy >= 0 && fy < height) {
+                if (rng.nextInt(++mc) == 0) { mx = fx; my = fy; }
             }
 
-            loc = new MapLocation(me.x + -2, me.y + 1);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
+            fx = me.x + 1;
+            fy = me.y + 2;
+            if (fx >= 0 && fx < width && fy >= 0 && fy < height) {
+                if (rng.nextInt(++mc) == 0) { mx = fx; my = fy; }
             }
 
-            loc = new MapLocation(me.x + -2, me.y + 2);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
+            fx = me.x + 1;
+            fy = me.y + 3;
+            if (fx >= 0 && fx < width && fy >= 0 && fy < height) {
+                if (rng.nextInt(++mc) == 0) { mx = fx; my = fy; }
             }
 
-            loc = new MapLocation(me.x + -2, me.y + 3);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
+            fx = me.x + 2;
+            fy = me.y + -3;
+            if (fx >= 0 && fx < width && fy >= 0 && fy < height) {
+                if (rng.nextInt(++mc) == 0) { mx = fx; my = fy; }
             }
 
-            loc = new MapLocation(me.x + -2, me.y + 4);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
+            fx = me.x + 2;
+            fy = me.y + -2;
+            if (fx >= 0 && fx < width && fy >= 0 && fy < height) {
+                if (rng.nextInt(++mc) == 0) { mx = fx; my = fy; }
             }
 
-            loc = new MapLocation(me.x + -1, me.y + -4);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
+            fx = me.x + 2;
+            fy = me.y + -1;
+            if (fx >= 0 && fx < width && fy >= 0 && fy < height) {
+                if (rng.nextInt(++mc) == 0) { mx = fx; my = fy; }
             }
 
-            loc = new MapLocation(me.x + -1, me.y + -3);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
+            fx = me.x + 2;
+            fy = me.y + 1;
+            if (fx >= 0 && fx < width && fy >= 0 && fy < height) {
+                if (rng.nextInt(++mc) == 0) { mx = fx; my = fy; }
             }
 
-            loc = new MapLocation(me.x + -1, me.y + -2);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
+            fx = me.x + 2;
+            fy = me.y + 2;
+            if (fx >= 0 && fx < width && fy >= 0 && fy < height) {
+                if (rng.nextInt(++mc) == 0) { mx = fx; my = fy; }
             }
 
-            loc = new MapLocation(me.x + -1, me.y + 2);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
+            fx = me.x + 2;
+            fy = me.y + 3;
+            if (fx >= 0 && fx < width && fy >= 0 && fy < height) {
+                if (rng.nextInt(++mc) == 0) { mx = fx; my = fy; }
             }
 
-            loc = new MapLocation(me.x + -1, me.y + 3);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
+            fx = me.x + 3;
+            fy = me.y + -2;
+            if (fx >= 0 && fx < width && fy >= 0 && fy < height) {
+                if (rng.nextInt(++mc) == 0) { mx = fx; my = fy; }
             }
 
-            loc = new MapLocation(me.x + -1, me.y + 4);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
+            fx = me.x + 3;
+            fy = me.y + -1;
+            if (fx >= 0 && fx < width && fy >= 0 && fy < height) {
+                if (rng.nextInt(++mc) == 0) { mx = fx; my = fy; }
             }
 
-            loc = new MapLocation(me.x + 0, me.y + -4);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
+            fx = me.x + 3;
+            fy = me.y + 0;
+            if (fx >= 0 && fx < width && fy >= 0 && fy < height) {
+                if (rng.nextInt(++mc) == 0) { mx = fx; my = fy; }
             }
 
-            loc = new MapLocation(me.x + 0, me.y + -3);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
+            fx = me.x + 3;
+            fy = me.y + 1;
+            if (fx >= 0 && fx < width && fy >= 0 && fy < height) {
+                if (rng.nextInt(++mc) == 0) { mx = fx; my = fy; }
             }
 
-            loc = new MapLocation(me.x + 0, me.y + 3);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
+            fx = me.x + 3;
+            fy = me.y + 2;
+            if (fx >= 0 && fx < width && fy >= 0 && fy < height) {
+                if (rng.nextInt(++mc) == 0) { mx = fx; my = fy; }
             }
 
-            loc = new MapLocation(me.x + 0, me.y + 4);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
+            fx = me.x + 4;
+            fy = me.y + 0;
+            if (fx >= 0 && fx < width && fy >= 0 && fy < height) {
+                if (rng.nextInt(++mc) == 0) { mx = fx; my = fy; }
             }
-
-            loc = new MapLocation(me.x + 1, me.y + -4);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
-            }
-
-            loc = new MapLocation(me.x + 1, me.y + -3);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
-            }
-
-            loc = new MapLocation(me.x + 1, me.y + -2);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
-            }
-
-            loc = new MapLocation(me.x + 1, me.y + 2);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
-            }
-
-            loc = new MapLocation(me.x + 1, me.y + 3);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
-            }
-
-            loc = new MapLocation(me.x + 1, me.y + 4);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
-            }
-
-            loc = new MapLocation(me.x + 2, me.y + -4);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
-            }
-
-            loc = new MapLocation(me.x + 2, me.y + -3);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
-            }
-
-            loc = new MapLocation(me.x + 2, me.y + -2);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
-            }
-
-            loc = new MapLocation(me.x + 2, me.y + -1);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
-            }
-
-            loc = new MapLocation(me.x + 2, me.y + 1);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
-            }
-
-            loc = new MapLocation(me.x + 2, me.y + 2);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
-            }
-
-            loc = new MapLocation(me.x + 2, me.y + 3);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
-            }
-
-            loc = new MapLocation(me.x + 2, me.y + 4);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
-            }
-
-            loc = new MapLocation(me.x + 3, me.y + -4);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
-            }
-
-            loc = new MapLocation(me.x + 3, me.y + -3);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
-            }
-
-            loc = new MapLocation(me.x + 3, me.y + -2);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
-            }
-
-            loc = new MapLocation(me.x + 3, me.y + -1);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
-            }
-
-            loc = new MapLocation(me.x + 3, me.y + 0);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
-            }
-
-            loc = new MapLocation(me.x + 3, me.y + 1);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
-            }
-
-            loc = new MapLocation(me.x + 3, me.y + 2);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
-            }
-
-            loc = new MapLocation(me.x + 3, me.y + 3);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
-            }
-
-            loc = new MapLocation(me.x + 3, me.y + 4);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
-            }
-
-            loc = new MapLocation(me.x + 4, me.y + -4);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
-            }
-
-            loc = new MapLocation(me.x + 4, me.y + -3);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
-            }
-
-            loc = new MapLocation(me.x + 4, me.y + -2);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
-            }
-
-            loc = new MapLocation(me.x + 4, me.y + -1);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
-            }
-
-            loc = new MapLocation(me.x + 4, me.y + 0);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
-            }
-
-            loc = new MapLocation(me.x + 4, me.y + 1);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
-            }
-
-            loc = new MapLocation(me.x + 4, me.y + 2);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
-            }
-
-            loc = new MapLocation(me.x + 4, me.y + 3);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
-            }
-
-            loc = new MapLocation(me.x + 4, me.y + 4);
-            if (rc.canAttack(loc)) {
-                might[mc] = loc;
-                mc++;
-            }
+            might = new MapLocation(mx, my);
         } else {
             MapLocation clouds[] = rc.senseNearbyCloudLocations(16);
             for (MapLocation cloud : clouds) {
                 if (me.distanceSquaredTo(cloud) <= 4)
-                    continue;
-                might[mc] = cloud;
-                mc++;
+                continue;
+                if (rng.nextInt(++mc) == 0) might = cloud;
             }
         }
-        if (mc > 0)
-            rc.attack(might[robot.rng.nextInt(mc)]);
+        if (mc > 0) rc.attack(might);
     }
 
     public MapLocation getThreat() throws GameActionException {
@@ -618,7 +430,7 @@ public class Attack {
         MapLocation weakLoc = null;
         int weakness = 0;
         for (RobotInfo enemy : enemies) {
-            if (!enemy.type.equals(RobotType.LAUNCHER) && !enemy.type.equals(RobotType.DESTABILIZER))
+            if (!enemy.type.equals(RobotType.LAUNCHER) || !enemy.type.equals(RobotType.DESTABILIZER))
                 continue;
             MapLocation toAttack = enemy.location;
             int adjustedHealth = getEnemyStrengthMetric(enemy);

@@ -69,7 +69,8 @@ public class Tracker {
 
     void update() throws GameActionException {
         senseWells();
-        senseIslands();
+        if (rc.getType().equals(RobotType.CARRIER))
+            senseIslands();
         readWells();
         shareWells();
     }
