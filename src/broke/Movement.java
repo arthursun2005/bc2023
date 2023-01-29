@@ -1,4 +1,4 @@
-package nosleep;
+package broke;
 
 import battlecode.common.*;
 
@@ -50,10 +50,18 @@ public class Movement {
     boolean canGo(MapLocation tar) throws GameActionException {
         if (!rc.onTheMap(tar) || !rc.sensePassability(tar)) return false;
         if (rc.canSenseRobotAtLocation(tar) && !rc.getLocation().equals(tar)) return false;
-        if (rc.senseMapInfo(tar).getCurrentDirection() == Direction.CENTER) return true;
-        MapLocation actualTar = tar.add(rc.senseMapInfo(tar).getCurrentDirection());
+
+        Direction dir1 = rc.senseMapInfo(tar).getCurrentDirection();
+        if (dir1 == Direction.CENTER) return true;
+        Direction dir2 = path[cur].directionTo(tar);
+
         if (gameStates[cur].invalid.charAt(tar.x*60+tar.y)=='1') return false;
-        if (path[cur].distanceSquaredTo(actualTar) > 2) return true;
+
+        //MapLocation actualTar = tar.add(rc.senseMapInfo(tar).getCurrentDirection());
+        //if (path[cur].distanceSquaredTo(actualTar) > 2) return true;
+        //if (gameStates[cur].state == State.WALL) return false;
+        if (dir1 == dir2 || dir1 == dir2.rotateLeft() || dir1 == dir2.rotateRight()) return true;
+
         gameStates[cur].invalid.setCharAt(tar.x*60+tar.y, '1');
         return false;
     }
@@ -92,33 +100,31 @@ public class Movement {
 
             tmp = path[cur].add(dir);
             if (canGo(tmp)) {
-                if (rc.senseMapInfo(tmp).getCurrentDirection() != Direction.CENTER) {
+                /*if (rc.senseMapInfo(tmp).getCurrentDirection() != Direction.CENTER) {
                     gameStates[cur+1] = new GameState(gameStates[cur]);
                     path[++cur] = tmp;
                     return true;
-                }
+                }*/
                 best = tmp;
             }
 
-            //TODO: use currents if next to friends
-
             tmp = path[cur].add(dir.rotateLeft());
-            if (canGo(tmp)) {
-                if (rc.senseMapInfo(tmp).getCurrentDirection() != Direction.CENTER) {
+            if (canGo(tmp) && rc.senseMapInfo(tmp).getCurrentDirection() == Direction.CENTER) {
+                /*if (rc.senseMapInfo(tmp).getCurrentDirection() != Direction.CENTER) {
                     gameStates[cur+1] = new GameState(gameStates[cur]);
                     path[++cur] = tmp;
                     return true;
-                }
+                }*/
                 if (best == null) best = tmp;
             }
 
             tmp = path[cur].add(dir.rotateRight());
-            if (canGo(tmp)) {
-                if (rc.senseMapInfo(tmp).getCurrentDirection() != Direction.CENTER) {
+            if (canGo(tmp) && rc.senseMapInfo(tmp).getCurrentDirection() == Direction.CENTER) {
+                /*if (rc.senseMapInfo(tmp).getCurrentDirection() != Direction.CENTER) {
                     gameStates[cur+1] = new GameState(gameStates[cur]);
                     path[++cur] = tmp;
                     return true;
-                }
+                }*/
                 if (best == null) best = tmp;
             }
 
