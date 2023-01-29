@@ -1,4 +1,4 @@
-package sosleep;
+package nosleep;
 
 import battlecode.common.*;
 
@@ -235,20 +235,17 @@ public class Movement {
             }
             return;
         }
-        if (lastUpdate != rc.getRoundNum()) {
-            if (lastUpdate == -1) {
-                if (update(loc))
-                if (update(loc));
-            }
-            else {
-                if (update(loc))
-                if (update(loc))
-                if (update(loc))
-                if (update(loc))
-                if (update(loc));
-            }
-            lastUpdate = rc.getRoundNum();
+        if (!rc.getLocation().equals(path[cur])) reset();
+        if (rc.getType() == RobotType.CARRIER || lastUpdate == -1) {
+            if (update(loc))
+            if (update(loc));
         }
+        else {
+            if (update(loc))
+            if (update(loc))
+            if (update(loc));
+        }
+        lastUpdate = rc.getRoundNum();
         /*for (int i = 0; i < 3; i++) {
             int start = Clock.getBytecodesLeft();
             if (!update(loc)) break;
@@ -258,9 +255,10 @@ public class Movement {
         /*for (int i = Math.max(0,cur-7); i + 1 <= cur; i++) {
             rc.setIndicatorLine(path[i], path[i+1], 225, 235, 255);
         }*/
+        //rc.setIndicatorDot(rc.getLocation(), 255, 69, 69);
+        rc.setIndicatorLine(path[cur], rc.getLocation(), 235, 69, 255);
         tryMove();
-        rc.setIndicatorLine(loc, rc.getLocation(), 69, 235, 255);
-        //rc.setIndicatorLine(path[cur], rc.getLocation(), 235, 69, 255);
-        //rc.setIndicatorString("value " + cur + " sus " + gameStates[cur].turningLeft + " state " + gameStates[cur].state);
+        //rc.setIndicatorLine(loc, rc.getLocation(), 69, 235, 255);
+        rc.setIndicatorString("value " + cur + " sus " + gameStates[cur].turningLeft + " state " + gameStates[cur].state);
     }
 }
