@@ -122,7 +122,7 @@ public class Carrier extends Robot {
         if (ada >= GameConstants.CARRIER_CAPACITY / 4 + 5 && rc.getRoundNum() < 19)
             shouldReturn = true;
 
-        if (ada >= 3 * GameConstants.CARRIER_CAPACITY / 4 && rc.getRoundNum() < 89)
+        if (huhh >= 3 * GameConstants.CARRIER_CAPACITY / 4 && rc.getRoundNum() < 89)
             shouldReturn = true;
 
         MapLocation well = tracker.getBestWell(attack.getThreat());

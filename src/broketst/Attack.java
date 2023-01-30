@@ -70,6 +70,7 @@ public class Attack {
     }
 
     boolean shouldTargetHQ(MapLocation loc) throws GameActionException {
+        if (true) return false;
         return rc.getRoundNum() > 180 && rc.getID() % 8 == 0;
     }
 

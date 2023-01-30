@@ -128,7 +128,7 @@ public class Launcher extends Robot {
                 moveToBestie(bestie);
             }
 
-            if (rc.getRoundNum() % 2 == 1/* && rc.getRoundNum() % 3 != 0*/)
+            if (rc.getRoundNum() % 2 == 1 && rc.getRoundNum() % 3 != 0)
                 moveTo(symmetry.update());
 
             attack.tryAttack();
