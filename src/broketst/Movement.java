@@ -29,6 +29,7 @@ public class Movement {
 
     Movement(RobotController rc) {
         this.rc = rc;
+        turningLeft = rc.getID()%2 == 1;
     }
 
     StringBuilder invalid = new StringBuilder(String.format("%3690s",""));
@@ -54,7 +55,7 @@ public class Movement {
 
         invalid = new StringBuilder(String.format("%3690s",""));
 
-        turningLeft = true;
+        turningLeft = rc.getID()%2 == 1;
         shouldRight = true;
         bugLength = 0;
         switchable = false;
@@ -186,7 +187,10 @@ public class Movement {
         if (canMove(togo)) {
             return togo;
         }
-/*
+
+        Direction left = togo.rotateLeft();
+        Direction right = togo.rotateRight();
+
         MapLocation tryLeft = currentLocation.add(left);
         MapLocation tryRight = currentLocation.add(right);
 
@@ -223,7 +227,7 @@ public class Movement {
         }
 
         // bruh rip
-*/
+
         return null;
     }
 
