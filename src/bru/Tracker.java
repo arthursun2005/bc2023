@@ -1,4 +1,4 @@
-package broketst;
+package bru;
 
 import battlecode.common.*;
 
@@ -530,8 +530,8 @@ public class Tracker {
         if (!foundSymmetry) {
             int[] tmpPossi = readpossi();
             if (tmpPossi[1] == 0) possi[1] = 0;
-            if (tmpPossi[2] == 0) possi[2] = 0;
-            if (tmpPossi[3] == 0) possi[3] = 0;
+            if (tmpPossi[1] == 0) possi[2] = 0;
+            if (tmpPossi[1] == 0) possi[3] = 0;
 
             MapLocation toCheck[] = rc.getAllLocationsWithinRadiusSquared(rc.getLocation(), 18);
             int x, y, oppx, oppy, val;
