@@ -127,9 +127,11 @@ public class Launcher extends Robot {
                 // tryMove(dir.rotateRight());
                 moveToBestie(bestie);
             }
-
-            if (rc.getRoundNum() % 2 == 1 && rc.getRoundNum() % 3 != 0)
+            if (count == 0 && rc.getRoundNum() % 3 == 0) {
                 moveTo(symmetry.update());
+            } else if (rc.getRoundNum() % 2 == 1 && rc.getRoundNum() % 3 != 0) {
+                moveTo(symmetry.update());
+            }
 
             attack.tryAttack();
         } else {
