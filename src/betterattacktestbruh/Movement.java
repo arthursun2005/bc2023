@@ -1,6 +1,7 @@
-package broketst;
+package betterattacktestbruh;
 
 import battlecode.common.*;
+
 import java.util.Random;
 
 enum State {
@@ -29,37 +30,18 @@ public class Movement {
 
     Movement(RobotController rc) {
         this.rc = rc;
-        turningLeft = rc.getID()%2 == 1;
     }
 
-    StringBuilder invalid = new StringBuilder(String.format("%3690s",""));
-
-    MapLocation bestieLoc = null;
-
     boolean canMove(Direction desired) throws GameActionException {
-        if (!rc.canMove(desired)) return false;
-
-        if (bestieLoc != null && (bestieLoc.distanceSquaredTo(rc.getLocation().add(desired))) >= 15) return false;
-
-        MapLocation tar = rc.getLocation().add(desired);
-        Direction current = rc.senseMapInfo(tar).getCurrentDirection();
-        if (current == Direction.CENTER) return true;
-
-        if (invalid.charAt(tar.x*60+tar.y)=='1') return false;
-
-        if (current == desired || current == desired.rotateLeft() || current == desired.rotateRight()) return true;
-
-        invalid.setCharAt(tar.x*60+tar.y, '1');
-        return false;
+        if (currentState == State.WALL) return rc.canMove(desired) && rc.senseMapInfo(currentLocation.add(desired)).getCurrentDirection().equals(Direction.CENTER);
+        return rc.canMove(desired) && !rc.senseMapInfo(currentLocation.add(desired)).getCurrentDirection().equals(desired.opposite());
     }
 
     void hardReset() {
         lastDirection = Direction.CENTER;
         currentState = State.NORMAL;
 
-        invalid = new StringBuilder(String.format("%3690s",""));
-
-        turningLeft = rc.getID()%2 == 1;
+        turningLeft = true;
         shouldRight = true;
         bugLength = 0;
         switchable = false;
@@ -191,10 +173,7 @@ public class Movement {
         if (canMove(togo)) {
             return togo;
         }
-
-        Direction left = togo.rotateLeft();
-        Direction right = togo.rotateRight();
-
+/*
         MapLocation tryLeft = currentLocation.add(left);
         MapLocation tryRight = currentLocation.add(right);
 
@@ -231,7 +210,7 @@ public class Movement {
         }
 
         // bruh rip
-
+*/
         return null;
     }
 
@@ -358,7 +337,6 @@ public class Movement {
             currentState = State.NORMAL;
             bugLength = 0;
             lastDirection = Direction.CENTER;
-            invalid = new StringBuilder(String.format("%3690s",""));
 
             if (previous != null) lastDirection = previous;
         }
@@ -407,20 +385,21 @@ public class Movement {
     }
 
     void moveTo(MapLocation loc) throws GameActionException {
-        bestieLoc = null;
         if (!rc.isMovementReady()) return;
         if (rc.getLocation().distanceSquaredTo(loc) == 0) return;
         if (rc.getLocation().distanceSquaredTo(loc) <= 2 && (rc.senseRobotAtLocation(loc) != null || !rc.sensePassability(loc))) return;
         Direction dir = tryMove(loc, null);
-        if (dir != null && rc.canMove(dir)) rc.move(dir);
-    }
 
-    void moveToBestie(MapLocation loc) throws GameActionException {
-        bestieLoc = loc;
-        if (!rc.isMovementReady()) return;
-        if (rc.getLocation().distanceSquaredTo(loc) == 0) return;
-        if (rc.getLocation().distanceSquaredTo(loc) <= 2 && (rc.senseRobotAtLocation(loc) != null || !rc.sensePassability(loc))) return;
-        Direction dir = tryMove(loc, null);
-        if (dir != null && rc.canMove(dir)) rc.move(dir);
+        RobotInfo robotInfo[] = rc.senseNearbyRobots(-1, rc.getTeam().opponent());
+
+        MapLocation hq = null;
+        for (RobotInfo r : robotInfo) {
+            if (r.getType() == RobotType.HEADQUARTERS) {
+                hq = r.getLocation();
+            }
+        }
+
+
+        if (dir != null && rc.canMove(dir) && (hq == null || (hq.distanceSquaredTo(rc.getLocation().add(dir)) > 9))) rc.move(dir);
     }
 }

@@ -10,7 +10,7 @@ public class Carrier extends Robot {
     public void runUnit() throws GameActionException {
 
         int temp = Clock.getBytecodesLeft();
-        bfs.redoMap();
+        rng.nextInt();
         System.out.println("OMEGASUS: " + (temp - Clock.getBytecodesLeft()));
     }
 }

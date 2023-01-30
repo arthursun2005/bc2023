@@ -1,11 +1,12 @@
-package broketst;
+package betterattacktestbruh;
 
 import battlecode.common.*;
-import java.util.*;
+
+import java.util.Random;
 
 public abstract class Robot {
     RobotController rc;
-    CursedRandom rng;
+    Random rng;
 
     Attack attack;
     Tracker tracker;
@@ -18,12 +19,12 @@ public abstract class Robot {
     Direction[] directions = Direction.values();
 
     public Robot(RobotController rc) throws GameActionException {
-        rng = new CursedRandom(rc);
         this.rc = rc;
         Util.rc = rc;
         attack = new Attack(rc, this);
         tracker = new Tracker(rc, this);
         movement = new Movement(rc);
+        rng = new Random(rc.getID() + 369);
         creationRound = rc.getRoundNum();
         turnCount = 0;
 
@@ -31,7 +32,6 @@ public abstract class Robot {
     }
 
     public void prepare() throws GameActionException {
-        rng = new CursedRandom(rc);
         if (turnCount > 3 || (!rc.getType().equals(RobotType.LAUNCHER) && !rc.getType().equals(RobotType.DESTABILIZER)))
             tracker.update();
         attack.updateFriends();
@@ -44,10 +44,6 @@ public abstract class Robot {
 
     public void moveTo(MapLocation loc) throws GameActionException {
         movement.moveTo(loc);
-    }
-
-    public void moveToBestie(MapLocation loc) throws GameActionException {
-        movement.moveToBestie(loc);
     }
 
     void tryMove(Direction dir) throws GameActionException {
