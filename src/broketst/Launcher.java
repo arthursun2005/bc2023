@@ -87,7 +87,7 @@ public class Launcher extends Robot {
             randomizedGreedy(weakLoc, -1, 1_000_000);
             attack.tryAttack();
         } else if (status == 0) {
-            int mini = rc.getID(); //rc.getLocation().distanceSquaredTo(symmetry.target.loc);
+            int mini = rc.getLocation().distanceSquaredTo(symmetry.target.loc);
             // int lowerCount = 0;
             MapLocation bestie = null;
             RobotInfo[] friends = rc.senseNearbyRobots(-1, rc.getTeam());
@@ -98,8 +98,8 @@ public class Launcher extends Robot {
                     // if (friend.ID < rc.getID())
                     // lowerCount++;
                     count++;
-                    if (friend.ID < mini) {
-                        mini = friend.ID;
+                    if (friend.location.distanceSquaredTo(symmetry.target.loc) < mini) {
+                        mini = friend.location.distanceSquaredTo(symmetry.target.loc);
                         bestie = friend.location;
                     }
                 }
@@ -119,18 +119,18 @@ public class Launcher extends Robot {
             // if (mini < rc.getID() && lowerCount < 9) {
             // moveTo(bestie);
             // }
-            if (false && bestie != null && rc.getRoundNum() % 2 == 1) {
-                // Direction dir = rc.getLocation().directionTo(bestie);
-                // tryMove(dir.rotateLeft().rotateLeft());
-                // tryMove(dir.rotateRight().rotateRight());
-                // tryMove(dir.rotateLeft());
-                // tryMove(dir.rotateRight());
-                moveToBestie(bestie);
-            }
-            if (count == 0 && rc.getRoundNum() % 3 == 0) {
+            if (bestie != null) {
+                // Someone is closer
                 moveTo(symmetry.update());
-            } else if (rc.getRoundNum() % 2 == 1 && rc.getRoundNum() % 3 != 0) {
-                moveTo(symmetry.update());
+            } else {
+                if (count == 0) {
+                    // no one in vision radius
+                    if (rc.getRoundNum() % 10 == 0)
+                        moveTo(symmetry.update());
+                } else if (rc.getRoundNum() % 3 == 0) {
+                    // ur closest
+                    moveTo(symmetry.update());
+                }
             }
 
             attack.tryAttack();
