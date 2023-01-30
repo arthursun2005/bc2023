@@ -43,7 +43,7 @@ public class Movement {
     void reset() throws GameActionException {
         rc.setIndicatorDot(rc.getLocation(),69,255,69);
         path[0] = rc.getLocation();
-        gameStates[0] = new GameState(true || rc.getID()%2 == 1);
+        gameStates[0] = new GameState(rc.getID()%2 == 1);
         cur = 0;
     }
 
