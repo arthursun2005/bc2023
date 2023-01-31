@@ -1,4 +1,4 @@
-package broketst;
+package loners;
 
 import battlecode.common.*;
 
@@ -79,6 +79,11 @@ public class Launcher extends Robot {
 
         if (status == 1) {
             if (weakLoc != null) {
+                RobotInfo bot = null;
+                if (rc.canSenseLocation(weakLoc))
+                    bot = rc.senseRobotAtLocation(weakLoc);
+                if (bot != null && bot.type == RobotType.CARRIER)
+                    randomizedGreedy(weakLoc, 1, rc.getType().actionRadiusSquared);
                 randomizedGreedy(weakLoc, -1, rc.getType().actionRadiusSquared);
             }
             attack.tryAttack();
@@ -87,19 +92,22 @@ public class Launcher extends Robot {
             randomizedGreedy(weakLoc, -1, 1_000_000);
             attack.tryAttack();
         } else if (status == 0) {
-            int mini = rc.getLocation().distanceSquaredTo(symmetry.target.loc);
+            int mini = Util.rDist(rc.getLocation(), symmetry.target.loc);
             // int lowerCount = 0;
             MapLocation bestie = null;
             RobotInfo[] friends = rc.senseNearbyRobots(-1, rc.getTeam());
             int count = 0;
+            int ahead = 0;
 
             for (RobotInfo friend : friends) {
                 if (friend.type == RobotType.LAUNCHER) {
                     // if (friend.ID < rc.getID())
                     // lowerCount++;
                     count++;
-                    if (friend.location.distanceSquaredTo(symmetry.target.loc) < mini) {
-                        mini = friend.location.distanceSquaredTo(symmetry.target.loc);
+                    int w = Util.rDist(friend.location, symmetry.target.loc);
+                    if (w < mini) {
+                        ahead++;
+                        // mini = w;
                         bestie = friend.location;
                     }
                 }
@@ -109,7 +117,7 @@ public class Launcher extends Robot {
 
             MapLocation site = tracker.pls();
             if (site != null
-                    && rc.getLocation().distanceSquaredTo(site) < 100) {
+                    && rc.getLocation().distanceSquaredTo(site) <= 64) {
                 moveTo(site);
                 rc.setIndicatorLine(site, rc.getLocation(), 255, 0, 0);
             }
@@ -124,7 +132,7 @@ public class Launcher extends Robot {
                 moveTo(symmetry.update());
             } else {
                 if (count == 0) {
-                    // no one in vision radius
+                    // moveTo(HQLoc);
                     if (rc.getRoundNum() % 10 == 0)
                         moveTo(symmetry.update());
                 } else if (rc.getRoundNum() % 3 == 0) {
