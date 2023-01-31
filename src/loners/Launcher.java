@@ -128,21 +128,23 @@ public class Launcher extends Robot {
             // moveTo(bestie);
             // }
             //
-            if (rc.getRoundNum() % 2 == 0) {
-                if (bestie != null) {
-                    // Someone is closer
-                    moveTo(symmetry.update());
-                } else {
-                    if (count == 0) {
-                        // moveTo(HQLoc);
-                        if (rc.getRoundNum() % 3 == 0)
-                            moveTo(symmetry.update());
-                    } else if (rc.getRoundNum() % 5 <= 3) {
-                        // ur closest
-                        moveTo(symmetry.update());
-                    }
-                }
-            }
+
+            moveTo(symmetry.update());
+//            if (rc.getRoundNum() % 2 == 0) {
+//                if (bestie != null) {
+//                    // Someone is closer
+//                    moveTo(symmetry.update());
+//                } else {
+//                    if (count == 0) {
+//                        // moveTo(HQLoc);
+//                        if (rc.getRoundNum() % 3 == 0)
+//                            moveTo(symmetry.update());
+//                    } else if (rc.getRoundNum() % 5 <= 3) {
+//                        // ur closest
+//                        moveTo(symmetry.update());
+//                    }
+//                }
+//            }
             // if (rc.getRoundNum() % 2 == 0) {
             //     if (rc.getRoundNum() % 30 < 25) {
             //         moveTo(symmetry.update());
