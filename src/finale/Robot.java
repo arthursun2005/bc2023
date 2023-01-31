@@ -1,4 +1,4 @@
-package loctildoretst;
+package finale;
 
 import battlecode.common.*;
 import java.util.*;
