@@ -169,7 +169,7 @@ public class Movement {
 //            return desired;
 //        }\
 
-        if (bugLength > Math.max(rc.getMapHeight(), rc.getMapWidth()) / 1.5) {
+        if (false && bugLength > Math.max(rc.getMapHeight(), rc.getMapWidth()) / 1.5) {
             hardReset();
             return getGreedyDirection();
         }
