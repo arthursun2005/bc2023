@@ -143,8 +143,8 @@ public class Headquarter extends Robot {
             int mana = rc.getResourceAmount(ResourceType.MANA);
             int elixir = rc.getResourceAmount(ResourceType.ELIXIR);
 
-            if (getTotalAda() - anchorsMade * 300 >= 2000 && getTotalMana() - anchorsMade * 500 >= 3000
-                    && rc.senseNearbyRobots(-1, rc.getTeam().opponent()).length <= 1 && elixir < 200 && false) {
+            if (getTotalAda() - anchorsMade * 300 >= 4500 && getTotalMana() - anchorsMade * 500 >= 3500
+                    && rc.senseNearbyRobots(-1, rc.getTeam().opponent()).length <= 1 && elixir < 200) {
                 rc.setIndicatorString("trying to build anchor ...");
                 if (rc.canBuildAnchor(Anchor.STANDARD)) {
                     rc.buildAnchor(Anchor.STANDARD);
@@ -186,7 +186,7 @@ public class Headquarter extends Robot {
                 trySpawn(toMake, null, 1);
         }
         helpMe();
-        suicide();
+        // suicide();
         tracker.tryFindSymmetry();
     }
 }

@@ -236,7 +236,7 @@ public class Tracker {
         boolean mapsmall = Rigged <= 8;
         if (mapsmall) sosmall = true;
 
-        if (rc.getType().equals(RobotType.CARRIER) && rc.getRoundNum() > 25) {
+        if (rc.getType().equals(RobotType.CARRIER) && rc.getRoundNum() > 15) {
             // if (rc.getRoundNum() <= 25 && width <= 25 && height <= 25
             // && rc.getID() % 3 != 0) {
             // ignoreAda = true;
@@ -399,7 +399,7 @@ public class Tracker {
         int height = rc.getMapHeight();
         long w;
         boolean ignoreAda = false;
-        if (rc.getRoundNum() > 15 && rc.getRoundNum() <= 55) {
+        if (rc.getRoundNum() > 15 && rc.getRoundNum() <= 75) {
             ignoreAda = true;
         }
         MapLocation me = rc.getLocation();
