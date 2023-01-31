@@ -156,7 +156,7 @@ public class Movement {
 
         if (turningLeft) {
             checkDir = checkDir.rotateLeft().rotateLeft();
-            if (rc.canMove(checkDir.rotateLeft())) {
+            if (canMove(checkDir.rotateLeft())) {
                 currentState = State.NORMAL;
                 bugLength = 0;
                 shouldRight = true;
@@ -164,7 +164,7 @@ public class Movement {
             }
         } else {
             checkDir = checkDir.rotateRight().rotateRight();
-            if (rc.canMove(checkDir.rotateRight())) {
+            if (canMove(checkDir.rotateRight())) {
                 currentState = State.NORMAL;
                 bugLength = 0;
                 shouldRight = true;

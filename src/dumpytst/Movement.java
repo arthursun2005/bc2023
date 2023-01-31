@@ -1,4 +1,4 @@
-// package xsquare;
+// package dumpytst;
 //
 // import battlecode.common.*;
 //
@@ -65,7 +65,7 @@
 //     }
 // }
 
-package xsquare;
+package dumpytst;
 
 import battlecode.common.*;
 import java.util.Random;
