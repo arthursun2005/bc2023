@@ -70,8 +70,13 @@ public class Attack {
     }
 
     boolean shouldTargetHQ(MapLocation loc) throws GameActionException {
-        if (true) return false;
-        return rc.getRoundNum() > 180 && rc.getID() % 8 == 0;
+        // if (true) return false;
+        // return rc.getRoundNum() > 180 && rc.getID() % 8 == 0;
+        if (!rc.canSenseLocation(loc))
+            return true;
+        if (rc.senseNearbyRobots(loc, rc.getType().actionRadiusSquared, rc.getTeam()).length >= 3)
+            return false;
+        return true;
     }
 
     public MapLocation getWeakLocCarrier() throws GameActionException {
