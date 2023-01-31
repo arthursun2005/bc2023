@@ -1,4 +1,4 @@
-package loners;
+package patrickk;
 
 import battlecode.common.*;
 import java.util.*;
@@ -59,19 +59,21 @@ public class Symmetry {
                 MapLocation oppositeLoc = new MapLocation(rc.getMapWidth() - hqLoc.x - 1,
                         rc.getMapHeight() - hqLoc.y - 1);
                 if (tracker.possi[1] == 1)
-                    enemyLocs.add(new possiLoc(new MapLocation(oppositeLoc.x, hqLoc.y), 1, 6900));
+                    enemyLocs.add(new possiLoc(new MapLocation(oppositeLoc.x, hqLoc.y), 1, (hqLoc == parentLoc ? 690000 : 0)));
                 if (tracker.possi[2] == 1)
-                    enemyLocs.add(new possiLoc(new MapLocation(hqLoc.x, oppositeLoc.y), 2, 6900));
+                    enemyLocs.add(new possiLoc(new MapLocation(hqLoc.x, oppositeLoc.y), 2, (hqLoc == parentLoc ? 690000 : 0)));
                 if (tracker.possi[3] == 1)
-                    enemyLocs.add(new possiLoc(oppositeLoc, 3, (hqLoc == parentLoc ? uuu : 6900)));
+                    enemyLocs.add(new possiLoc(oppositeLoc, 3, (hqLoc == parentLoc ? 690000 : 0)));
             }
 
             Collections.sort(enemyLocs, new Comparator<possiLoc>() {
                 public int compare(possiLoc a, possiLoc b) {
                     // return (Math.min(rc.getLocation().distanceSquaredTo(b.loc), b.offset)
                     // - Math.min(rc.getLocation().distanceSquaredTo(a.loc), a.offset));
-                    return (Math.min(Util.l1(rc.getLocation(), b.loc), b.offset)
-                            - Math.min(Util.l1(rc.getLocation(), a.loc), a.offset));
+                    //return (Math.min(Util.l1(rc.getLocation(), b.loc), b.offset)
+                    //        - Math.min(Util.l1(rc.getLocation(), a.loc), a.offset));
+                    return ((rc.getLocation().distanceSquaredTo(b.loc) - b.offset)
+                        - (rc.getLocation().distanceSquaredTo(a.loc) - a.offset));
                 }
             });
 
