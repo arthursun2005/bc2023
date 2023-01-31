@@ -47,6 +47,7 @@ public class Symmetry {
         MapLocation oppositeLoc = new MapLocation(width - parentLoc.x - 1,
                 height - parentLoc.y - 1);
         uuu = robot.rng.nextInt(20) == 0 ? 16 : 6900;
+        uuu = -1;
         target = new possiLoc(oppositeLoc, 3, uuu);
     }
 

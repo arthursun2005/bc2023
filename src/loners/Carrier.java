@@ -57,9 +57,19 @@ public class Carrier extends Robot {
         if (threat == null)
             threat = tracker.pls();
         if (threat != null) {
+            RobotInfo[] friends = rc.senseNearbyRobots(-1, rc.getTeam());
+            boolean ahead = false;
+            for (RobotInfo ri : friends) {
+                if (ri.type.equals(RobotType.LAUNCHER) || ri.type.equals(RobotType.DESTABILIZER)) {
+                    if (ri.location.distanceSquaredTo(threat) < rc.getLocation().distanceSquaredTo(threat)) ahead = true;
+                }
+            }
+            if (ahead) {
+                return false;
+            }
             tracker.signalDistress(threat);
-            // if (rc.getLocation().distanceSquaredTo(threat) > rc.getType().visionRadiusSquared)
-                // return false;
+            if (rc.getLocation().distanceSquaredTo(threat) > rc.getType().visionRadiusSquared)
+                return false;
             // if (rc.getWeight() >= 20)
             // return true;
             if (rc.getWeight() >= 4000) {
@@ -74,6 +84,7 @@ public class Carrier extends Robot {
             greedilyMove(threat, -1);
             // if (rc.getLocation().distanceSquaredTo(threat) <= rc.getType().visionRadiusSquared)
             greedilyMove(threat, -1);
+            if (rc.getWeight() > 0) return true;
         }
         return false;
     }
@@ -98,9 +109,9 @@ public class Carrier extends Robot {
             if (ahead) {
                 moveTo(symmetry.update());
                 attack.tryAttack();
-                tracker.tryFindSymmetry();
-                return;
             }
+            tracker.tryFindSymmetry();
+            return;
         }
 
         shouldReturn = checkDanger();

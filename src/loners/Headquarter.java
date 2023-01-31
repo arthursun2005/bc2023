@@ -119,6 +119,7 @@ public class Headquarter extends Robot {
         RobotInfo[] enemies = rc.senseNearbyRobots(-1, rc.getTeam().opponent());
         MapLocation me = rc.getLocation();
         for (RobotInfo a : enemies) {
+            if (!a.type.equals(RobotType.LAUNCHER) && !a.type.equals(RobotType.DESTABILIZER)) continue;
             if (best == null || a.location.distanceSquaredTo(me) < best.distanceSquaredTo(me))
                 best = a.location;
         }
@@ -160,7 +161,7 @@ public class Headquarter extends Robot {
                 toMake = RobotType.CARRIER;
             }
 
-            if (rc.getRoundNum() == 1 && lol) {
+            if (rc.getRoundNum() == 1 && lol && k < 4) {
                 toMake = RobotType.LAUNCHER;
             }
 

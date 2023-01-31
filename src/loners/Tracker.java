@@ -194,7 +194,7 @@ public class Tracker {
         long w;
         boolean ignoreAda = false;
         boolean elixirOnly = false;
-        if (rc.getType().equals(RobotType.CARRIER)) {
+        if (rc.getType().equals(RobotType.CARRIER) && rc.getRoundNum() > 15) {
             // if (rc.getRoundNum() <= 25 && width <= 25 && height <= 25
             // && rc.getID() % 3 != 0) {
             // ignoreAda = true;
@@ -217,7 +217,7 @@ public class Tracker {
             int cutoff = 3 * Rigged / 2;
             boolean mapsmall = Rigged <= 8;
             if (mapsmall) {
-                if (rc.getRoundNum() < 35 || cnt < 18) {
+                if (rc.getRoundNum() < 55) {
                     ignoreAda = true;
                 } else {
                     if (rc.getID() % 3 != 0) {
@@ -225,7 +225,7 @@ public class Tracker {
                     }
                 }
             } else {
-                if (rc.getRoundNum() < 35) {
+                if (rc.getRoundNum() < 55) {
                 } else {
                     if (rc.getID() % 3 != 0) {
                         ignoreAda = true;
@@ -250,7 +250,7 @@ public class Tracker {
                 MapLocation loc = new MapLocation(x, y);
                 if (!hasEmpty(loc))
                     continue;
-                if (threat != null && loc.distanceSquaredTo(threat) < 26)
+                if (threat != null && loc.distanceSquaredTo(threat) <= 20)
                     continue;
                 if (best == null || me.distanceSquaredTo(loc) < me.distanceSquaredTo(best))
                     best = loc;
@@ -271,7 +271,7 @@ public class Tracker {
                 MapLocation loc = new MapLocation(x, y);
                 if (!hasEmpty(loc))
                     continue;
-                if (threat != null && loc.distanceSquaredTo(threat) < 26)
+                if (threat != null && loc.distanceSquaredTo(threat) <= 20)
                     continue;
                 if (best == null || me.distanceSquaredTo(loc) < me.distanceSquaredTo(best))
                     best = loc;
@@ -292,7 +292,7 @@ public class Tracker {
                 MapLocation loc = new MapLocation(x, y);
                 if (!hasEmpty(loc))
                     continue;
-                if (threat != null && loc.distanceSquaredTo(threat) < 26)
+                if (threat != null && loc.distanceSquaredTo(threat) <= 20)
                     continue;
                 if (best == null || me.distanceSquaredTo(loc) < me.distanceSquaredTo(best))
                     best = loc;
@@ -360,7 +360,7 @@ public class Tracker {
         int height = rc.getMapHeight();
         long w;
         boolean ignoreAda = false;
-        if (rc.getRoundNum() <= 35) {
+        if (rc.getRoundNum() > 15 && rc.getRoundNum() <= 55) {
             ignoreAda = true;
         }
         MapLocation me = rc.getLocation();

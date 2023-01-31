@@ -92,7 +92,7 @@ public class Launcher extends Robot {
             randomizedGreedy(weakLoc, -1, 1_000_000);
             attack.tryAttack();
         } else if (status == 0) {
-            int mini = Util.rDist(rc.getLocation(), symmetry.target.loc);
+            int mini = Util.rDist(rc.getLocation(), symmetry.target.loc) - 2;
             // int lowerCount = 0;
             MapLocation bestie = null;
             RobotInfo[] friends = rc.senseNearbyRobots(-1, rc.getTeam());
@@ -127,19 +127,34 @@ public class Launcher extends Robot {
             // if (mini < rc.getID() && lowerCount < 9) {
             // moveTo(bestie);
             // }
-            if (bestie != null) {
-                // Someone is closer
-                moveTo(symmetry.update());
-            } else {
-                if (count == 0) {
-                    // moveTo(HQLoc);
-                    if (rc.getRoundNum() % 10 == 0)
-                        moveTo(symmetry.update());
-                } else if (rc.getRoundNum() % 3 == 0) {
-                    // ur closest
+            //
+            if (rc.getRoundNum() % 2 == 0) {
+                if (bestie != null) {
+                    // Someone is closer
                     moveTo(symmetry.update());
+                } else {
+                    if (count == 0) {
+                        // moveTo(HQLoc);
+                        if (rc.getRoundNum() % 3 == 0)
+                            moveTo(symmetry.update());
+                    } else if (rc.getRoundNum() % 5 <= 3) {
+                        // ur closest
+                        moveTo(symmetry.update());
+                    }
                 }
             }
+            // if (rc.getRoundNum() % 2 == 0) {
+            //     if (rc.getRoundNum() % 30 < 25) {
+            //         moveTo(symmetry.update());
+            //     } else {
+            //         moveTo(HQLoc);
+            //     }
+            // }
+            // if (rc.getRoundNum() % 2 == 0) {
+            //     if (rc.getRoundNum() % 3 != 0) {
+            //         moveTo(symmetry.update());
+            //     }
+            // }
 
             attack.tryAttack();
         } else {
