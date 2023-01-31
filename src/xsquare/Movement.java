@@ -223,8 +223,20 @@ public class Movement {
 
         if (turningLeft) {
             checkDir = checkDir.rotateLeft().rotateLeft();
+            if (rc.canMove(checkDir.rotateLeft())) {
+                currentState = State.NORMAL;
+                bugLength = 0;
+                shouldRight = true;
+                return tryMove(oldTarget, checkDir.rotateLeft());
+            }
         } else {
             checkDir = checkDir.rotateRight().rotateRight();
+            if (rc.canMove(checkDir.rotateRight())) {
+                currentState = State.NORMAL;
+                bugLength = 0;
+                shouldRight = true;
+                return tryMove(oldTarget, checkDir.rotateRight());
+            }
         }
 
 
